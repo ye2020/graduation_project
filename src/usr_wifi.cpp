@@ -1,6 +1,7 @@
 #include <ESP8266HTTPClient.h>    //网页用
 #include <ESP8266WiFi.h>
 #include "usr_wifi.h"
+#include "usr_eeprom.h"
 
 using namespace std;
 
@@ -72,5 +73,6 @@ void usr_wifi_t::wifi_smartconfig(void)
         }
     }
 
+    wifi_eeprom(WiFi.SSID().c_str(),WiFi.psk().c_str());                // 将获取到的SSID和pwd 写入flash
     usr_Wifi.get_wifi(WiFi.SSID().c_str(),WiFi.psk().c_str());          // 利用获取到的SSID和psw 进行网络连接
 }
