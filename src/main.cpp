@@ -20,11 +20,13 @@ void setup() {
 
   if(WiFi.status() != WL_CONNECTED)
     usr_Wifi.wifi_smartconfig();
+
 }
 
 void loop() {
   
   delay(1000);
+ 
 
 }
 

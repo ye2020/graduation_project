@@ -72,4 +72,5 @@ void usr_wifi_t::wifi_smartconfig(void)
         }
     }
 
+    usr_Wifi.get_wifi(WiFi.SSID().c_str(),WiFi.psk().c_str());          // 利用获取到的SSID和psw 进行网络连接
 }
