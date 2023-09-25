@@ -38,6 +38,8 @@ void usr_wifi_t::get_wifi(const char* SSID,const char* Password)     //连接 wi
     Serial.println("WiFi connected");
     Serial.println("IP address: ");
     Serial.println(WiFi.localIP());
+
+
     http.setTimeout(5000);
   }
 
@@ -69,10 +71,12 @@ void usr_wifi_t::wifi_smartconfig(void)
         Serial.printf("PSW:%s\r\n", WiFi.psk().c_str());
         Serial.println("IP address: ");
         Serial.println(WiFi.localIP());
+
+        wifi_eeprom(WiFi.SSID().c_str(),WiFi.psk().c_str());                // 将成功连接的wifi到的SSID和pwd 写入flash
         break;
         }
     }
 
-    wifi_eeprom(WiFi.SSID().c_str(),WiFi.psk().c_str());                // 将获取到的SSID和pwd 写入flash
+    
     usr_Wifi.get_wifi(WiFi.SSID().c_str(),WiFi.psk().c_str());          // 利用获取到的SSID和psw 进行网络连接
 }

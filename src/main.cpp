@@ -4,6 +4,7 @@
 #include "usr_wifi.h"
 #include "main.h"
 #include "usr_eeprom.h"
+#include "bsp_button.h"
 
 using namespace std;
 
@@ -25,14 +26,13 @@ void setup() {
   if(WiFi.status() != WL_CONNECTED)
     usr_Wifi.wifi_smartconfig();
 
-
+  button_init();                                                      // 按键初始化
 
 }
 
-void loop() {
-  
-  delay(1000);
- 
+void loop() 
+{
+  button_loop();                           // 按键循环函数 
 
 }
 

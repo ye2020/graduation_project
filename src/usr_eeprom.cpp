@@ -46,7 +46,7 @@ void auto_eeprom(void){
 
 
 
-// 将wifi 的ssid和pwd写入flash
+/* 将wifi 的ssid和pwd写入flash */
 void wifi_eeprom(const char* SSID,const char* Password) {
     strcpy(eepUserSet.wifi_ssid, SSID);
     strcpy(eepUserSet.wifi_password, Password);
@@ -54,3 +54,4 @@ void wifi_eeprom(const char* SSID,const char* Password) {
     EEPROM.commit();                                              // 覆盖掉旧的数值
 
 }
+
