@@ -1,3 +1,20 @@
+/**
+  ****************************** Y.Z.T.****************************************
+  * @file       usr_eeprom.c/h
+  * @brief      用于存放写入和读取flash的函数
+  * @note       none
+  * 
+  * @author     Y.Z.T
+  * @history    2023.9.18
+  *
+  @verbatim     v1.0
+  ==============================================================================
+
+  ==============================================================================
+  @endverbatim
+  ****************************** Y.Z.T. *****************************************
+  */
+
 #include "usr_eeprom.h"
 #include <EEPROM.h>
 
@@ -5,8 +22,12 @@
 EEPROMStruct eepUserSet;                // 用户写入 EEPROM 的结构体
 
 
-
-//首次开机自动刷写一部分EEPROM
+/**
+ * @brief       自动计算与写入EEPROM的函数
+ * @param[in]   none
+ * @retval      
+ * @attention   首次开机自动刷写一部分EEPROM, 以及读取eeprom中的数据
+ */
 void auto_eeprom(void){
   
   /* 自动计算需要用多少eeprom数量 */
@@ -45,8 +66,12 @@ void auto_eeprom(void){
 }
 
 
-
-/* 将wifi 的ssid和pwd写入flash */
+/**
+ * @brief       将成功连接的wifi的参数写入 EEPROM
+ * @param[in]   none
+ * @retval      
+ * @attention   将wifi 的ssid和pwd写入flash
+ */
 void wifi_eeprom(const char* SSID,const char* Password) {
     strcpy(eepUserSet.wifi_ssid, SSID);
     strcpy(eepUserSet.wifi_password, Password);

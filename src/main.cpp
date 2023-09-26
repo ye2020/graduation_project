@@ -5,29 +5,21 @@
 #include "main.h"
 #include "usr_eeprom.h"
 #include "bsp_button.h"
+#include "usr_ui_show.h"
 
 using namespace std;
 
 
 
 
-
 void setup() {
   Serial.begin(115200);
-  auto_eeprom();
-  Serial.println("wifi ssid:");
-  Serial.println(eepUserSet.wifi_ssid);
-  Serial.println("wifi pwd:");
-  Serial.println(eepUserSet.wifi_password);
+  auto_eeprom();                                                      // 读取保存在flash中的数据
 
-  WiFi.mode(WIFI_OFF);
-  usr_Wifi.get_wifi(eepUserSet.wifi_ssid,eepUserSet.wifi_password);        // 从flash中读取
-
-  if(WiFi.status() != WL_CONNECTED)
-    usr_Wifi.wifi_smartconfig();
-
+  usr_Wifi.wifi_init();                                               // wifi 初始化函数,自动调用上次连接成功的网络
   button_init();                                                      // 按键初始化
-
+  
+  ui_show = ui_show_t();
 }
 
 void loop() 
