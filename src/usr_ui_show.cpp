@@ -17,7 +17,6 @@
   */
 #include "usr_ui_show.h"
 #include "usr_buletooth.h"
-#include <U8g2lib.h>
 #include <Wire.h>
 
 // U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C u8g2(U8G2_R0, /* clock=*/14, /* data=*/2, /* reset=*/ U8X8_PIN_NONE);     // 0.91寸OLED驱动
@@ -69,6 +68,11 @@ void ui_show_t::ui_init(void)
     u8g2.begin();
     u8g2.enableUTF8Print();
     u8g2.setFont(u8g2_font_wqy12_t_gb2312a);           // 设置字体
+
+    u8g2.clearBuffer();
+    u8g2.drawXBMP(40,15,50,50,ACE);
+    u8g2.sendBuffer();     
+
     // u8g2.setFont(u8g2_font_ncenB08_tr);
 }
 
