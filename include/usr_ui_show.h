@@ -35,12 +35,14 @@ class ui_show_t{
     public:
 
     position_expect_t menu_x_position = {0, 0};                                      // 菜单x位置与期望    
-    position_expect_t menu_y_position = {27, 27};                                      // 菜单y位置与期望
-    position_expect_t frame_len;                                            // 选择框的宽度
-    position_expect_t frame_y;                                              // 选择框的高度
-    position_expect_t progress_position;                                    // 进度条的位置
+    position_expect_t menu_y_position = {28, 28};                                    // 菜单y位置与期望
+    position_expect_t frame_len = {32, 32};                                          // 选择框的宽度
+    position_expect_t frame_y = {17, 17};                                            // 选择框的高度
+    position_expect_t progress_position {16, 16};                                    // 进度条的位置
 
     uint8_t max_bar;                                                        // 进度条最底部的位置
+    uint8_t y_offset = 16;                                                  // y偏移值 , 为了不在最上面的黄色部分显示
+    uint8_t select_index;                                                     // 菜单索引, 表示实际指向的表单
 
     ui_show_t();                                                            // 构造函数
 

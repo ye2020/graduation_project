@@ -16,6 +16,7 @@
   ****************************** Y.Z.T. *****************************************
   */
 #include "usr_ui_show.h"
+#include "usr_buletooth.h"
 #include <U8g2lib.h>
 #include <Wire.h>
 
@@ -32,6 +33,7 @@ ui_show_t ui_show;
  * @param[in]   none
  * @retval      
  * @attention   none
+ * 
  */
 ui_show_t::ui_show_t()
 {
@@ -42,18 +44,18 @@ ui_show_t::ui_show_t()
                 {"test1",7},
                 {"test251",9},
                 {"4tet", 6},
-                {"中文测试", 6}
+                {"中文测试", 6},
+                {"123456",8}
             };
 
     line_len = list.size();                                                // 选择页面的数量              
-    single_line_length = (screen_height - 1) / line_len;                   // 进度条单元格长度
+    single_line_length = (screen_height - 1 - 16) / line_len;                   // 进度条单元格长度
     total_line_length  = single_line_length * line_len + 1;                // 进度条长竖线的长度
 
 
 
    Serial.println(list[0].str);
 }
-
 
 
 /**
@@ -130,15 +132,15 @@ void ui_show_t::select_ui_show(int16_t speed_x, int16_t speed_y)
  */
 void ui_show_t::progress_ui_show(void)
 {
-  u8g2.drawVLine(126,0,total_line_length);            // 长竖线
-  u8g2.drawPixel(125,0);                              // 进度条最上面的小横线
-  u8g2.drawPixel(127,0);      
+  u8g2.drawVLine(126, ui_show.progress_position.cur_position + 1, total_line_length);            // 长竖线
+  u8g2.drawPixel(125, ui_show.progress_position.cur_position + 1);                              // 进度条最上面的小横线
+  u8g2.drawPixel(127, ui_show.progress_position.cur_position + 1);      
 
   for(uint8_t i=0; i < ui_show.line_len; ++i)
   {    
  
-    u8g2.drawPixel(125,single_line_length*(i+1));     // 分段小横线
-    u8g2.drawPixel(127,single_line_length*(i+1));
+    u8g2.drawPixel(125,single_line_length*(i+1) + ui_show.y_offset);     // 分段小横线
+    u8g2.drawPixel(127,single_line_length*(i+1) + ui_show.y_offset);
     ui_show.max_bar = single_line_length*(i+1);       // 进度条最底部位置
   }
 
