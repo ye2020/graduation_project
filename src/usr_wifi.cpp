@@ -42,8 +42,8 @@ void usr_wifi_t::wifi_init(void)
   WiFi.mode(WIFI_OFF);
   usr_Wifi.get_wifi(eepUserSet.wifi_ssid,eepUserSet.wifi_password);        // 从flash中读取
 
-  // if(WiFi.status() != WL_CONNECTED)
-  //   usr_Wifi.wifi_smartconfig();
+  if(WiFi.status() != WL_CONNECTED)
+    usr_Wifi.wifi_smartconfig();
 }
 
 
