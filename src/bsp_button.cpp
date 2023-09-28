@@ -22,8 +22,8 @@
 OneButton key5(5, true);           // 定义按钮5（gpio5） (gpio16) , 按键按下为低电平
 OneButton key0(0,true);            // 定义按键0（gpio0） (gpio12)
 
-static button_status_e button5_current_state = button_none;      // 按键5当前按键状态
-static button_status_e button0_current_state = button_none;      // 按键0当前按键状态
+button_status_e button5_current_state = button_none;      // 按键5当前按键状态
+button_status_e button0_current_state = button_none;      // 按键0当前按键状态
 
 /**********************  函数声明 ************************/
 

@@ -16,7 +16,6 @@
   ****************************** Y.Z.T. *****************************************
   */
 #include "usr_ui_show.h"
-#include "usr_buletooth.h"
 #include <Wire.h>
 
 // U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C u8g2(U8G2_R0, /* clock=*/14, /* data=*/2, /* reset=*/ U8X8_PIN_NONE);     // 0.91寸OLED驱动
@@ -70,7 +69,7 @@ void ui_show_t::ui_init(void)
     u8g2.setFont(u8g2_font_wqy12_t_gb2312a);           // 设置字体
 
     u8g2.clearBuffer();
-    u8g2.drawXBMP(40,15,50,50,ACE);
+    u8g2.drawXBMP(40,16,50,50,ACE);
     u8g2.sendBuffer();     
 
     // u8g2.setFont(u8g2_font_ncenB08_tr);
@@ -188,8 +187,46 @@ void ui_show_t::menu_ui_show(void)
  * @retval      none
  * @attention   none
  */
-// bool ui_show_t::ui_disapper(void)
-// {
-//     // int len = 8 * u8g2.getBufferTileHeight() * u8g2.getBufferTileWidth();
-//     // uint8_t *p = u8g2.getBufferPtr();
-// }
+bool ui_show_t::ui_disapper(void)
+{
+    int len = 8 * u8g2.getBufferTileHeight() * u8g2.getBufferTileWidth();
+    uint8_t *p = u8g2.getBufferPtr();
+    int8_t dis_temp = 0;
+
+    for(int j = 0; j < 4; j++)
+    {
+      for (int i = 0; i < len; i++)
+      {
+        p[i] = p[i] & (rand()%0xff) >> dis_temp;
+      }
+
+      dis_temp += 2;
+      u8g2.sendBuffer();
+      delay(100);
+    }
+
+    if(dis_temp >= 8)
+    {
+      dis_temp = 0;
+      u8g2.clearBuffer();  
+      u8g2.sendBuffer();
+      return 0;
+    }
+
+    return 1;
+
+}
+
+
+void ui_test(button_status_e keybt0, button_status_e keybt1)
+{
+    u8g2.clearBuffer();  
+    u8g2.drawStr(20,30,"keybt0: ");
+    u8g2.setCursor(90, 30);
+    u8g2.print(keybt0);
+    u8g2.drawStr(20,42,"keybt1: ");
+    u8g2.setCursor(90, 42);
+    u8g2.print(keybt1);
+    u8g2.sendBuffer();
+}
+
