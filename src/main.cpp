@@ -1,3 +1,29 @@
+
+/************************** Dongguan-University of Technology -ACE**************************
+ * @project   stupid_housing_system
+ * @Author    Dongguan-University of Technology -ACE  叶昭廷Y.Z.T.   &&  黄崇志
+ * @Date      2023-09-18
+
+                    P                          :u7  :Ii              .
+                   QBQ                     sQBBQBB  PBBBBQI.        XQBBBBBBBBBQBBBBBBBBBBBBM
+                  bBBBZ                 .MQBQBBBQB  5BBBBBBBBi      uBBBBBBBBBQBBBBBBBBBQBBBP
+                 bBBQQB5               XBBBRQQBBBP  sQBQBQQBBBZ     IBBBBBBBBBBBBBBBBBBBBBBBD
+                 rBBgRQBY             BBQQRBBQr        rgBBBQr
+               .  iBBgRQB7           BBQRgBQ:            iE.
+              :BY  7BBgRQB:         sBQMgBB
+             .BBB:  uBBgRBB.        BBMDQQ:                         rSU57  UQPdPbPPPPqPPbPdQs
+             BBQBB:  XBQgRBB        QBggQB                          sBEQ1  QBBBBQBBBBBBBBBBBZ
+            BBQgBBB   KBRDRBB       BBgDBB                          jBDQU  QBBBBBBBBBBBQBBBBg
+           BBQgRBB     dQggQBB      BBggQB.                         iXJS7  uDK5XXK5KXKXXSSXg7
+          gBQgRQB   BBggQDggQBQ     YBQDMBB
+         PBQgRBB   BBBBBRQgMgQBg     BBQgRBB:            iZ:
+        2BQgMBB.  BBBBBBBBBQRgQBK     BBBRQBBQL.      .rRBBQBr       ..                   ..
+       vQBgRQB:  :uriiiiiirBQQgBB1     XQBQQQBBBBE  uBQBQBQBBBD     SBBBBBBBBBBBBBBBBBBBQBBBD
+      7QBQBBBr             :BBBQBBY     .ZBQBBBBBB  qBBQBBBBB:      UBBBBQBBBBBBBBBBBBBBBBBBd
+     LBBBBBBJ               7BBBBBQu       YRBBBQB  KBBBBBJ.        IBQBBBBBQBBBBBBBBBBBBBBBZ
+                                                7i  .7.
+*************************** Dongguan-University of Technology -ACE**************************/
+
 #include <ESP8266WiFi.h>
 #include <EEPROM.h>
 
@@ -20,14 +46,13 @@ void setup() {
   Serial.begin(115200);
   auto_eeprom();                                                      // 读取保存在flash中的数据
   ui_show.ui_init();                                                  // ui初始化
+  Menu_Main_Init();                                                   // 菜单初始化
+
 
   usr_Wifi.wifi_init();                                               // wifi 初始化函数,自动调用上次连接成功的网络
-  button_init();                                                      // 按键初始化
   
-  /* ui_show = ui_show_t(); */
-  ui_show.ui_disapper();
-  ui_show.menu_ui_show();
-  Menu_Main_Init();
+  button_init();                                                      // 按键初始化
+  /* ui_show = ui_show_t(); */  
 }
 
 

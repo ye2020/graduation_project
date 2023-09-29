@@ -16,19 +16,20 @@
 #include "usr_ui_show.h"
 
 
+extern U8G2_SSD1306_128X64_NONAME_F_SW_I2C u8g2;				// u8g2 库iic驱动
+
 //主菜单初始化
 void Menu_Main_Init(void)
 {
 	Serial.println("home status");
 
 	sub_index.main_current_index = 0;
-	sub_index.setting_current_index = 8;
-	sub_index.select_current_index = 1;
-	sub_index.language_current_index = 2;
-	sub_index.configuration_current_index = 20;
-	sub_index.read_current_index = 30;				// 不想跟指针索引重合
+	sub_index.select_current_index = 1;				// 索引值1 ~ 10 留给 菜单表单及其子表单 
+	sub_index.wifi_config_current_index = 2;
+			
 
-	sub_index.Current_Page = MAIN_PAGE;
+
+	sub_index.Current_Page = MAIN_PAGE;					// 设置初始页面
 
 }
 
@@ -45,66 +46,20 @@ void Enter_Page(menu_i32 index, button_status_e Key5Value , button_status_e Key0
 		Menu_Select_Item(MAIN_PAGE, Key5Value,Key0Value);
 		break;
 	}
-		// 进入时钟页面
-	case CLOCK_PAGE:
+	//进入wifi配网页面
+	case WiFi_PAGE:
 	{
-		Menu_Select_Item(CLOCK_PAGE,  Key5Value,Key0Value);
+		Menu_Select_Item(WiFi_PAGE,  Key5Value,Key0Value);
 		break;
 	}
-		// 	进入天气界面
-	case WEATHER_PAGE:
-	{
-		Menu_Select_Item(WEATHER_PAGE,  Key5Value,Key0Value);
-		break;
-	}
-	//进入配置页面
-	case CONFIGURATION_PAGE:
-	{
-		Menu_Select_Item(CONFIGURATION_PAGE,  Key5Value,Key0Value);
-		break;
-	}
-	//进入阅读页面
-	case READ_PAGE:
-	{
-		Menu_Select_Item(READ_PAGE,  Key5Value,Key0Value);
-		break;
-	}
-	//进入游戏页面
-	case GAME_PAGE:
-	{
-		Menu_Select_Item(GAME_PAGE,  Key5Value,Key0Value);
-		break;
-	}
-	//进入设置页面
-	case SETTING_PAGE:
-	{
-		Menu_Select_Item(SETTING_PAGE,  Key5Value,Key0Value);
-		break;
-	}
-	//进入设置页面
+
+	//进入菜单页面
 	case SELECT_PAGE:
 	{
 		Menu_Select_Item(SELECT_PAGE,  Key5Value,Key0Value);
 		break;
 	}
-	// 进入菜单页面
-	case LANGUAGE_PAGE:
-	{
-		Menu_Select_Item(LANGUAGE_PAGE,  Key5Value, Key0Value);
-		break;
-	}
-	// 进入菜单页面
-	case WORD_PAGE:
-	{
-		Menu_Select_Item(WORD_PAGE,  Key5Value, Key0Value);
-		break;
-	}
 
-	case BOOK_PAGE:
-	{
-		Menu_Select_Item(BOOK_PAGE,  Key5Value, Key0Value);
-		break;
-	}
 	// 否则返回主页面
 	default:
 	{	Menu_Select_Item(MAIN_PAGE, Key5Value,Key0Value);
@@ -114,68 +69,30 @@ void Enter_Page(menu_i32 index, button_status_e Key5Value , button_status_e Key0
 }
 
 //主页面UI处理
-void main_page_ui_process(menu_u8 index)
+void main_page_ui_process(void)
 {
+	u8g2.clearBuffer();
+    u8g2.drawXBMP(40,16,50,50,ACE);
+    u8g2.sendBuffer();     
 
 }
-
-
-//天气页面UI处理
-void weather_page_ui_process(void)
-{
-	
-}
-
-//时钟页面UI处理
-void clock_page_ui_process(void)
-{
-
-
-}
-
 
 
 // 菜单页面ui进程
 void select_page_ui_process(void)
 {
-
+	ui_show.menu_ui_show();				// 绘制菜单
 }
 
 
-// 设置页面UI进程
-void setting_page_ui_process(void)
+// wifi设置页面UI进程
+void wifi_page_ui_process(void)
 {
+	u8g2.clearBuffer();
 
-}
+    u8g2.drawXBMP(88,2,13,10,wifi_13_10);
+	u8g2.drawXBMP(108,2,16,9,battery_16_9);
 
-
-
-// 语言页面UI进程
-void language_page_ui_process(void)
-{
-
-}
-
-// 字号模式进程
-void word_page_ui_process(void)
-{
-
-}
-
-// 配置模式进程
-void configuration_page_ui_process(void)
-{
-
-}
-
-// 阅读模式进程
-void read_page_ui_process(void)
-{
-
-}
-
-void book_page_ui_process(void)
-{	
-
+	u8g2.sendBuffer();
 }
 

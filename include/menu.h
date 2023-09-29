@@ -46,12 +46,9 @@ typedef enum
 typedef struct Menu_Key_Index
 {
 	menu_u8 main_current_index ;
-	menu_u8 setting_current_index ; 
-	menu_u8 select_current_index ; 
-  menu_u8 language_current_index;
-  menu_u8 configuration_current_index;
-  menu_u8 read_current_index;
-  
+	menu_u8 wifi_config_current_index ; 
+  menu_u8 select_current_index;
+
 	menu_u8 Current_Page ;      // 当前页面
 }Key_Index;
 
@@ -70,17 +67,9 @@ typedef struct OP_STRUCT
 typedef enum 
 {
 	MAIN_PAGE = 0,          // 主页面						
-	CLOCK_PAGE,             // 时钟状态 
-	WEATHER_PAGE,           // 天气状态
-	CONFIGURATION_PAGE,     // 配置状态
-	READ_PAGE,              // 阅读状态
-	GAME_PAGE,              // 游戏状态 （以上是select下的子表单）
-  SETTING_PAGE,           // 设置模式（main下的子表单）
-	SELECT_PAGE,						// 菜单    （main下的子表单）
-  LANGUAGE_PAGE,          // 语言设置（setting下的子表单）
-  WORD_PAGE,              // 字号设置（setting下的子表单）
-  BOOK_PAGE,              // 书籍页面（read下的子表单）
-	
+  SELECT_PAGE,            // 菜单页面
+  WiFi_PAGE,              // wifi扫码配网模式（main下的子表单）    
+
 }OP_PAGE;
 
 
@@ -91,16 +80,9 @@ void Menu_Select_Item(menu_i32 current_index, button_status_e Key5Value , button
 
 void select_page_process(button_status_e Key5Value , button_status_e Key0Value);
 void main_page_process(button_status_e Key5Value , button_status_e Key0Value);
-void clock_page_process(button_status_e Key5Value , button_status_e Key0Value);
-void weather_page_process(button_status_e Key5Value , button_status_e Key0Value);
-void configuration_page_process(button_status_e Key5Value , button_status_e Key0Value);
-void read_page_process(button_status_e Key5Value , button_status_e Key0Value);
-void game_page_process(button_status_e Key5Value , button_status_e Key0Value);
-void setting_page_process(button_status_e Key5Value , button_status_e Key0Value);
+void wifi_page_process(button_status_e Key5Value , button_status_e Key0Value);
 void Menu_Select_main(button_status_e Key5Value , button_status_e Key0Value);
-void language_page_process(button_status_e Key5Value, button_status_e Key0Value);
-void word_page_process(button_status_e Key5Value, button_status_e Key0Value);
-void book_page_process(button_status_e Key5Value, button_status_e Key0Value);
+
 
 uint8_t return_UI_loging_flag(void);
 uint8_t return_flie_current_num(void);

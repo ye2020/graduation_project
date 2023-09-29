@@ -42,6 +42,16 @@ const unsigned char ACE[] U8X8_PROGMEM = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x
                                            0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00 };
 
 
+// width: 13, height: 10
+const unsigned char wifi_13_10[] U8X8_PROGMEM = { 0xf0,0x01,0x1c,0x07,0x07,0x1c,0xf1,0x11,0x1c,0x07,0x44,0x04,0xf0,0x01,0x10,0x01,0x40,0x00,0x40,0x00 };
+
+// wifi断
+const unsigned char dis_wifi_13_11[] U8X8_PROGMEM = { 0x00,0x08,0x00,0x0c,0xf8,0x07,0xfe,0x0f,0xbf,0x1f,0xde,0x0f,0xac,0x07,0xd0,0x03,0xe8,0x01,0xe4,0x00,0x02,0x00 };
+
+
+// 
+const unsigned char battery_16_9[] U8X8_PROGMEM =  { 0xfc,0x7f,0x02,0x80,0x9a,0xbb,0x9b,0xb3,0x9b,0xb3,0x9b,0xb3,0x9a,0xb3,0x02,0x80,0xfc,0x7f };
+
 /* 位置与位置期望 */
 typedef struct 
 {
@@ -65,6 +75,22 @@ class ui_show_t{
     uint8_t y_offset = 16;                                                  // y偏移值 , 为了不在最上面的黄色部分显示
     uint8_t select_index;                                                     // 菜单索引, 表示实际指向的表单
 
+
+    int16_t line_len;                                                       // 选择页面的数量
+    uint8_t single_line_length;                                             // 进度条单元格长度
+    uint8_t total_line_length;                                              // 进度条长竖线的长度
+
+    
+    /* 菜单相关属性 */
+    typedef struct                                                          
+    {                               
+        String str;                                                          // 选项名字符串
+        int len;                                                             // 该选项的长度用于设置选择框的长度(一般设置为字符个数 + 2)
+    }Ui_list_t;                             
+
+
+    std::vector<Ui_list_t> list;                                             // 菜单项数组 
+
     ui_show_t();                                                            // 构造函数
 
     int  ui_run(int16_t *res, int16_t *res_trg, int16_t step);              // 实现动画效果(渐进)
@@ -79,18 +105,8 @@ class ui_show_t{
     uint8_t screen_length = 128;                                            // 屏幕长度
     uint8_t screen_height = 64 ;                                            // 屏幕高度
 
-    int16_t line_len;                                                       // 选择页面的数量
-    uint8_t single_line_length;                                             // 进度条单元格长度
-    uint8_t total_line_length;                                              // 进度条长竖线的长度
 
-    /* 菜单相关属性 */
-    typedef struct                                                          
-    {                               
-        String str;                                                          // 选项名字符串
-        int len;                                                             // 该选项的长度用于设置选择框的长度(一般设置为字符个数 + 2)
-    }Ui_list_t;                             
 
-    std::vector<Ui_list_t> list;                                             // 菜单项数组 
 
 
 };

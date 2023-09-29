@@ -49,16 +49,8 @@ uint8_t ui_loging_flag = 0;				//将ui加载标志位置0，表示允许加载ui
 static OP_MENU_PAGE g_opStruct[] =
 	{
 		{MAIN_PAGE, main_page_process},
-		{CLOCK_PAGE, clock_page_process},
-		{WEATHER_PAGE, weather_page_process},
-		{CONFIGURATION_PAGE, configuration_page_process},
-		{READ_PAGE, read_page_process},
-		{GAME_PAGE, game_page_process},
-		{SETTING_PAGE, setting_page_process},
 		{SELECT_PAGE, select_page_process},
-		{LANGUAGE_PAGE, language_page_process},
-		{WORD_PAGE, word_page_process},
-		{BOOK_PAGE, book_page_process}
+		{WiFi_PAGE, wifi_page_process}
 	};
 
 
@@ -193,20 +185,23 @@ uint8_t return_UI_loging_flag(void)
  */
 void main_page_process(button_status_e Key5Value, button_status_e Key0Value)
 {
-
+	main_page_ui_process();					// 主页面ui绘制
 	switch (Key5Value_transition_function(Key5Value, Key0Value))
 	{
 	case KEY_dowm:
 	{
-
+		ui_show.ui_disapper();								// 消失函数
+		Enter_Page(SELECT_PAGE, Key5Value, Key0Value);		// 进入选择页面
 		break;
 	}
 
 	case KEY_up:
 	{
-
+		ui_show.ui_disapper();								// 消失函数
+		Enter_Page(SELECT_PAGE, Key5Value, Key0Value);		// 进入选择页面
 		break ;
 	}
+
 	case KEY_enter:
 	{
 
@@ -237,35 +232,49 @@ void main_page_process(button_status_e Key5Value, button_status_e Key0Value)
  */
 void select_page_process(button_status_e Key5Value, button_status_e Key0Value)
 {
-
+	// Serial.println("select status");
+	select_page_ui_process();										// 菜单页面ui绘制
 	switch (Key5Value_transition_function(Key5Value, Key0Value))
 	{
 	case KEY_dowm:
 	{
+		// 临界条件判断
+		(sub_index.select_current_index < (ui_show.line_len - 1)) ? (sub_index.select_current_index++) : (sub_index.select_current_index = (ui_show.line_len - 1));
+		ui_show.frame_y.position_trg    =  (sub_index.select_current_index  - 1)* 11 + (ui_show.y_offset + 2);				// 选择框位置目标值
+  		ui_show.frame_len.position_trg  =  ui_show.list[sub_index.select_current_index - 1].len * 5;
 
+		Serial.println("down to choose");
+		Serial.println(sub_index.select_current_index);		
 		break;
 	}
 
 	case KEY_up:
 	{
+		(sub_index.select_current_index > 1) ? (sub_index.select_current_index--) : (sub_index.select_current_index = 1);
+		ui_show.frame_y.position_trg    =  (sub_index.select_current_index - 1) * 11 + (ui_show.y_offset + 2);				// 选择框位置目标值
+  		ui_show.frame_len.position_trg  =  ui_show.list[sub_index.select_current_index - 1].len * 5;		
 
+		Serial.println("down to choose");
+		Serial.println(sub_index.select_current_index);		
 		break ;
 	}
 	case KEY_enter:
 	{
-
+		Serial.println("Enter the choice");
+		Serial.println((sub_index.select_current_index));
+		Enter_Page((sub_index.select_current_index + 1), button_none, button_none);					// 页面跳转
 		break;
 	}
 
 	case KEY_home:
 	{
-
+		Enter_Page(MAIN_PAGE,button_none,button_none);												// home键返回主页面
 		break;
 	}
 
 	case KEY_esc:
 	{	
-
+		Enter_Page(MAIN_PAGE,button_none,button_none);												// 返回上级页面 即main
 		break;
 	}
 	default:
@@ -274,15 +283,15 @@ void select_page_process(button_status_e Key5Value, button_status_e Key0Value)
 }
 
 /**
- * @brief       设置页面处理
+ * @brief       wifi设置页面处理
  * @param[in]   KeyValue ： 键值
  * @retval      none
  * @attention
  */
-void setting_page_process(button_status_e Key5Value, button_status_e Key0Value)
+void wifi_page_process(button_status_e Key5Value, button_status_e Key0Value)
 {
-	Serial.println("setting status");
-
+	Serial.println("wifi status");
+	wifi_page_ui_process();												// ui绘制
 	/*************************** 键值处理 **************************/
 	switch (Key5Value_transition_function(Key5Value, Key0Value))
 	{
@@ -305,7 +314,7 @@ void setting_page_process(button_status_e Key5Value, button_status_e Key0Value)
 
 	case KEY_home:
 	{
-
+		Enter_Page(MAIN_PAGE,button_none,button_none);												// home键返回主页面
 		break;
 	}
 
@@ -317,292 +326,5 @@ void setting_page_process(button_status_e Key5Value, button_status_e Key0Value)
 	default:
 		break;
 	}
-}
-
-/**
- * @brief       天气页面处理
- * @param[in]   KeyValue ： 键值
- * @retval      none
- * @attention
- */
-void weather_page_process(button_status_e Key5Value, button_status_e Key0Value)
-{
-	Serial.println("weather status");
-
-	switch (Key5Value_transition_function(Key5Value, Key0Value))
-	{
-
-	case KEY_home:
-	{
-
-		break;
-	}
-
-	case KEY_esc:
-	{	
-
-		break;
-	}
-	default:
-		break;
-	}		
-}
-
-
-/**
- * @brief       时钟页面处理
- * @param[in]   KeyValue ： 键值
- * @retval      none
- * @attention
- */
-void clock_page_process(button_status_e Key5Value, button_status_e Key0Value)
-{
-
-	switch (Key5Value_transition_function(Key5Value, Key0Value))
-	{
-
-	case KEY_home:
-	{
-
-		break;
-	}
-
-	case KEY_esc:
-	{	
-
-		break;
-	}
-	default:
-		break;
-	}		
-}
-
-/**
- * @brief      	配置页面处理
- * @param[in]   KeyValue ： 键值
- * @retval      none
- * @attention
- */
-void configuration_page_process(button_status_e Key5Value, button_status_e Key0Value)
-{
-	switch (Key5Value_transition_function(Key5Value, Key0Value))
-	{
-	case KEY_dowm:
-	{
-
-		break;
-	}
-
-	case KEY_up:
-	{
-
-		break ;
-	}
-
-	case KEY_enter:
-	{
-
-		break;
-	}
-	case KEY_home:
-	{
-
-		break;
-	}
-
-	case KEY_esc:
-	{	
-
-		break;
-	}
-	default:
-		break;
-	}		
-}
-
-/**
- * @brief      	阅读页面处理
- * @param[in]   KeyValue ： 键值
- * @retval      none
- * @attention
- */
-void read_page_process(button_status_e Key5Value, button_status_e Key0Value)
-{
-
-	switch (Key5Value_transition_function(Key5Value, Key0Value))
-	{
-	case KEY_dowm:
-	{
-
-		break;
-	}
-
-	case KEY_up:
-	{
-
-		break ;
-	}
-
-	case KEY_enter:
-	{
-
-		break;
-	}
-	case KEY_home:
-	{
-
-		break;
-	}
-
-	case KEY_esc:
-	{	
-
-		break;
-	}
-	default:
-		break;
-	}		
-}
-
-/**
- * @brief      	游戏页面处理
- * @param[in]   KeyValue ： 键值
- * @retval      none
- * @attention
- */
-void game_page_process(button_status_e Key5Value, button_status_e Key0Value)
-{
-	Serial.println("game status");
-
-	switch (Key5Value_transition_function(Key5Value, Key0Value))
-	{
-
-	case KEY_home:
-	{
-
-		break;
-	}
-
-	case KEY_esc:
-	{	
-
-		break;
-	}
-	default:
-		break;
-	}	
-}
-
-/**
- * @brief      	语言页面处理
- * @param[in]   KeyValue ： 键值
- * @retval      none
- * @attention
- */
-void language_page_process(button_status_e Key5Value, button_status_e Key0Value)
-{
-	Serial.println("language status");
-
-	switch (Key5Value_transition_function(Key5Value, Key0Value))
-	{
-
-	case KEY_dowm:
-	{
-
-		break;
-	}
-
-	case KEY_up:
-	{
-
-		break ;
-	}
-
-	case KEY_enter:
-	{
-
-		break;
-	}
-	case KEY_home:
-	{
-
-		break;
-	}
-
-	case KEY_esc:
-	{	//返回上一页
-
-		break;
-	}
-	default:
-		break;
-	}	
-}
-
-
-/**
- * @brief       字号页面处理
- * @param[in]   KeyValue ： 键值
- * @retval      none
- * @attention
- */
-void word_page_process(button_status_e Key5Value, button_status_e Key0Value)
-{
-	Serial.println("word status"); 
-	switch (Key5Value_transition_function(Key5Value, Key0Value))
-	{
-	case KEY_home:
-	{
-
-		break;
-	}
-
-	case KEY_esc:
-	{	
-
-		break;
-	}
-	default:
-		break;
-	}
-}
-
-/**
- * @brief       字号页面处理
- * @param[in]   KeyValue ： 键值
- * @retval      none
- * @attention
- */
-void book_page_process(button_status_e Key5Value, button_status_e Key0Value)
-{	
-	switch (Key5Value_transition_function(Key5Value, Key0Value))
-	{
-
-	case KEY_dowm:
-	{
-
-		break;
-	}
-
-	case KEY_up:
-	{
-
-		break ;
-	}		
-	case KEY_home:
-	{
-
-		break;
-	}
-
-	case KEY_esc:
-	{	
-
-		break;
-	}
-	default:
-		break;
-	}
-
 }
 

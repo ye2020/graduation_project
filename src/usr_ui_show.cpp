@@ -42,7 +42,7 @@ ui_show_t::ui_show_t()
                 {"test1",7},
                 {"test251",9},
                 {"4tet", 6},
-                {"中文测试", 6},
+                {"中文测试", 11},
                 {"123456",8}
             };
 
@@ -70,8 +70,8 @@ void ui_show_t::ui_init(void)
 
     u8g2.clearBuffer();
     u8g2.drawXBMP(40,16,50,50,ACE);
-    u8g2.sendBuffer();     
-
+    u8g2.drawStr(30,10,"initializing...");
+    u8g2.sendBuffer();    
     // u8g2.setFont(u8g2_font_ncenB08_tr);
 }
 
@@ -117,11 +117,15 @@ int ui_show_t::ui_run(int16_t *res, int16_t *res_trg, int16_t step)
 void ui_show_t::select_ui_show(int16_t speed_x, int16_t speed_y)
 {
   u8g2.setDrawColor(2);                             // 异或,颜色反转
-
   // 绘制选择框 , 左上x; 左上y; 框的宽度; 框的高度; 圆角的半径
   u8g2.drawRBox(ui_show.menu_x_position.cur_position, ui_show.frame_y.cur_position, ui_show.frame_len.cur_position, 12, 1);
   u8g2.setDrawColor(1);                             // 异或,颜色恢复
 
+
+  // Serial.println("frame_y_cur:");
+	// Serial.println(ui_show.frame_y.cur_position);	
+  // Serial.println("frame_y_trg:");
+	// Serial.println(ui_show.frame_y.position_trg);	
   ui_run(&ui_show.frame_y.cur_position, &ui_show.frame_y.position_trg, speed_y);                // y轴移动(2)
   ui_run(&ui_show.frame_len.cur_position, &ui_show.frame_len.position_trg, speed_x);           // x轴移动
 }
@@ -173,7 +177,7 @@ void ui_show_t::menu_ui_show(void)
       // u8g2.drawStr(ui_show.menu_x_position.cur_position + 5, ui_show.menu_y_position.cur_position + i*10, "test");
       u8g2.drawUTF8(ui_show.menu_x_position.cur_position + 5, ui_show.menu_y_position.cur_position + i*11, list[i].str.c_str());
     }
-    ui_show.select_ui_show(10, 2);                // 选择框UI绘制
+    ui_show.select_ui_show(10, 5);             // 选择框UI绘制
     ui_show.progress_ui_show();                   // 进度条UI绘制
     //// ui_run(&y, &y_trg,10);
     u8g2.sendBuffer();              // 将缓存发送并显示
@@ -202,7 +206,7 @@ bool ui_show_t::ui_disapper(void)
 
       dis_temp += 2;
       u8g2.sendBuffer();
-      delay(100);
+      delay(2);
     }
 
     if(dis_temp >= 8)
