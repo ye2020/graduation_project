@@ -246,8 +246,24 @@ void select_page_process(button_status_e Key5Value, button_status_e Key0Value)
 			(ui_show.progress_position.position_trg += ui_show.single_line_length);
 		}
 		
-		ui_show.frame_y.position_trg    =  (sub_index.select_current_index  - 2)* 11 + (ui_show.y_offset + 2);								 // 选择框位置目标值
-		(ui_show.frame_y.position_trg < (ui_show.screen_height - 5)) ? (ui_show.frame_y.position_trg += 0) : (ui_show.frame_y.position_trg = 51);  // 选择框位置限制
+		// ui_show.frame_y.position_trg    =  (sub_index.select_current_index  - 2)* 11 + (ui_show.y_offset + 2);								 // 选择框位置目标值
+		
+		// 当前指向的页面在屏幕外面
+		if((sub_index.select_current_index - 2) > (ui_show.text_bottom_index))
+		{
+			// ui_show.menu_y_position.position_trg -= 11;					// 上移菜单 
+			ui_show.text_bottom_index += 1;								// 更新索引
+			ui_show.text_top_index = ui_show.text_bottom_index - 2;
+		} 
+		else 
+		{
+			ui_show.frame_y.position_trg += 15;							// 下移框
+			Serial.println("y.position_trg");
+			Serial.println(ui_show.frame_y.position_trg);		
+			
+		}
+
+		(ui_show.frame_y.position_trg < (ui_show.screen_height - 5)) ? (ui_show.frame_y.position_trg += 0) : (ui_show.frame_y.position_trg = 47);  // 选择框位置限制
 		(ui_show.frame_y.position_trg > ui_show.y_offset) ? (ui_show.frame_y.position_trg -= 0) : (ui_show.frame_y.position_trg = 18);
   		
 		ui_show.frame_len.position_trg  =  ui_show.list[sub_index.select_current_index - 2].len * 5;
@@ -266,9 +282,21 @@ void select_page_process(button_status_e Key5Value, button_status_e Key0Value)
 			(ui_show.progress_position.position_trg -= ui_show.single_line_length);
 		}
 
-		ui_show.frame_y.position_trg    =  (sub_index.select_current_index - 2) * 11 + (ui_show.y_offset + 2);							// 选择框位置目标值
+
+		// 当前指向的页面在屏幕外面
+		if((sub_index.select_current_index - 2) < (ui_show.text_top_index))
+		{
+			// ui_show.menu_y_position.position_trg += 11;					// 下移菜单 
+			ui_show.text_top_index -= 1;
+			ui_show.text_bottom_index = ui_show.text_top_index + 2;
+		} 
+		else 
+		{
+			ui_show.frame_y.position_trg -= 15;							// 上移框
+		}	
+
 		(ui_show.frame_y.position_trg > ui_show.y_offset) ? (ui_show.frame_y.position_trg -= 0) : (ui_show.frame_y.position_trg = 18);	// 选择框位置限制
-		(ui_show.frame_y.position_trg < (ui_show.screen_height - 5)) ? (ui_show.frame_y.position_trg += 0) : (ui_show.frame_y.position_trg = 51);
+		(ui_show.frame_y.position_trg < (ui_show.screen_height - 5)) ? (ui_show.frame_y.position_trg += 0) : (ui_show.frame_y.position_trg = 47);
 
   		ui_show.frame_len.position_trg  =  ui_show.list[sub_index.select_current_index - 2].len * 5;		
 

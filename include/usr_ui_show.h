@@ -73,7 +73,8 @@ class ui_show_t{
 
     uint8_t max_bar;                                                        // 进度条最底部的位置
     uint8_t y_offset = 16;                                                  // y偏移值 , 为了不在最上面的黄色部分显示
-    uint8_t select_index;                                                     // 菜单索引, 表示实际指向的表单
+    uint8_t text_bottom_index = 2;                                          // 最底部索引, 指向当前显示最底部的表单
+    uint8_t text_top_index = 0;                                             // 最顶部索引, 指向当前显示最顶部的表单
 
 
     int16_t line_len;                                                       // 选择页面的数量

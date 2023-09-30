@@ -42,11 +42,11 @@ ui_show_t::ui_show_t()
 
     /* 菜单选项 */
     list = {
-                {"test1",7},
-                {"test251",9},
-                {"4tet", 6},
+                {"遥控", 6},
+                {"中文", 6},
+                {"微信小程序", 13},
                 {"中文测试", 11},
-                {"4tet", 2},
+                {"wifi 配置", 11},
                 {"123456",8}
             };
 
@@ -173,15 +173,18 @@ void ui_show_t::menu_ui_show(void)
   
 
 
-    for (int i = 0; i < ui_show.line_len; i++ )
+    // for (int i = 0; i < ui_show.line_len; i++ )
+    // {
+    //   u8g2.drawUTF8(ui_show.menu_x_position.cur_position + 5, ui_show.menu_y_position.cur_position + i*11, list[i].str.c_str());
+    // }
+    for (int i = 0; i < 3; i++ )
     {
-      // u8g2.drawStr(ui_show.menu_x_position.cur_position + 5, ui_show.menu_y_position.cur_position + i*10, list[i].str.c_str());
-      // u8g2.drawStr(ui_show.menu_x_position.cur_position + 5, ui_show.menu_y_position.cur_position + i*10, "test");
-      u8g2.drawUTF8(ui_show.menu_x_position.cur_position + 5, ui_show.menu_y_position.cur_position + i*11, list[i].str.c_str());
+      u8g2.drawUTF8(ui_show.menu_x_position.cur_position + 4, ui_show.menu_y_position.cur_position + i*15, list[ui_show.text_top_index + i].str.c_str());
     }
+
     ui_show.select_ui_show(10, 5);             // 选择框UI绘制
     ui_show.progress_ui_show();                   // 进度条UI绘制
-    //// ui_run(&y, &y_trg,10);
+
 
 }
 
