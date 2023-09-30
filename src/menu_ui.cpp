@@ -92,6 +92,9 @@ void select_page_ui_process(void)
 // wifi设置页面UI进程
 void wifi_page_ui_process(void)
 {
-
+	u8g2.clearBuffer();	
+	top_ui_show();							
+	u8g2.drawXBMP(40,16,50,50,QR_code_50_50);				// LOGO 绘制
+	u8g2.sendBuffer();
 }
 

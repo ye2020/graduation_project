@@ -157,7 +157,7 @@ void ui_show_t::progress_ui_show(void)
   u8g2.drawVLine(125, ui_show.progress_position.cur_position, single_line_length - 1);    // 进度条小框（左上角坐标x,左上角坐标y, 高度）
   u8g2.drawVLine(127, ui_show.progress_position.cur_position, single_line_length - 1);
 
-  ui_run(&ui_show.progress_position.cur_position,&ui_show.progress_position.position_trg, 3);                       // 进度条移动
+  ui_run(&ui_show.progress_position.cur_position,&ui_show.progress_position.position_trg, 4);                       // 进度条移动
 }
 
 
@@ -182,7 +182,7 @@ void ui_show_t::menu_ui_show(void)
       u8g2.drawUTF8(ui_show.menu_x_position.cur_position + 4, ui_show.menu_y_position.cur_position + i*15, list[ui_show.text_top_index + i].str.c_str());
     }
 
-    ui_show.select_ui_show(10, 5);             // 选择框UI绘制
+    ui_show.select_ui_show(10, 7);             // 选择框UI绘制
     ui_show.progress_ui_show();                   // 进度条UI绘制
 
 

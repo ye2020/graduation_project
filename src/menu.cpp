@@ -336,7 +336,7 @@ void select_page_process(button_status_e Key5Value, button_status_e Key0Value)
  */
 void wifi_page_process(button_status_e Key5Value, button_status_e Key0Value)
 {
-	Serial.println("wifi status");
+	// Serial.println("wifi status");
 	wifi_page_ui_process();												// ui绘制
 	/*************************** 键值处理 **************************/
 	switch (Key5Value_transition_function(Key5Value, Key0Value))
