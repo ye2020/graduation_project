@@ -17,6 +17,9 @@
   */
 #include "usr_ui_show.h"
 #include <Wire.h>
+#include "usr_wifi.h"
+#include "usr_clock_time.h"
+
 
 // U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C u8g2(U8G2_R0, /* clock=*/14, /* data=*/2, /* reset=*/ U8X8_PIN_NONE);     // 0.91寸OLED驱动
 // U8G2_SSD1306_128X32_UNIVISION_1_SW_I2C u8g2(U8G2_R0, /* clock=*/14, /* data=*/2, /* reset=*/ U8X8_PIN_NONE);   //这是比较常用的0.9寸的OLED显示器的驱动
@@ -43,6 +46,7 @@ ui_show_t::ui_show_t()
                 {"test251",9},
                 {"4tet", 6},
                 {"中文测试", 11},
+                {"4tet", 2},
                 {"123456",8}
             };
 
@@ -50,7 +54,7 @@ ui_show_t::ui_show_t()
     single_line_length = (screen_height - 1 - 16) / line_len;                   // 进度条单元格长度
     total_line_length  = single_line_length * line_len + 1;                // 进度条长竖线的长度
 
-
+    max_bar = single_line_length*ui_show.line_len + ui_show.y_offset;       // 进度条最底部位置
 
    Serial.println(list[0].str);
 }
@@ -139,16 +143,14 @@ void ui_show_t::select_ui_show(int16_t speed_x, int16_t speed_y)
  */
 void ui_show_t::progress_ui_show(void)
 {
-  u8g2.drawVLine(126, ui_show.progress_position.cur_position + 1, total_line_length);            // 长竖线
-  u8g2.drawPixel(125, ui_show.progress_position.cur_position + 1);                              // 进度条最上面的小横线
-  u8g2.drawPixel(127, ui_show.progress_position.cur_position + 1);      
+  u8g2.drawVLine(126, ui_show.y_offset + 1, total_line_length);            // 长竖线
+  u8g2.drawPixel(125, ui_show.y_offset + 1);                              // 进度条最上面的小横线
+  u8g2.drawPixel(127, ui_show.y_offset + 1);      
 
   for(uint8_t i=0; i < ui_show.line_len; ++i)
   {    
- 
     u8g2.drawPixel(125,single_line_length*(i+1) + ui_show.y_offset);     // 分段小横线
     u8g2.drawPixel(127,single_line_length*(i+1) + ui_show.y_offset);
-    ui_show.max_bar = single_line_length*(i+1);       // 进度条最底部位置
   }
 
 
@@ -169,7 +171,7 @@ void ui_show_t::progress_ui_show(void)
 void ui_show_t::menu_ui_show(void)
 {
   
-    u8g2.clearBuffer();             // 清除缓存
+
 
     for (int i = 0; i < ui_show.line_len; i++ )
     {
@@ -180,7 +182,7 @@ void ui_show_t::menu_ui_show(void)
     ui_show.select_ui_show(10, 5);             // 选择框UI绘制
     ui_show.progress_ui_show();                   // 进度条UI绘制
     //// ui_run(&y, &y_trg,10);
-    u8g2.sendBuffer();              // 将缓存发送并显示
+
 }
 
 
@@ -222,6 +224,30 @@ bool ui_show_t::ui_disapper(void)
 }
 
 
+/**
+ * @brief       绘制表头常驻UI
+ * @param[in]   
+ * @retval      none
+ * @attention   none
+ */
+void top_ui_show(void)
+{
+
+  u8g2.drawXBMP(108,2,16,9,battery_16_9);
+
+  if(WiFi.status() == WL_CONNECTED) {
+     u8g2.drawXBMP(88,2,13,10,wifi_13_10);
+  } else if( WiFi.status() != WL_CONNECTED) {
+    u8g2.drawXBMP(88,2,13,11,dis_wifi_13_11);
+  }
+   
+	u8g2.drawStr(10, 10, return_time_hours().c_str());
+  u8g2.drawStr(26, 10, ":");
+  u8g2.drawStr(33, 10, return_time_minutes().c_str());
+  
+}
+
+
 void ui_test(button_status_e keybt0, button_status_e keybt1)
 {
     u8g2.clearBuffer();  
@@ -233,4 +259,5 @@ void ui_test(button_status_e keybt0, button_status_e keybt1)
     u8g2.print(keybt1);
     u8g2.sendBuffer();
 }
+
 

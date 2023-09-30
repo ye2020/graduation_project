@@ -24,7 +24,6 @@
                                                 7i  .7.
 *************************** Dongguan-University of Technology -ACE**************************/
 
-#include <ESP8266WiFi.h>
 #include <EEPROM.h>
 
 #include "usr_wifi.h"
@@ -52,7 +51,6 @@ void setup() {
   usr_Wifi.wifi_init();                                               // wifi 初始化函数,自动调用上次连接成功的网络
   
   button_init();                                                      // 按键初始化
-  /* ui_show = ui_show_t(); */  
 }
 
 

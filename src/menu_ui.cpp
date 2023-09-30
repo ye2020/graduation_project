@@ -24,8 +24,8 @@ void Menu_Main_Init(void)
 	Serial.println("home status");
 
 	sub_index.main_current_index = 0;
-	sub_index.select_current_index = 1;				// 索引值1 ~ 10 留给 菜单表单及其子表单 
-	sub_index.wifi_config_current_index = 2;
+	sub_index.select_current_index = 2;				// 索引值2 ~ 10 留给 菜单表单及其子表单 
+	//sub_index.wifi_config_current_index = 2;
 			
 
 
@@ -71,28 +71,27 @@ void Enter_Page(menu_i32 index, button_status_e Key5Value , button_status_e Key0
 //主页面UI处理
 void main_page_ui_process(void)
 {
-	u8g2.clearBuffer();
-    u8g2.drawXBMP(40,16,50,50,ACE);
-    u8g2.sendBuffer();     
 
+	u8g2.clearBuffer();	
+	top_ui_show();							
+	u8g2.drawXBMP(40,16,50,50,ACE);				// LOGO 绘制
+	u8g2.sendBuffer();
 }
 
 
 // 菜单页面ui进程
 void select_page_ui_process(void)
 {
-	ui_show.menu_ui_show();				// 绘制菜单
+	u8g2.clearBuffer();             // 清除缓存
+	top_ui_show();					// 表头常驻UI
+	ui_show.menu_ui_show();			// 绘制菜单
+	u8g2.sendBuffer();              // 将缓存发送并显示
 }
 
 
 // wifi设置页面UI进程
 void wifi_page_ui_process(void)
 {
-	u8g2.clearBuffer();
 
-    u8g2.drawXBMP(88,2,13,10,wifi_13_10);
-	u8g2.drawXBMP(108,2,16,9,battery_16_9);
-
-	u8g2.sendBuffer();
 }
 

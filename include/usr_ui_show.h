@@ -80,6 +80,9 @@ class ui_show_t{
     uint8_t single_line_length;                                             // 进度条单元格长度
     uint8_t total_line_length;                                              // 进度条长竖线的长度
 
+    uint8_t screen_length = 128;                                            // 屏幕长度
+    uint8_t screen_height = 64 ;                                            // 屏幕高度
+
     
     /* 菜单相关属性 */
     typedef struct                                                          
@@ -102,8 +105,7 @@ class ui_show_t{
 
     private:
 
-    uint8_t screen_length = 128;                                            // 屏幕长度
-    uint8_t screen_height = 64 ;                                            // 屏幕高度
+
 
 
 
@@ -115,6 +117,7 @@ class ui_show_t{
 extern ui_show_t ui_show;
 
 void ui_test(button_status_e keybt0, button_status_e keybt1);
+void top_ui_show(void);
 
 
 #endif

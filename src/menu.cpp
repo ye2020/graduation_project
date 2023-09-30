@@ -239,9 +239,18 @@ void select_page_process(button_status_e Key5Value, button_status_e Key0Value)
 	case KEY_dowm:
 	{
 		// 临界条件判断
-		(sub_index.select_current_index < (ui_show.line_len - 1)) ? (sub_index.select_current_index++) : (sub_index.select_current_index = (ui_show.line_len - 1));
-		ui_show.frame_y.position_trg    =  (sub_index.select_current_index  - 1)* 11 + (ui_show.y_offset + 2);				// 选择框位置目标值
-  		ui_show.frame_len.position_trg  =  ui_show.list[sub_index.select_current_index - 1].len * 5;
+		(sub_index.select_current_index < (2 + ui_show.line_len - 1)) ? (sub_index.select_current_index++) : (sub_index.select_current_index = (2 + ui_show.line_len - 1));
+
+		// 进度条目标位置
+		if(ui_show.progress_position.position_trg < (ui_show.max_bar - ui_show.single_line_length -  1))  {
+			(ui_show.progress_position.position_trg += ui_show.single_line_length);
+		}
+		
+		ui_show.frame_y.position_trg    =  (sub_index.select_current_index  - 2)* 11 + (ui_show.y_offset + 2);								 // 选择框位置目标值
+		(ui_show.frame_y.position_trg < (ui_show.screen_height - 5)) ? (ui_show.frame_y.position_trg += 0) : (ui_show.frame_y.position_trg = 51);  // 选择框位置限制
+		(ui_show.frame_y.position_trg > ui_show.y_offset) ? (ui_show.frame_y.position_trg -= 0) : (ui_show.frame_y.position_trg = 18);
+  		
+		ui_show.frame_len.position_trg  =  ui_show.list[sub_index.select_current_index - 2].len * 5;
 
 		Serial.println("down to choose");
 		Serial.println(sub_index.select_current_index);		
@@ -250,9 +259,18 @@ void select_page_process(button_status_e Key5Value, button_status_e Key0Value)
 
 	case KEY_up:
 	{
-		(sub_index.select_current_index > 1) ? (sub_index.select_current_index--) : (sub_index.select_current_index = 1);
-		ui_show.frame_y.position_trg    =  (sub_index.select_current_index - 1) * 11 + (ui_show.y_offset + 2);				// 选择框位置目标值
-  		ui_show.frame_len.position_trg  =  ui_show.list[sub_index.select_current_index - 1].len * 5;		
+		(sub_index.select_current_index > 2) ? (sub_index.select_current_index--) : (sub_index.select_current_index = 2);
+
+		// 进度条目标位置
+		if(ui_show.progress_position.position_trg > (ui_show.single_line_length + ui_show.y_offset - 2))  {
+			(ui_show.progress_position.position_trg -= ui_show.single_line_length);
+		}
+
+		ui_show.frame_y.position_trg    =  (sub_index.select_current_index - 2) * 11 + (ui_show.y_offset + 2);							// 选择框位置目标值
+		(ui_show.frame_y.position_trg > ui_show.y_offset) ? (ui_show.frame_y.position_trg -= 0) : (ui_show.frame_y.position_trg = 18);	// 选择框位置限制
+		(ui_show.frame_y.position_trg < (ui_show.screen_height - 5)) ? (ui_show.frame_y.position_trg += 0) : (ui_show.frame_y.position_trg = 51);
+
+  		ui_show.frame_len.position_trg  =  ui_show.list[sub_index.select_current_index - 2].len * 5;		
 
 		Serial.println("down to choose");
 		Serial.println(sub_index.select_current_index);		
@@ -262,7 +280,7 @@ void select_page_process(button_status_e Key5Value, button_status_e Key0Value)
 	{
 		Serial.println("Enter the choice");
 		Serial.println((sub_index.select_current_index));
-		Enter_Page((sub_index.select_current_index + 1), button_none, button_none);					// 页面跳转
+		Enter_Page((sub_index.select_current_index ), button_none, button_none);					// 页面跳转
 		break;
 	}
 

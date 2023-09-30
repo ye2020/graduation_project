@@ -18,6 +18,8 @@
 #ifndef _USR_WIFI_H
 #define _USR_WIFI_H
 
+#include <ESP8266WiFi.h>
+
 class usr_wifi_t{
     public:
     void get_wifi(const char* SSID,const char* Password);     //连接 wifi

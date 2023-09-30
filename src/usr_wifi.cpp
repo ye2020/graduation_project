@@ -16,9 +16,9 @@
   */
 
 #include <ESP8266HTTPClient.h>    //网页用
-#include <ESP8266WiFi.h>
 #include "usr_wifi.h"
 #include "usr_eeprom.h"
+#include "usr_clock_time.h"
 
 using namespace std;
 
@@ -42,8 +42,10 @@ void usr_wifi_t::wifi_init(void)
   WiFi.mode(WIFI_OFF);
   usr_Wifi.get_wifi(eepUserSet.wifi_ssid,eepUserSet.wifi_password);        // 从flash中读取
 
-  if(WiFi.status() != WL_CONNECTED)
-    usr_Wifi.wifi_smartconfig();
+
+  clock_init();                                                       // NTP时钟初始化
+  // if(WiFi.status() != WL_CONNECTED)
+  //   usr_Wifi.wifi_smartconfig();
 }
 
 
