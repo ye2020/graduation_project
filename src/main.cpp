@@ -36,6 +36,7 @@
 #include "menu_ui.h"
 #include "usr_irremote.h"
 #include "usr_dht.h"
+#include "usr_server.h"
 
 
 using namespace std;
@@ -53,17 +54,18 @@ void setup() {
   usr_Wifi.wifi_init();                                               // wifi 初始化函数,自动调用上次连接成功的网络
   
   button_init();                                                      // 按键初始化
-  IR_init();
+  // IR_init();
+  startTCPClient();
 }
 
 
 void loop() 
 {
-  IR_send();
+  // IR_send();
   // button_loop();                           // 按键循环函数 
   buletooth_loop();                        // 蓝牙循环函数 
-  // ui_test(keybt0_status_return(),keybt1_status_return());
   Menu_Select_main(key5_status_return(),key0_status_return());
+  doTCPClientTick();
 }
 
 
