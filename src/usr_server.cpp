@@ -11,6 +11,7 @@
 
 String UID = "04cbbb009ce722b9fe048e7dbc01f419";    //用户私钥(这是我的,自己改成自己的)
 String TOPIC = "YZTtemp";                              //用于传输温湿度的主题
+String TOPIC2  = "AirControl";                           //用于空调控制的主题
 
 
 /* tcp初始化相关 */
@@ -22,6 +23,9 @@ unsigned long preHeartTick = 0;//心跳
 unsigned long preTCPStartTick = 0;//连接
 bool preTCPConnected = false;
 
+
+void air_on_callback(void);
+void air_off_callback(void);
 
 
 /************************** 函数原型 ************************************/
@@ -51,7 +55,7 @@ void startTCPClient()
     Serial.print("\nConnected to server:");
     Serial.printf("%s:%d\r\n",TCP_SERVER_ADDR,atoi(TCP_SERVER_PORT));
     String tcpTemp="";
-    tcpTemp = "cmd=1&uid="+UID+"&topic="+TOPIC+"\r\n";
+    tcpTemp = "cmd=1&uid="+UID+"&topic="+TOPIC2+"\r\n";                     // 订阅消息
 
     sendtoTCPServer(tcpTemp);
     preTCPConnected = true;
@@ -124,6 +128,33 @@ void doTCPClientTick()
       sendtoTCPServer(upstr);
       upstr = "";
     }
+      if((TcpClient_Buff.length() >= 1) && (millis() - TcpClient_preTick>=200))
+    {//data ready
+        TCPclient.flush();
+        Serial.println("Buff");
+        Serial.println(TcpClient_Buff);
+        //////字符串匹配，检测发了的字符串TcpClient_Buff里面是否包含&msg=on，如果有，则打开开关
+        if((TcpClient_Buff.indexOf("&msg=on") > 0)) {
+        air_on_callback();
+        //////字符串匹配，检测发了的字符串TcpClient_Buff里面是否包含&msg=off，如果有，则关闭开关
+        }else if((TcpClient_Buff.indexOf("&msg=off") > 0)) {
+        air_off_callback();
+        }
+    TcpClient_Buff="";//清空字符串，以便下次接收
+    TcpClient_BuffIndex = 0;
+    }
   }
 }
 
+
+// 打开状态回调函数
+void air_on_callback(void)
+{
+    Serial.println("air one");
+}
+
+// 关闭状态回调函数
+void air_off_callback(void)
+{
+    Serial.println("air off");
+}
