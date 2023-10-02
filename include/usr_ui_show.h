@@ -85,6 +85,9 @@ class ui_show_t{
     uint8_t single_line_length;                                             // 进度条单元格长度
     uint8_t total_line_length;                                              // 进度条长竖线的长度
 
+    int16_t wifi_line_len;                                                  // wifi页面的数量
+    uint8_t wifi_single_line_length;                                        // 进度条单元格长度
+
     uint8_t screen_length = 128;                                            // 屏幕长度
     uint8_t screen_height = 64 ;                                            // 屏幕高度
 
@@ -97,15 +100,16 @@ class ui_show_t{
     }Ui_list_t;                             
 
 
-    std::vector<Ui_list_t> list;                                             // 菜单项数组 
+    std::vector<Ui_list_t> list;                                             // 菜单项数组
+    std::vector<Ui_list_t> wifi_list;                                        // wifi配置页面子菜单
 
     ui_show_t();                                                            // 构造函数
 
     int  ui_run(int16_t *res, int16_t *res_trg, int16_t step);              // 实现动画效果(渐进)
     void select_ui_show(int16_t speed_x, int16_t speed_y);                  // 选择框绘制函数
     void ui_init(void);                                                     // ui初始化函数
-    void progress_ui_show(void);                                            // 进度条绘制函数
-    void menu_ui_show(void);                                                // 菜单绘制函数
+    void progress_ui_show(int16_t list_len, uint8_t single_length);         // 进度条绘制函数
+    void menu_ui_show(std::vector<Ui_list_t>& list);                         // 菜单绘制函数
     bool ui_disapper(void);                                                 // 消失函数
 
     private:

@@ -84,7 +84,7 @@ void select_page_ui_process(void)
 {
 	u8g2.clearBuffer();             // 清除缓存
 	top_ui_show();					// 表头常驻UI
-	ui_show.menu_ui_show();			// 绘制菜单
+	ui_show.menu_ui_show(ui_show.list);			// 绘制菜单
 	u8g2.sendBuffer();              // 将缓存发送并显示
 }
 

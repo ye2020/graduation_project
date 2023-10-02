@@ -42,16 +42,26 @@ ui_show_t::ui_show_t()
 
     /* 菜单选项 */
     list = {
-                {"遥控", 6},
-                {"中文", 6},
+                {"网络配置", 11},
+                {"温湿度显示", 13},
                 {"微信小程序", 13},
-                {"中文测试", 11},
+                {"遥控", 6},
                 {"wifi 配置", 11},
-                {"123456",8}
+                {"关于设备", 11}
             };
 
-    line_len = list.size();                                                // 选择页面的数量              
-    single_line_length = (screen_height - 1 - 16) / line_len;                   // 进度条单元格长度
+    wifi_list = {
+                  {"当前网络", 11},
+                  {"断开网络", 11},
+                  {"扫码配网", 11}
+    };
+            
+
+    line_len                  = list.size();                                      // 选择页面的数量              
+    single_line_length        = (screen_height - 1 - 16) / line_len;              // 进度条单元格长度
+    wifi_line_len             = wifi_list.size();                                 // wifi页面数量
+    wifi_single_line_length   = (screen_height - 1 - 16) / wifi_line_len;         // wifi页面单元格长度
+
     total_line_length  = single_line_length * line_len + 1;                // 进度条长竖线的长度
 
     max_bar = single_line_length*ui_show.line_len + ui_show.y_offset;       // 进度条最底部位置
@@ -122,7 +132,7 @@ void ui_show_t::select_ui_show(int16_t speed_x, int16_t speed_y)
 {
   u8g2.setDrawColor(2);                             // 异或,颜色反转
   // 绘制选择框 , 左上x; 左上y; 框的宽度; 框的高度; 圆角的半径
-  u8g2.drawRBox(ui_show.menu_x_position.cur_position, ui_show.frame_y.cur_position, ui_show.frame_len.cur_position, 12, 1);
+  u8g2.drawRBox(ui_show.menu_x_position.cur_position, ui_show.frame_y.cur_position, ui_show.frame_len.cur_position, 13, 1);
   u8g2.setDrawColor(1);                             // 异或,颜色恢复
 
 
@@ -141,21 +151,21 @@ void ui_show_t::select_ui_show(int16_t speed_x, int16_t speed_y)
  * @retval      none
  * @attention   none
  */
-void ui_show_t::progress_ui_show(void)
+void ui_show_t::progress_ui_show(int16_t list_len, uint8_t single_length)
 {
   u8g2.drawVLine(126, ui_show.y_offset + 1, total_line_length);            // 长竖线
   u8g2.drawPixel(125, ui_show.y_offset + 1);                              // 进度条最上面的小横线
   u8g2.drawPixel(127, ui_show.y_offset + 1);      
 
-  for(uint8_t i=0; i < ui_show.line_len; ++i)
+  for(uint8_t i=0; i < list_len; ++i)
   {    
-    u8g2.drawPixel(125,single_line_length*(i+1) + ui_show.y_offset);     // 分段小横线
-    u8g2.drawPixel(127,single_line_length*(i+1) + ui_show.y_offset);
+    u8g2.drawPixel(125,single_length*(i+1) + ui_show.y_offset);     // 分段小横线
+    u8g2.drawPixel(127,single_length*(i+1) + ui_show.y_offset);
   }
 
 
-  u8g2.drawVLine(125, ui_show.progress_position.cur_position, single_line_length - 1);    // 进度条小框（左上角坐标x,左上角坐标y, 高度）
-  u8g2.drawVLine(127, ui_show.progress_position.cur_position, single_line_length - 1);
+  u8g2.drawVLine(125, ui_show.progress_position.cur_position, single_length - 1);    // 进度条小框（左上角坐标x,左上角坐标y, 高度）
+  u8g2.drawVLine(127, ui_show.progress_position.cur_position, single_length - 1);
 
   ui_run(&ui_show.progress_position.cur_position,&ui_show.progress_position.position_trg, 4);                       // 进度条移动
 }
@@ -168,22 +178,16 @@ void ui_show_t::progress_ui_show(void)
  * @retval      none
  * @attention   none
  */
-void ui_show_t::menu_ui_show(void)
+void ui_show_t::menu_ui_show(std::vector<Ui_list_t>& list)
 {
-  
 
-
-    // for (int i = 0; i < ui_show.line_len; i++ )
-    // {
-    //   u8g2.drawUTF8(ui_show.menu_x_position.cur_position + 5, ui_show.menu_y_position.cur_position + i*11, list[i].str.c_str());
-    // }
     for (int i = 0; i < 3; i++ )
     {
       u8g2.drawUTF8(ui_show.menu_x_position.cur_position + 4, ui_show.menu_y_position.cur_position + i*15, list[ui_show.text_top_index + i].str.c_str());
     }
 
-    ui_show.select_ui_show(10, 7);             // 选择框UI绘制
-    ui_show.progress_ui_show();                   // 进度条UI绘制
+    ui_show.select_ui_show(13, 9);                                            // 选择框UI绘制
+    ui_show.progress_ui_show(line_len, single_line_length);                   // 进度条UI绘制
 
 
 }
@@ -211,7 +215,7 @@ bool ui_show_t::ui_disapper(void)
 
       dis_temp += 2;
       u8g2.sendBuffer();
-      delay(2);
+      // delay(1);
     }
 
     if(dis_temp >= 8)
