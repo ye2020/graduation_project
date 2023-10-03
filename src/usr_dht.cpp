@@ -3,7 +3,7 @@
 
 
 
-#define DHTPIN D4               // 接口
+#define DHTPIN 4               // 接口
 #define DHTTYPE DHT11           // DHT 11
 
 

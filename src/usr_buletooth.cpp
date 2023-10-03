@@ -8,8 +8,6 @@ extern button_status_e button0_current_state;
 
 void buletooth_loop(void)
 {
-    button5_current_state = button_none;
-    button0_current_state = button_none;
 
     while(Serial.available() > 0)               // 串口接收的数据大于0
     {
@@ -18,33 +16,38 @@ void buletooth_loop(void)
         Serial.println(comdata);
     }
 
-    if(comdata == "1") {
+    if(comdata == "1") {                                // 向下
         comdata = "";
         button5_current_state = button_click;
         button0_current_state = button_none;
 
         return;
-    } else if (comdata == "2") {
+    } else if (comdata == "2") {                        // 向上
         comdata = "";
         button5_current_state = button_none;
         button0_current_state = button_click2;
 
         return;
-    } else if (comdata == "3") {
+    } else if (comdata == "3") {                        // 确定
         comdata = "";
-        button5_current_state = button_doubleclick;
+        button5_current_state = button_longPressStart;
         button0_current_state = button_none;
 
         return;
-    } else if (comdata == "4") {
+    } else if (comdata == "4") {                        // 返回
         comdata = "";
         button5_current_state = button_none;
         button0_current_state = button_longPressStart2;
     }
-    else {
+    else if (comdata == "5") {                        // home键
         comdata = "";
         button5_current_state = button_none;
-        button0_current_state = button_none;
+        button0_current_state = button_doubleclick2;
+    }
+    else {
+        comdata = "";
+    //     button5_current_state = button_none;
+    //     button0_current_state = button_none;
         return;        
     }
 

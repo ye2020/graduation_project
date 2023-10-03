@@ -119,29 +119,29 @@ static key_value_e Key5Value_transition_function(button_status_e button5, button
 		return KEY_dowm;
 		break;
 	}
-	// key5 短按2下确定
-	case button_doubleclick:
+	// key5 长按确定
+	case button_longPressStart:
 	{
 		Serial.println("KEY_enter");		
 		return KEY_enter;
 		break;
 	}
 
-	// key5 长按进入设置模式
-	case button_longPressStop:
-	{
-		Serial.println("KEY_setting");		
-		return KEY_setting;
-		break;
-	}
+	// // key5 长按进入设置模式
+	// case button_longPressStop:
+	// {
+	// 	Serial.println("KEY_setting");		
+	// 	return KEY_setting;
+	// 	break;
+	// }
 
 	/**************** 右按键对应键值 *******************/
 
-	// key0 长按返回主页面
+	// key0 长按返回上一级
 	case button_longPressStart2:
 	{
-		Serial.println("KEY_home");		
-		return KEY_home;
+		Serial.println("KEY_esc");		
+		return KEY_esc;
 		break;
 	}
 
@@ -153,11 +153,11 @@ static key_value_e Key5Value_transition_function(button_status_e button5, button
 		break;
 	}
 
-	// key0 短按2下返回
+	// key0 短按2下home键 (只在蓝牙有效)
 	case button_doubleclick2:
 	{
-		Serial.println("KEY_esc");		
-		return KEY_esc;
+		Serial.println("KEY_home");		
+		return KEY_home;
 		break;
 	}
 	default:
@@ -233,7 +233,9 @@ void main_page_process(button_status_e Key5Value, button_status_e Key0Value)
 void select_page_process(button_status_e Key5Value, button_status_e Key0Value)
 {
 	// Serial.println("select status");
-	select_page_ui_process();										// 菜单页面ui绘制
+
+	select_page_ui_process();	
+										// 菜单页面ui绘制
 	switch (Key5Value_transition_function(Key5Value, Key0Value))
 	{
 	case KEY_dowm:
@@ -308,6 +310,11 @@ void select_page_process(button_status_e Key5Value, button_status_e Key0Value)
 	{
 		Serial.println("Enter the choice");
 		Serial.println((sub_index.select_current_index));
+
+		sub_index.wifi_config_current_index = 11;													// 复位索引
+		ui_show.frame_len = {32, 32};																// 复位选择框
+		ui_show.frame_y	  = {17, 17};
+		ui_show.progress_position = {16, 16};														// 复位进度条
 		Enter_Page((sub_index.select_current_index ), button_none, button_none);					// 页面跳转
 		break;
 	}
@@ -343,18 +350,60 @@ void wifi_page_process(button_status_e Key5Value, button_status_e Key0Value)
 	{
 	case KEY_dowm:
 	{
+		// 临界条件判断
+		(sub_index.wifi_config_current_index < (11 + ui_show.wifi_line_len - 1)) ? (sub_index.wifi_config_current_index++) : (sub_index.wifi_config_current_index = (11 + ui_show.line_len - 1));
+		
+		// 进度条目标位置
+		if(ui_show.progress_position.position_trg < (ui_show.max_bar - ui_show.wifi_single_line_length -  1))  {
+			(ui_show.progress_position.position_trg += ui_show.wifi_single_line_length);
+		}
+	
+		{
+			ui_show.frame_y.position_trg += 15;							// 下移框
+			Serial.println("y.position_trg");
+			Serial.println(ui_show.frame_y.position_trg);		
+			
+		}
 
-		break;
+		(ui_show.frame_y.position_trg < (ui_show.screen_height - 5)) ? (ui_show.frame_y.position_trg += 0) : (ui_show.frame_y.position_trg = 47);  // 选择框位置限制
+		(ui_show.frame_y.position_trg > ui_show.y_offset) ? (ui_show.frame_y.position_trg -= 0) : (ui_show.frame_y.position_trg = 18);
+  		
+		ui_show.frame_len.position_trg  =  ui_show.list[sub_index.wifi_config_current_index - 2].len * 5;
+
+		Serial.println("down to choose");
+		Serial.println(sub_index.wifi_config_current_index);		
+		break;		
+
 	}
 
 	case KEY_up:
 	{
+		(sub_index.wifi_config_current_index > 11) ? (sub_index.wifi_config_current_index--) : (sub_index.wifi_config_current_index = 11);
 
+		// 进度条目标位置
+		if(ui_show.progress_position.position_trg > (ui_show.wifi_single_line_length + ui_show.y_offset - 2))  {
+			(ui_show.progress_position.position_trg -= ui_show.wifi_single_line_length);
+		}
+
+		{
+			ui_show.frame_y.position_trg -= 15;							// 上移框
+		}	
+
+		(ui_show.frame_y.position_trg > ui_show.y_offset) ? (ui_show.frame_y.position_trg -= 0) : (ui_show.frame_y.position_trg = 18);	// 选择框位置限制
+		(ui_show.frame_y.position_trg < (ui_show.screen_height - 5)) ? (ui_show.frame_y.position_trg += 0) : (ui_show.frame_y.position_trg = 47);
+
+  		ui_show.frame_len.position_trg  =  ui_show.list[sub_index.wifi_config_current_index - 11].len * 5;		
+
+		Serial.println("down to choose");
+		Serial.println(sub_index.wifi_config_current_index);		
 		break ;
 	}
 	case KEY_enter:
 	{
+		Serial.println("Enter the choice");
+		Serial.println((sub_index.wifi_config_current_index));
 
+		Enter_Page((sub_index.wifi_config_current_index ), button_none, button_none);					// 页面跳转
 		break;
 	}
 
@@ -367,6 +416,8 @@ void wifi_page_process(button_status_e Key5Value, button_status_e Key0Value)
 	case KEY_esc:
 	{	
 
+		
+		Enter_Page(SELECT_PAGE,button_none,button_none);											// 返回选择页面
 		break;
 	}
 	default:

@@ -14,6 +14,7 @@
 #ifndef _USR_IRREMOTE_H
 #define _USR_IRREMOTE_H
 
+#include <Arduino.h>
 
 void IR_init(void);
 void IR_receive(void);

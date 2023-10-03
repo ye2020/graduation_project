@@ -68,7 +68,10 @@ typedef enum
 {
 	MAIN_PAGE = 0,          // 主页面						
   SELECT_PAGE,            // 菜单页面
-  WiFi_PAGE,              // wifi扫码配网模式（main下的子表单）    
+  WiFi_PAGE,              // wifi扫码配网模式（main下的子表单）
+  WIFI_INFO_PAGE = 11,    // 当前网络信息    
+  WIFI_DISCONNECT_PAGE,   // 断开网络
+  WIFI_SMART_CON_PAGE,    // 智能配网(扫码)
 
 }OP_PAGE;
 

@@ -19,8 +19,8 @@
 #include "bsp_button.h"
 
 /*********************** 变量定义 *************************/
-OneButton key5(5, true);           // 定义按钮5（gpio5） (gpio16) , 按键按下为低电平
-OneButton key0(0,true);            // 定义按键0（gpio0） (gpio12)
+OneButton key5(16, true);           // 定义按钮5（gpio5） (gpio16) , 按键按下为低电平
+OneButton key0(12,true);            // 定义按键0（gpio0） (gpio12)
 
 button_status_e button5_current_state = button_none;      // 按键5当前按键状态
 button_status_e button0_current_state = button_none;      // 按键0当前按键状态
@@ -38,17 +38,17 @@ button_status_e button0_current_state = button_none;      // 按键0当前按键状态
  {
     // 按键5函数映射.
     key5.attachClick(click1);
-    key5.attachDoubleClick(doubleclick1);
+    // key5.attachDoubleClick(doubleclick1);                    // 实体按键取消该事件注册 , 因为ui绘制太费时间 , 触发很难
     key5.attachLongPressStart(longPressStart1);
-    key5.attachLongPressStop(longPressStop1);
-    key5.attachDuringLongPress(longPress1);
+    // key5.attachLongPressStop(longPressStop1);
+    // key5.attachDuringLongPress(longPress1);
 
     // 按键0函数映射
     key0.attachClick(click2);
-    key0.attachDoubleClick(doubleclick2);
+    // key0.attachDoubleClick(doubleclick2);
     key0.attachLongPressStart(longPressStart2);
-    key0.attachLongPressStop(longPressStop2);
-    key0.attachDuringLongPress(longPress2);
+    // key0.attachLongPressStop(longPressStop2);
+    // key0.attachDuringLongPress(longPress2);
 
  }
 

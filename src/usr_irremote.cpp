@@ -47,7 +47,7 @@ void IR_receive(void)
 void IR_send(void)
 {
     gree_ac.on();
-    Serial.println(gree_ac.toString());         //显示发送的空调开机红外编码
-    gree_ac.send();//发送红外命令
-    // delay(200);  //测试阶段每两秒发一次
+    // Serial.println(gree_ac.toString());         //显示发送的空调开机红外编码
+    gree_ac.send();                         //发送红外命令
+    delay(2000);                             //测试阶段每两秒发一次
 }

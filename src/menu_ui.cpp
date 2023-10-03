@@ -25,7 +25,7 @@ void Menu_Main_Init(void)
 
 	sub_index.main_current_index = 0;
 	sub_index.select_current_index = 2;				// 索引值2 ~ 10 留给 菜单表单及其子表单 
-	//sub_index.wifi_config_current_index = 2;
+	sub_index.wifi_config_current_index = 11;		// 索引值11 ~ 15 留给网络配置页面
 			
 
 
