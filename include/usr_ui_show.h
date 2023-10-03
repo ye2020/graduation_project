@@ -71,7 +71,7 @@ class ui_show_t{
 
     position_expect_t menu_x_position = {0, 0};                                      // 菜单x位置与期望    
     position_expect_t menu_y_position = {28, 28};                                    // 菜单y位置与期望
-    position_expect_t frame_len = {32, 32};                                          // 选择框的宽度
+    position_expect_t frame_len = {55, 55};                                          // 选择框的宽度
     position_expect_t frame_y = {17, 17};                                            // 选择框的高度
     position_expect_t progress_position {16, 16};                                    // 进度条的位置
 

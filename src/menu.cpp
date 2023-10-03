@@ -50,7 +50,18 @@ static OP_MENU_PAGE g_opStruct[] =
 	{
 		{MAIN_PAGE, main_page_process},
 		{SELECT_PAGE, select_page_process},
-		{WiFi_PAGE, wifi_page_process}
+		{WiFi_PAGE, wifi_page_process},
+		{TEMP_HUM_PAGE, temp_hum_page_process},
+		{WECHAT_PAGE, wechat_page_process},
+		{REMOTE_PAGE, remote_page_process},
+		{IR_CHECK_PAGE, ir_check_page_process},
+		{ABOUT_PAGE, about_page_process},
+		{8,idle_page_process},										// 留空
+		{9,idle_page_process},										// 留空
+		{10,idle_page_process},										// 留空
+		{WIFI_INFO_PAGE, wifi_info_page_process},
+		{WIFI_DISCONNECT_PAGE, wifi_disconnect_page_process},
+		{WIFI_SMART_CON_PAGE, wifi_smart_page_process}
 	};
 
 
@@ -167,6 +178,27 @@ static key_value_e Key5Value_transition_function(button_status_e button5, button
 	return KEY_none;
 }
 
+
+
+/**
+ * @brief		复位索引和选择框进度条的位置
+ * @param[in]   status: 进入新的页面是为ture;  退回上级时为false
+ * 				len   : 新的页面第一项的选择框长度
+ * @retval      none
+ * @attention
+ */
+void index_reset(bool status, int16_t len)
+{
+	if(status == false) 
+	{
+		sub_index.main_current_index = 0;
+		sub_index.select_current_index = 2;				// 索引值2 ~ 10 留给 菜单表单及其子表单 
+		sub_index.wifi_config_current_index = 11;		// 索引值11 ~ 15 留给网络配置页面
+	}
+	ui_show.frame_len = {len, len};																// 复位选择框
+	ui_show.frame_y	  = {17, 17};
+	ui_show.progress_position = {16, 16};														// 复位进度条
+}
 
 uint8_t return_UI_loging_flag(void)
 {
@@ -311,22 +343,24 @@ void select_page_process(button_status_e Key5Value, button_status_e Key0Value)
 		Serial.println("Enter the choice");
 		Serial.println((sub_index.select_current_index));
 
-		sub_index.wifi_config_current_index = 11;													// 复位索引
-		ui_show.frame_len = {32, 32};																// 复位选择框
-		ui_show.frame_y	  = {17, 17};
-		ui_show.progress_position = {16, 16};														// 复位进度条
+		index_reset(true, 55);																		// 复位选择框与进度条
+		ui_show.ui_disapper();																		// 消失函数
 		Enter_Page((sub_index.select_current_index ), button_none, button_none);					// 页面跳转
 		break;
 	}
 
 	case KEY_home:
 	{
+		index_reset(false, 55);																		// 复位选择框与进度条
+		ui_show.ui_disapper();																		// 消失函数											
 		Enter_Page(MAIN_PAGE,button_none,button_none);												// home键返回主页面
 		break;
 	}
 
 	case KEY_esc:
 	{	
+		index_reset(false, 55);																		// 复位选择框与进度条
+		ui_show.ui_disapper();																		// 消失函数	
 		Enter_Page(MAIN_PAGE,button_none,button_none);												// 返回上级页面 即main
 		break;
 	}
@@ -351,7 +385,7 @@ void wifi_page_process(button_status_e Key5Value, button_status_e Key0Value)
 	case KEY_dowm:
 	{
 		// 临界条件判断
-		(sub_index.wifi_config_current_index < (11 + ui_show.wifi_line_len - 1)) ? (sub_index.wifi_config_current_index++) : (sub_index.wifi_config_current_index = (11 + ui_show.line_len - 1));
+		(sub_index.wifi_config_current_index < (11 + ui_show.wifi_line_len - 1)) ? (sub_index.wifi_config_current_index++) : (sub_index.wifi_config_current_index = (11 + ui_show.wifi_line_len - 1));
 		
 		// 进度条目标位置
 		if(ui_show.progress_position.position_trg < (ui_show.max_bar - ui_show.wifi_single_line_length -  1))  {
@@ -368,7 +402,7 @@ void wifi_page_process(button_status_e Key5Value, button_status_e Key0Value)
 		(ui_show.frame_y.position_trg < (ui_show.screen_height - 5)) ? (ui_show.frame_y.position_trg += 0) : (ui_show.frame_y.position_trg = 47);  // 选择框位置限制
 		(ui_show.frame_y.position_trg > ui_show.y_offset) ? (ui_show.frame_y.position_trg -= 0) : (ui_show.frame_y.position_trg = 18);
   		
-		ui_show.frame_len.position_trg  =  ui_show.list[sub_index.wifi_config_current_index - 2].len * 5;
+		ui_show.frame_len.position_trg  =  ui_show.wifi_list[sub_index.wifi_config_current_index - 11].len * 5;
 
 		Serial.println("down to choose");
 		Serial.println(sub_index.wifi_config_current_index);		
@@ -392,7 +426,7 @@ void wifi_page_process(button_status_e Key5Value, button_status_e Key0Value)
 		(ui_show.frame_y.position_trg > ui_show.y_offset) ? (ui_show.frame_y.position_trg -= 0) : (ui_show.frame_y.position_trg = 18);	// 选择框位置限制
 		(ui_show.frame_y.position_trg < (ui_show.screen_height - 5)) ? (ui_show.frame_y.position_trg += 0) : (ui_show.frame_y.position_trg = 47);
 
-  		ui_show.frame_len.position_trg  =  ui_show.list[sub_index.wifi_config_current_index - 11].len * 5;		
+  		ui_show.frame_len.position_trg  =  ui_show.wifi_list[sub_index.wifi_config_current_index - 11].len * 5;		
 
 		Serial.println("down to choose");
 		Serial.println(sub_index.wifi_config_current_index);		
@@ -400,23 +434,26 @@ void wifi_page_process(button_status_e Key5Value, button_status_e Key0Value)
 	}
 	case KEY_enter:
 	{
+		index_reset(true, 55);																		// 复位选择框与进度条
+		ui_show.ui_disapper();																		// 消失函数
 		Serial.println("Enter the choice");
-		Serial.println((sub_index.wifi_config_current_index));
-
-		Enter_Page((sub_index.wifi_config_current_index ), button_none, button_none);					// 页面跳转
+		Serial.println((sub_index.wifi_config_current_index));																
+		Enter_Page((sub_index.wifi_config_current_index ), button_none, button_none);				// 页面跳转
 		break;
 	}
 
 	case KEY_home:
 	{
+		index_reset(false, 55);																		// 复位选择框与进度条
+		ui_show.ui_disapper();																		// 消失函数
 		Enter_Page(MAIN_PAGE,button_none,button_none);												// home键返回主页面
 		break;
 	}
 
 	case KEY_esc:
 	{	
-
-		
+		index_reset(false, 55);																		// 复位选择框与进度条
+		ui_show.ui_disapper();																		// 消失函数
 		Enter_Page(SELECT_PAGE,button_none,button_none);											// 返回选择页面
 		break;
 	}
@@ -425,3 +462,431 @@ void wifi_page_process(button_status_e Key5Value, button_status_e Key0Value)
 	}
 }
 
+
+/**
+ * @brief      	温湿度页面处理
+ * @param[in]   KeyValue ： 键值
+ * @retval      none
+ * @attention
+ */
+void temp_hum_page_process(button_status_e Key5Value, button_status_e Key0Value)
+{
+	Serial.println("temp status");
+	switch (Key5Value_transition_function(Key5Value, Key0Value))
+	{
+
+	case KEY_dowm:
+	{
+
+		break;
+	}
+
+	case KEY_up:
+	{
+
+		break ;
+	}
+
+	case KEY_enter:
+	{
+		index_reset(true, 55);																		// 复位选择框与进度条
+		ui_show.ui_disapper();		
+		Enter_Page(MAIN_PAGE,button_none,button_none);;
+		break;
+	}
+	case KEY_home:
+	{
+		index_reset(false, 55);																		// 复位选择框与进度条
+		ui_show.ui_disapper();																		// 消失函数
+		Enter_Page(MAIN_PAGE,button_none,button_none);
+		break;
+	}
+
+	case KEY_esc:
+	{	
+		index_reset(false, 55);																		// 复位选择框与进度条
+		ui_show.ui_disapper();																		// 消失函数
+		Enter_Page(SELECT_PAGE,button_none,button_none);
+		break;
+	}
+	default:
+		break;
+	}	
+}
+
+
+/**
+ * @brief      	微信小程序页面处理
+ * @param[in]   KeyValue ： 键值
+ * @retval      none
+ * @attention
+ */
+void wechat_page_process(button_status_e Key5Value, button_status_e Key0Value)
+{
+	Serial.println("wechat status");
+	switch (Key5Value_transition_function(Key5Value, Key0Value))
+	{
+
+	case KEY_dowm:
+	{
+
+		break;
+	}
+
+	case KEY_up:
+	{
+
+		break ;
+	}
+
+	case KEY_enter:
+	{
+		index_reset(true, 55);																		// 复位选择框与进度条
+		ui_show.ui_disapper();		
+		Enter_Page(MAIN_PAGE,button_none,button_none);;
+		break;
+	}
+	case KEY_home:
+	{
+		index_reset(false, 55);																		// 复位选择框与进度条
+		ui_show.ui_disapper();																		// 消失函数
+		Enter_Page(MAIN_PAGE,button_none,button_none);
+		break;
+	}
+
+	case KEY_esc:
+	{	
+		index_reset(false, 55);																		// 复位选择框与进度条
+		ui_show.ui_disapper();																		// 消失函数
+		Enter_Page(SELECT_PAGE,button_none,button_none);
+		break;
+	}
+	default:
+		break;
+	}	
+}
+
+/**
+ * @brief      	遥控页面处理
+ * @param[in]   KeyValue ： 键值
+ * @retval      none
+ * @attention
+ */
+void remote_page_process(button_status_e Key5Value, button_status_e Key0Value)
+{
+	Serial.println("remote status");
+	switch (Key5Value_transition_function(Key5Value, Key0Value))
+	{
+
+	case KEY_dowm:
+	{
+
+		break;
+	}
+
+	case KEY_up:
+	{
+
+		break ;
+	}
+
+	case KEY_enter:
+	{
+		index_reset(true, 55);																		// 复位选择框与进度条
+		ui_show.ui_disapper();		
+		Enter_Page(MAIN_PAGE,button_none,button_none);;
+		break;
+	}
+	case KEY_home:
+	{
+		index_reset(false, 55);																		// 复位选择框与进度条
+		ui_show.ui_disapper();																		// 消失函数
+		Enter_Page(MAIN_PAGE,button_none,button_none);
+		break;
+	}
+
+	case KEY_esc:
+	{	
+		index_reset(false, 55);																		// 复位选择框与进度条
+		ui_show.ui_disapper();																		// 消失函数
+		Enter_Page(SELECT_PAGE,button_none,button_none);
+		break;
+	}
+	default:
+		break;
+	}	
+}
+
+
+/**
+ * @brief      	红外检测页面处理
+ * @param[in]   KeyValue ： 键值
+ * @retval      none
+ * @attention
+ */
+void ir_check_page_process(button_status_e Key5Value, button_status_e Key0Value)
+{
+	Serial.println("ir_check status");
+	switch (Key5Value_transition_function(Key5Value, Key0Value))
+	{
+
+	case KEY_dowm:
+	{
+
+		break;
+	}
+
+	case KEY_up:
+	{
+
+		break ;
+	}
+
+	case KEY_enter:
+	{
+		index_reset(true, 55);																		// 复位选择框与进度条
+		ui_show.ui_disapper();		
+		Enter_Page(MAIN_PAGE,button_none,button_none);;
+		break;
+	}
+	case KEY_home:
+	{
+		index_reset(false, 55);																		// 复位选择框与进度条
+		ui_show.ui_disapper();																		// 消失函数
+		Enter_Page(MAIN_PAGE,button_none,button_none);
+		break;
+	}
+
+	case KEY_esc:
+	{	
+		index_reset(false, 55);																		// 复位选择框与进度条
+		ui_show.ui_disapper();																		// 消失函数
+		Enter_Page(SELECT_PAGE,button_none,button_none);
+		break;
+	}
+	default:
+		break;
+	}	
+}
+
+
+
+/**
+ * @brief      	关于设备页面处理
+ * @param[in]   KeyValue ： 键值
+ * @retval      none
+ * @attention
+ */
+void about_page_process(button_status_e Key5Value, button_status_e Key0Value)
+{
+	Serial.println("about status");
+	switch (Key5Value_transition_function(Key5Value, Key0Value))
+	{
+
+	case KEY_dowm:
+	{
+
+		break;
+	}
+
+	case KEY_up:
+	{
+
+		break ;
+	}
+
+	case KEY_enter:
+	{
+		index_reset(true, 55);																		// 复位选择框与进度条
+		ui_show.ui_disapper();		
+		Enter_Page(MAIN_PAGE,button_none,button_none);;
+		break;
+	}
+	case KEY_home:
+	{
+		index_reset(false, 55);																		// 复位选择框与进度条
+		ui_show.ui_disapper();																		// 消失函数
+		Enter_Page(MAIN_PAGE,button_none,button_none);
+		break;
+	}
+
+	case KEY_esc:
+	{	
+		index_reset(false, 55);																		// 复位选择框与进度条
+		ui_show.ui_disapper();																		// 消失函数
+		Enter_Page(SELECT_PAGE,button_none,button_none);
+		break;
+	}
+	default:
+		break;
+	}	
+}
+
+
+
+/**
+ * @brief      	网络信息页面处理
+ * @param[in]   KeyValue ： 键值
+ * @retval      none
+ * @attention
+ */
+void wifi_info_page_process(button_status_e Key5Value, button_status_e Key0Value)
+{
+	Serial.println("wifi_info status");
+	switch (Key5Value_transition_function(Key5Value, Key0Value))
+	{
+
+	case KEY_dowm:
+	{
+
+		break;
+	}
+
+	case KEY_up:
+	{
+
+		break ;
+	}
+
+	case KEY_enter:
+	{
+		index_reset(true, 55);																		// 复位选择框与进度条
+		ui_show.ui_disapper();		
+		Enter_Page(MAIN_PAGE,button_none,button_none);;
+		break;
+	}
+	case KEY_home:
+	{
+		index_reset(false, 55);																		// 复位选择框与进度条
+		ui_show.ui_disapper();																		// 消失函数
+		Enter_Page(MAIN_PAGE,button_none,button_none);
+		break;
+	}
+
+	case KEY_esc:
+	{	
+		index_reset(false, 55);																		// 复位选择框与进度条
+		ui_show.ui_disapper();																		// 消失函数
+		Enter_Page(WiFi_PAGE,button_none,button_none);
+		break;
+	}
+	default:
+		break;
+	}	
+}
+
+
+/**
+ * @brief      	断开网络页面处理
+ * @param[in]   KeyValue ： 键值
+ * @retval      none
+ * @attention
+ */
+void wifi_disconnect_page_process(button_status_e Key5Value, button_status_e Key0Value)
+{
+	Serial.println("wifi_disconnect status");
+	switch (Key5Value_transition_function(Key5Value, Key0Value))
+	{
+
+	case KEY_dowm:
+	{
+
+		break;
+	}
+
+	case KEY_up:
+	{
+
+		break ;
+	}
+
+	case KEY_enter:
+	{
+		index_reset(true, 55);																		// 复位选择框与进度条
+		ui_show.ui_disapper();		
+		Enter_Page(MAIN_PAGE,button_none,button_none);;
+		break;
+	}
+	case KEY_home:
+	{
+		index_reset(false, 55);																		// 复位选择框与进度条
+		ui_show.ui_disapper();																		// 消失函数
+		Enter_Page(MAIN_PAGE,button_none,button_none);
+		break;
+	}
+
+	case KEY_esc:
+	{	
+		index_reset(false, 55);																		// 复位选择框与进度条
+		ui_show.ui_disapper();																		// 消失函数
+		Enter_Page(WiFi_PAGE,button_none,button_none);
+		break;
+	}
+	default:
+		break;
+	}	
+}
+
+
+/**
+ * @brief      	扫码配网页面处理
+ * @param[in]   KeyValue ： 键值
+ * @retval      none
+ * @attention
+ */
+void wifi_smart_page_process(button_status_e Key5Value, button_status_e Key0Value)
+{
+	Serial.println("wifi_smart status");
+	switch (Key5Value_transition_function(Key5Value, Key0Value))
+	{
+
+	case KEY_dowm:
+	{
+
+		break;
+	}
+
+	case KEY_up:
+	{
+
+		break ;
+	}
+
+	case KEY_enter:
+	{
+		index_reset(true, 55);																		// 复位选择框与进度条
+		ui_show.ui_disapper();		
+		Enter_Page(MAIN_PAGE,button_none,button_none);;
+		break;
+	}
+	case KEY_home:
+	{
+		index_reset(false, 55);																		// 复位选择框与进度条
+		ui_show.ui_disapper();																		// 消失函数
+		Enter_Page(MAIN_PAGE,button_none,button_none);
+		break;
+	}
+
+	case KEY_esc:
+	{	
+		index_reset(false, 55);																		// 复位选择框与进度条
+		ui_show.ui_disapper();																		// 消失函数
+		Enter_Page(WiFi_PAGE,button_none,button_none);
+		break;
+	}
+	default:
+		break;
+	}	
+}
+
+
+/**
+ * @brief       空闲页面处理
+ * @param[in]   none
+ * @retval      none
+ * @attention
+ */
+void idle_page_process(button_status_e Key5Value , button_status_e Key0Value)
+{
+	Serial.println("idle_page");
+}

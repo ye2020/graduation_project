@@ -60,6 +60,56 @@ void Enter_Page(menu_i32 index, button_status_e Key5Value , button_status_e Key0
 		break;
 	}
 
+	//进入菜单页面
+	case TEMP_HUM_PAGE:
+	{
+		Menu_Select_Item(TEMP_HUM_PAGE,  Key5Value,Key0Value);
+		break;
+	}
+
+		//进入菜单页面
+	case REMOTE_PAGE:
+	{
+		Menu_Select_Item(REMOTE_PAGE,  Key5Value,Key0Value);
+		break;
+	}
+
+		//进入菜单页面
+	case IR_CHECK_PAGE:
+	{
+		Menu_Select_Item(IR_CHECK_PAGE,  Key5Value,Key0Value);
+		break;
+	}
+
+		//进入菜单页面
+	case ABOUT_PAGE:
+	{
+		Menu_Select_Item(ABOUT_PAGE,  Key5Value,Key0Value);
+		break;
+	}
+
+		//进入菜单页面
+	case WIFI_INFO_PAGE:
+	{
+		Menu_Select_Item(WIFI_INFO_PAGE,  Key5Value,Key0Value);
+		break;
+	}
+
+		//进入菜单页面
+	case WIFI_DISCONNECT_PAGE:
+	{
+		Menu_Select_Item(WIFI_DISCONNECT_PAGE,  Key5Value,Key0Value);
+		break;
+	}
+
+		//进入菜单页面
+	case WIFI_SMART_CON_PAGE:
+	{
+		Menu_Select_Item(WIFI_SMART_CON_PAGE,  Key5Value,Key0Value);
+		break;
+	}
+
+
 	// 否则返回主页面
 	default:
 	{	Menu_Select_Item(MAIN_PAGE, Key5Value,Key0Value);
@@ -82,10 +132,11 @@ void main_page_ui_process(void)
 // 菜单页面ui进程
 void select_page_ui_process(void)
 {
-	u8g2.clearBuffer();             // 清除缓存
-	top_ui_show();					// 表头常驻UI
-	ui_show.menu_ui_show(ui_show.list);			// 绘制菜单
-	u8g2.sendBuffer();              // 将缓存发送并显示
+	u8g2.clearBuffer();             														 // 清除缓存
+	top_ui_show();																			 // 表头常驻UI
+	ui_show.menu_ui_show(ui_show.list);														 // 绘制菜单
+	ui_show.progress_ui_show(ui_show.line_len, ui_show.single_line_length);                  // 进度条UI绘制
+	u8g2.sendBuffer();              														 // 将缓存发送并显示
 }
 
 
@@ -93,8 +144,18 @@ void select_page_ui_process(void)
 void wifi_page_ui_process(void)
 {
 	u8g2.clearBuffer();	
-	top_ui_show();							
-	u8g2.drawXBMP(40,16,50,50,QR_code_50_50);				// LOGO 绘制
+	top_ui_show();
+	ui_show.menu_ui_show(ui_show.wifi_list);	
+	ui_show.progress_ui_show(ui_show.wifi_line_len, ui_show.wifi_single_line_length);      // 进度条UI绘制						
 	u8g2.sendBuffer();
 }
 
+
+// 扫码配网页面UI进程
+void wifi_smart_conf_ui_process(void)
+{
+	u8g2.clearBuffer();	
+	top_ui_show();	
+	u8g2.drawXBMP(40,16,50,50,QR_code_50_50);				// 二维码 绘制
+	u8g2.sendBuffer();
+}

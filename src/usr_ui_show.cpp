@@ -46,7 +46,7 @@ ui_show_t::ui_show_t()
                 {"温湿度显示", 13},
                 {"微信小程序", 13},
                 {"遥控", 6},
-                {"wifi 配置", 11},
+                {"红外检测", 11},
                 {"关于设备", 11}
             };
 
@@ -187,8 +187,6 @@ void ui_show_t::menu_ui_show(std::vector<Ui_list_t>& list)
     }
 
     ui_show.select_ui_show(13, 9);                                            // 选择框UI绘制
-    ui_show.progress_ui_show(line_len, single_line_length);                   // 进度条UI绘制
-
 
 }
 
