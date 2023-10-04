@@ -22,6 +22,7 @@
 
 class usr_wifi_t{
     public:
+    
     void get_wifi(const char* SSID,const char* Password);     //连接 wifi
     void wifi_smartconfig(void);
     void wifi_init(void);

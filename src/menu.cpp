@@ -35,6 +35,7 @@
 #include "menu_ui.h"
 #include "usr_wifi.h"
 #include "usr_clock_time.h"
+#include "usr_dht.h"
 
 
 // 定义菜单索引变量
@@ -474,6 +475,15 @@ void wifi_page_process(button_status_e Key5Value, button_status_e Key0Value)
 void temp_hum_page_process(button_status_e Key5Value, button_status_e Key0Value)
 {
 	// Serial.println("temp status");
+	temp_hum_ui_process();
+	// static uint8_t load_count = 128;							// 数据更新计数值
+	// load_count++;
+	// if(load_count >= 128)
+	// {
+	// 	load_count = 0;
+	// 	usr_dht.dht_data_receive();							// 读取温湿度数据
+	// }
+
 	switch (Key5Value_transition_function(Key5Value, Key0Value))
 	{
 
@@ -489,13 +499,7 @@ void temp_hum_page_process(button_status_e Key5Value, button_status_e Key0Value)
 		break ;
 	}
 
-	case KEY_enter:
-	{
-		index_reset(true, 55);																		// 复位选择框与进度条
-		ui_show.ui_disapper();		
-		Enter_Page(MAIN_PAGE,button_none,button_none);;
-		break;
-	}
+
 	case KEY_home:
 	{
 		index_reset(false, 55);																		// 复位选择框与进度条

@@ -1,12 +1,13 @@
 #include "usr_server.h"
 #include "usr_wifi.h"
+#include "usr_dht.h"
 
 
 
 #define TCP_SERVER_ADDR "bemfa.com"     // 云服务器地址
 #define TCP_SERVER_PORT "8344"          // 服务器端口
 
-#define upDataTime 2*1000               // 上传速率2s (1s<=upDataTime<=60s）
+#define upDataTime 3*1000               // 上传速率3s (1s<=upDataTime<=60s）
 #define MAX_PACKETSIZE 512              // 最大字节数
 
 String UID = "04cbbb009ce722b9fe048e7dbc01f419";    //用户私钥(这是我的,自己改成自己的)
@@ -114,9 +115,8 @@ void doTCPClientTick()
       preHeartTick = millis();
 
       /*****************获取DHT11 温湿度*****************/
-      byte temperature = 50;
-      byte humidity = 100;
- 
+
+      usr_dht.dht_data_receive();                               
       
       /*********************数据上传*******************/
       /*
@@ -124,7 +124,7 @@ void doTCPClientTick()
         如果上传的数据不止温湿度，可在#号后面继续添加&msg=#23#80#data1#data2#data3#data4#\r\n,app字符串分割的时候，要根据上传的数据进行分割
       */
       String upstr = "";
-      upstr = "cmd=2&uid="+UID+"&topic="+TOPIC+"&msg=#"+temperature+"#"+humidity+"#"+0+"#\r\n";
+      upstr = "cmd=2&uid="+UID+"&topic="+TOPIC+"&msg=#"+usr_dht.temp+"#"+usr_dht.Hum+"#"+0+"#\r\n";
       sendtoTCPServer(upstr);
       upstr = "";
     }

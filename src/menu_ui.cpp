@@ -15,7 +15,7 @@
 #include "menu_ui.h"
 #include "usr_ui_show.h"
 #include "usr_wifi.h"
-
+#include "usr_dht.h"
 
 extern U8G2_SSD1306_128X64_NONAME_F_SW_I2C u8g2;				// u8g2 库iic驱动
 
@@ -197,5 +197,22 @@ void wifi_info_ui_process(void)
     	u8g2.print(usr_Wifi.return_MAC());		
 	}
 
+	u8g2.sendBuffer();
+}
+
+
+// 温湿度页面UI进程
+void temp_hum_ui_process(void)
+{
+	u8g2.clearBuffer();	
+	top_ui_show();
+	u8g2.drawUTF8(3, 30, "温度 :");
+	u8g2.setCursor(40, 30);
+    u8g2.print(usr_dht.temp);
+	u8g2.drawStr(74, 28, "*C");
+	u8g2.drawUTF8(3, 45, "湿度 :");
+	u8g2.setCursor(40, 45);
+    u8g2.print(usr_dht.Hum);
+	u8g2.drawStr(74, 43, "%");
 	u8g2.sendBuffer();
 }
