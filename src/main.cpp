@@ -72,7 +72,7 @@ void loop()
   button_loop();                           // 按键循环函数 
   buletooth_loop();                        // 蓝牙循环函数 
   Menu_Select_main(key5_status_return(),key0_status_return());
-  doTCPClientTick();
+  // doTCPClientTick();                        // 定时发送到云端
 }
 
 

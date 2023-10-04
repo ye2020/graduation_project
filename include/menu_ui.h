@@ -30,6 +30,8 @@ void wifi_smart_conf_ui_process(void);
 void wifi_discon_ui_process(void);
 void wifi_info_ui_process(void);
 void temp_hum_ui_process(void);
+void wechat_ui_process(void);
+void about_ui_process(void);
 
 
 

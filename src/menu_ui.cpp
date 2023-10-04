@@ -76,6 +76,13 @@ void Enter_Page(menu_i32 index, button_status_e Key5Value , button_status_e Key0
 	}
 
 		//进入菜单页面
+	case WECHAT_PAGE:
+	{
+		Menu_Select_Item(WECHAT_PAGE,  Key5Value,Key0Value);
+		break;
+	}
+
+		//进入菜单页面
 	case IR_CHECK_PAGE:
 	{
 		Menu_Select_Item(IR_CHECK_PAGE,  Key5Value,Key0Value);
@@ -210,9 +217,29 @@ void temp_hum_ui_process(void)
 	u8g2.setCursor(40, 30);
     u8g2.print(usr_dht.temp);
 	u8g2.drawStr(74, 28, "*C");
-	u8g2.drawUTF8(3, 45, "湿度 :");
-	u8g2.setCursor(40, 45);
+	u8g2.drawUTF8(3, 55, "湿度 :");
+	u8g2.setCursor(40, 55);
     u8g2.print(usr_dht.Hum);
-	u8g2.drawStr(74, 43, "%");
+	u8g2.drawStr(74, 53, "%");
+	u8g2.sendBuffer();
+}
+
+// 小程序页面UI进程
+void wechat_ui_process(void)
+{
+	u8g2.clearBuffer();	
+	top_ui_show();	
+	u8g2.drawXBMP(40,16,50,50,QR_wechat_50_50);				// 二维码 绘制
+	u8g2.sendBuffer();
+}
+
+// 设备信息页面UI进程
+void about_ui_process(void)
+{
+	u8g2.clearBuffer();	
+	top_ui_show();
+	u8g2.drawStr(3, 30, "MCU   :  ESP8266");
+	u8g2.drawStr(3, 45, "Flash  :  1MB");
+	u8g2.drawStr(3, 60, "SRAM  :  80KB");
 	u8g2.sendBuffer();
 }

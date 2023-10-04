@@ -476,29 +476,9 @@ void temp_hum_page_process(button_status_e Key5Value, button_status_e Key0Value)
 {
 	// Serial.println("temp status");
 	temp_hum_ui_process();
-	// static uint8_t load_count = 128;							// 数据更新计数值
-	// load_count++;
-	// if(load_count >= 128)
-	// {
-	// 	load_count = 0;
-	// 	usr_dht.dht_data_receive();							// 读取温湿度数据
-	// }
 
 	switch (Key5Value_transition_function(Key5Value, Key0Value))
 	{
-
-	case KEY_dowm:
-	{
-
-		break;
-	}
-
-	case KEY_up:
-	{
-
-		break ;
-	}
-
 
 	case KEY_home:
 	{
@@ -530,28 +510,10 @@ void temp_hum_page_process(button_status_e Key5Value, button_status_e Key0Value)
 void wechat_page_process(button_status_e Key5Value, button_status_e Key0Value)
 {
 	// Serial.println("wechat status");
+	wechat_ui_process();
 	switch (Key5Value_transition_function(Key5Value, Key0Value))
 	{
 
-	case KEY_dowm:
-	{
-
-		break;
-	}
-
-	case KEY_up:
-	{
-
-		break ;
-	}
-
-	case KEY_enter:
-	{
-		index_reset(true, 55);																		// 复位选择框与进度条
-		ui_show.ui_disapper();		
-		Enter_Page(MAIN_PAGE,button_none,button_none);;
-		break;
-	}
 	case KEY_home:
 	{
 		index_reset(false, 55);																		// 复位选择框与进度条
@@ -686,28 +648,10 @@ void ir_check_page_process(button_status_e Key5Value, button_status_e Key0Value)
 void about_page_process(button_status_e Key5Value, button_status_e Key0Value)
 {
 	// Serial.println("about status");
+	about_ui_process();
 	switch (Key5Value_transition_function(Key5Value, Key0Value))
 	{
 
-	case KEY_dowm:
-	{
-
-		break;
-	}
-
-	case KEY_up:
-	{
-
-		break ;
-	}
-
-	case KEY_enter:
-	{
-		index_reset(true, 55);																		// 复位选择框与进度条
-		ui_show.ui_disapper();		
-		Enter_Page(MAIN_PAGE,button_none,button_none);;
-		break;
-	}
 	case KEY_home:
 	{
 		index_reset(false, 55);																		// 复位选择框与进度条
