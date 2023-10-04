@@ -25,6 +25,13 @@ class usr_wifi_t{
     void get_wifi(const char* SSID,const char* Password);     //连接 wifi
     void wifi_smartconfig(void);
     void wifi_init(void);
+    void wifi_disconnect(void);
+    IPAddress return_IP_addr(void);
+    String return_SSID(void);
+    String return_MAC(void);
+    void wifi_quick_link(void);
+
+
 
     private:
     int usr_wifi_status;                                      // 连接状态

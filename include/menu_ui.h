@@ -26,6 +26,10 @@ void Enter_Page(menu_i32 index, button_status_e Key5Value, button_status_e Key0V
 void main_page_ui_process(void);
 void wifi_page_ui_process(void);
 void select_page_ui_process(void);
+void wifi_smart_conf_ui_process(void);
+void wifi_discon_ui_process(void);
+void wifi_info_ui_process(void);
+
 
 
 #endif

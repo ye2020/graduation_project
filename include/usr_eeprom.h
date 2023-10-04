@@ -39,5 +39,7 @@ extern EEPROMStruct eepUserSet;
 
 void auto_eeprom(void);                 // 自动读取EEPROM
 void wifi_eeprom(const char* SSID,const char* Password);
+void eeprom_read(void);
+
 
 #endif

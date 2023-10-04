@@ -60,7 +60,7 @@ void usr_wifi_t::get_wifi(const char* SSID,const char* Password)     //连接 wi
   uint8_t i = 0;  //用来判断半分钟内是否联网成功 , 否则提示
   WiFi.mode(WIFI_STA);
   WiFi.begin(SSID, Password);
-
+  
   while (WiFi.status() != WL_CONNECTED) 
   {   //检测 wifi 连接状态
     delay(500);
@@ -90,6 +90,45 @@ void usr_wifi_t::get_wifi(const char* SSID,const char* Password)     //连接 wi
 }
 
 
+/**
+ * @brief       wifi断开
+ * @param[in]   none
+ * @retval      
+ * @attention   
+ */
+void usr_wifi_t::wifi_disconnect(void)
+{
+  if( WiFi.status()  == WL_CONNECTED )      // 网络是连接状态的
+  {
+    WiFi.disconnect(1);
+  }
+}
+
+// 快速链接wifi, 连接最近一次网络
+void usr_wifi_t::wifi_quick_link(void)
+{
+  eeprom_read();            // 读取eeprom数据
+  usr_Wifi.get_wifi(eepUserSet.wifi_ssid,eepUserSet.wifi_password);        // wifi连接
+}
+
+// 返回IP地址
+IPAddress usr_wifi_t::return_IP_addr(void)
+{
+  return(WiFi.localIP());
+}
+
+
+// 返回网络名称
+String usr_wifi_t::return_SSID(void)
+{
+  return(WiFi.SSID());
+}
+
+// 返回MAC地址
+String usr_wifi_t::return_MAC(void)
+{
+  return(WiFi.macAddress());
+}
 /**
  * @brief       wifi智能配网连接函数
  * @param[in]   none

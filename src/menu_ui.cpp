@@ -14,6 +14,7 @@
   */
 #include "menu_ui.h"
 #include "usr_ui_show.h"
+#include "usr_wifi.h"
 
 
 extern U8G2_SSD1306_128X64_NONAME_F_SW_I2C u8g2;				// u8g2 库iic驱动
@@ -157,5 +158,44 @@ void wifi_smart_conf_ui_process(void)
 	u8g2.clearBuffer();	
 	top_ui_show();	
 	u8g2.drawXBMP(40,16,50,50,QR_code_50_50);				// 二维码 绘制
+	u8g2.sendBuffer();
+}
+
+
+// 断开页面UI进程
+void wifi_discon_ui_process(void)
+{
+	u8g2.clearBuffer();	
+	top_ui_show();	
+	u8g2.drawUTF8(20,35,"网络已断开 ");
+    u8g2.drawUTF8(20,50,"点击任意键退出...");
+	u8g2.sendBuffer();
+}
+
+
+// wifi信息页面UI进程
+void wifi_info_ui_process(void)
+{
+	u8g2.clearBuffer();	
+	top_ui_show();
+
+	if(WiFi.status() != WL_CONNECTED)				// 当前无网络连接
+	{
+		u8g2.drawUTF8(20,35,"网络已断开 ");
+    	u8g2.drawUTF8(20,50,"点击任意键快速连接");
+	}				
+	else 
+	{
+		u8g2.drawStr(3, 30, "SSID :");
+		u8g2.setCursor(40, 30);
+    	u8g2.print(usr_Wifi.return_SSID());
+		u8g2.drawStr(3, 45, "IP   :");
+		u8g2.setCursor(40, 45);
+    	u8g2.print(usr_Wifi.return_IP_addr());
+		u8g2.drawStr(3, 60, "MAC :");
+		u8g2.setCursor(40, 60);
+    	u8g2.print(usr_Wifi.return_MAC());		
+	}
+
 	u8g2.sendBuffer();
 }

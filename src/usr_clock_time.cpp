@@ -17,6 +17,12 @@ void clock_init(void)
     timeClient.begin();
 }
 
+// 更新时间数据
+void clock_updata(void)
+{
+    timeClient.update();
+}
+
 // 返回实时小时数
 String return_time_hours(void)
 {

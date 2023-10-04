@@ -1,8 +1,8 @@
 /**
   ****************************** Y.Z.T.****************************************
   * @file       menu.c/h
-  * @brief      Ìá¹©¼üÖµÊÊÅäµÈUI²Ëµ¥¿ò¼ÜÊı¾İ
-  * @note       ¿ò¼ÜÒÆÖ²×ÔSTM32¹¤³Ì£¬ÒòÏîÄ¿UI×Ó²Ëµ¥½ö2²ã£¬ÓĞĞ©º¯Êı²»ÊÇºÜ±ØÒª£¬¹ÊÉÔÏÔÓ·Ö×ºÍ»ìÂÒ
+  * @brief      æä¾›é”®å€¼é€‚é…ç­‰UIèœå•æ¡†æ¶æ•°æ®
+  * @note       æ¡†æ¶ç§»æ¤è‡ªSTM32å·¥ç¨‹ï¼Œå› é¡¹ç›®UIå­èœå•ä»…2å±‚ï¼Œæœ‰äº›å‡½æ•°ä¸æ˜¯å¾ˆå¿…è¦ï¼Œæ•…ç¨æ˜¾è‡ƒè‚¿å’Œæ··ä¹±
   * @history    2022.7.8
   *
   @verbatim     v1.0
@@ -12,20 +12,20 @@
   @endverbatim
   ****************************** Y.Z.T. *****************************************
   */
-/***************************** ²Ù×÷ËµÃ÷ ******************************
+/***************************** æ“ä½œè¯´æ˜ ******************************
  * 	
- * 		²Ù×÷ËµÃ÷£º
- * 			×ó¼ü£¨key5£©£º
- * 				µ¥»÷£ºÏòÏÂÑ¡Ôñ £¨ÔÚÖ÷Ò³½øÈë²Ëµ¥Ò³Ãæ£©	
- * 				Ë«»÷£ºÈ·ÈÏenter
- * 				³¤°´£ºÖ÷Ò³½øÈëÉèÖÃÄ£Ê½
+ * 		æ“ä½œè¯´æ˜ï¼š
+ * 			å·¦é”®ï¼ˆkey5ï¼‰ï¼š
+ * 				å•å‡»ï¼šå‘ä¸‹é€‰æ‹© ï¼ˆåœ¨ä¸»é¡µè¿›å…¥èœå•é¡µé¢ï¼‰	
+ * 				åŒå‡»ï¼šç¡®è®¤enter
+ * 				é•¿æŒ‰ï¼šä¸»é¡µè¿›å…¥è®¾ç½®æ¨¡å¼
  * 			
- *			ÓÒ¼ü£¨key0£©: 
- * 				µ¥»÷£ºÏòÉÏÑ¡Ôñ
- * 				Ë«»÷£º·µ»Øesc
- * 				³¤°´£º·µ»ØÖ÷Ò³home
+ *			å³é”®ï¼ˆkey0ï¼‰: 
+ * 				å•å‡»ï¼šå‘ä¸Šé€‰æ‹©
+ * 				åŒå‡»ï¼šè¿”å›esc
+ * 				é•¿æŒ‰ï¼šè¿”å›ä¸»é¡µhome
  * 
- * 		ÌØ±ğ×¢Òâ£ºÁ½¼ü²»¿ÉÍ¬Ê±°´£¬Í¬Ê±°´·µ»ØÎŞÖ¸Áî
+ * 		ç‰¹åˆ«æ³¨æ„ï¼šä¸¤é”®ä¸å¯åŒæ—¶æŒ‰ï¼ŒåŒæ—¶æŒ‰è¿”å›æ— æŒ‡ä»¤
 *******************************************************************/
 
 
@@ -33,19 +33,21 @@
 #include <Arduino.h>
 #include "usr_ui_show.h"
 #include "menu_ui.h"
+#include "usr_wifi.h"
+#include "usr_clock_time.h"
 
 
-// ¶¨Òå²Ëµ¥Ë÷Òı±äÁ¿
+// å®šä¹‰èœå•ç´¢å¼•å˜é‡
 Key_Index sub_index;
-uint8_t  page_current_sta = 1;		//µ±Ç°Ò³Âë
-static uint8_t flie_current_num = 0;		// µ±Ç°Êé¼®±àºÅ
+uint8_t  page_current_sta = 1;		//å½“å‰é¡µç 
+static uint8_t flie_current_num = 0;		// å½“å‰ä¹¦ç±ç¼–å·
 
 static key_value_e Key5Value_transition_function(button_status_e button5, button_status_e button0);
 void Menu_Select_Item(menu_i32 current_index, button_status_e Key5Value, button_status_e Key0Value);
-uint8_t ui_loging_flag = 0;				//½«ui¼ÓÔØ±êÖ¾Î»ÖÃ0£¬±íÊ¾ÔÊĞí¼ÓÔØui
+uint8_t ui_loging_flag = 0;				//å°†uiåŠ è½½æ ‡å¿—ä½ç½®0ï¼Œè¡¨ç¤ºå…è®¸åŠ è½½ui
 
 
-//²Ëµ¥²Ù×÷±í¶¨Òå
+//èœå•æ“ä½œè¡¨å®šä¹‰
 static OP_MENU_PAGE g_opStruct[] =
 	{
 		{MAIN_PAGE, main_page_process},
@@ -56,28 +58,28 @@ static OP_MENU_PAGE g_opStruct[] =
 		{REMOTE_PAGE, remote_page_process},
 		{IR_CHECK_PAGE, ir_check_page_process},
 		{ABOUT_PAGE, about_page_process},
-		{8,idle_page_process},										// Áô¿Õ
-		{9,idle_page_process},										// Áô¿Õ
-		{10,idle_page_process},										// Áô¿Õ
+		{8,idle_page_process},										// ç•™ç©º
+		{9,idle_page_process},										// ç•™ç©º
+		{10,idle_page_process},										// ç•™ç©º
 		{WIFI_INFO_PAGE, wifi_info_page_process},
 		{WIFI_DISCONNECT_PAGE, wifi_disconnect_page_process},
 		{WIFI_SMART_CON_PAGE, wifi_smart_page_process}
 	};
 
 
-//Ìø×ªµ½±íËù¶ÔÓ¦µÄÒ³Ãæ
+//è·³è½¬åˆ°è¡¨æ‰€å¯¹åº”çš„é¡µé¢
 static int JUMP_Table(menu_i32 op, button_status_e Key5Value, button_status_e Key0Value)
 {
-	if (op >= sizeof(g_opStruct) / sizeof(g_opStruct[0]) || op < 0) // ÅĞ¶Ï¸ÃÒ³ÃæÊÇ·ñÔÚ±íÄÚ£¨1~ 7 £©
+	if (op >= sizeof(g_opStruct) / sizeof(g_opStruct[0]) || op < 0) // åˆ¤æ–­è¯¥é¡µé¢æ˜¯å¦åœ¨è¡¨å†…ï¼ˆ1~ 7 ï¼‰
 	{
 		Serial.println("unknow operate!");
 		return -1;
 	}
-	g_opStruct[op].opfun(Key5Value, Key0Value); // Ö´ĞĞ²Ù×÷
+	g_opStruct[op].opfun(Key5Value, Key0Value); // æ‰§è¡Œæ“ä½œ
 	return 0;
 }
 
-//²Ëµ¥Ñ¡ÔñÏî
+//èœå•é€‰æ‹©é¡¹
 void Menu_Select_Item(menu_i32 current_index, button_status_e Key5Value, button_status_e Key0Value)
 {
 	JUMP_Table(current_index, Key5Value, Key0Value);
@@ -85,8 +87,8 @@ void Menu_Select_Item(menu_i32 current_index, button_status_e Key5Value, button_
 
 /**
  * @brief
- * @param[in]   Key5Value £º ×ó¼ükey5¼üÖµ£¨×ó£© £» Key0Value£¨ÓÒ£©
- * @retval      ÔÚloopº¯Êıµ÷ÓÃ
+ * @param[in]   Key5Value ï¼š å·¦é”®key5é”®å€¼ï¼ˆå·¦ï¼‰ ï¼› Key0Valueï¼ˆå³ï¼‰
+ * @retval      åœ¨loopå‡½æ•°è°ƒç”¨
  * @attention
  */
 void Menu_Select_main(button_status_e Key5Value, button_status_e Key0Value)
@@ -95,7 +97,7 @@ void Menu_Select_main(button_status_e Key5Value, button_status_e Key0Value)
 }
 
 /**
- * @brief		·µ»Øµ±Ç°ÔÄ¶ÁµÄÊé¼®±àºÅ
+ * @brief		è¿”å›å½“å‰é˜…è¯»çš„ä¹¦ç±ç¼–å·
  * @param[in]   none
  * @retval      none
  * @attention
@@ -106,8 +108,8 @@ uint8_t return_flie_current_num(void)
 }
 
 /**
- * @brief       ×ó¼üÖµ×ª»»£¬´Ó¾ßÌåµÄ°´¼üÈç£¨µ¥»÷£¬Ë«»÷×ª»»³ÉÃ¿¸öÒ³ÃæµÄ¶ÔÓ¦¹¦ÄÜ£©
- * @param[in]   button5 (×ó)
+ * @brief       å·¦é”®å€¼è½¬æ¢ï¼Œä»å…·ä½“çš„æŒ‰é”®å¦‚ï¼ˆå•å‡»ï¼ŒåŒå‡»è½¬æ¢æˆæ¯ä¸ªé¡µé¢çš„å¯¹åº”åŠŸèƒ½ï¼‰
+ * @param[in]   button5 (å·¦)
  * @retval
  * @attention
  */
@@ -122,15 +124,15 @@ static key_value_e Key5Value_transition_function(button_status_e button5, button
 	switch (button_CS)
 	{
 
-	/**************** ×ó°´¼ü¶ÔÓ¦¼üÖµ *******************/
-	// key5 ¶Ì°´Ò»ÏÂÏòÏÂ
+	/**************** å·¦æŒ‰é”®å¯¹åº”é”®å€¼ *******************/
+	// key5 çŸ­æŒ‰ä¸€ä¸‹å‘ä¸‹
 	case button_click:
 	{
 		Serial.println("KEY_dowm");		
 		return KEY_dowm;
 		break;
 	}
-	// key5 ³¤°´È·¶¨
+	// key5 é•¿æŒ‰ç¡®å®š
 	case button_longPressStart:
 	{
 		Serial.println("KEY_enter");		
@@ -138,7 +140,7 @@ static key_value_e Key5Value_transition_function(button_status_e button5, button
 		break;
 	}
 
-	// // key5 ³¤°´½øÈëÉèÖÃÄ£Ê½
+	// // key5 é•¿æŒ‰è¿›å…¥è®¾ç½®æ¨¡å¼
 	// case button_longPressStop:
 	// {
 	// 	Serial.println("KEY_setting");		
@@ -146,9 +148,9 @@ static key_value_e Key5Value_transition_function(button_status_e button5, button
 	// 	break;
 	// }
 
-	/**************** ÓÒ°´¼ü¶ÔÓ¦¼üÖµ *******************/
+	/**************** å³æŒ‰é”®å¯¹åº”é”®å€¼ *******************/
 
-	// key0 ³¤°´·µ»ØÉÏÒ»¼¶
+	// key0 é•¿æŒ‰è¿”å›ä¸Šä¸€çº§
 	case button_longPressStart2:
 	{
 		Serial.println("KEY_esc");		
@@ -156,7 +158,7 @@ static key_value_e Key5Value_transition_function(button_status_e button5, button
 		break;
 	}
 
-	// key0 ¶Ì°´ÏòÉÏ
+	// key0 çŸ­æŒ‰å‘ä¸Š
 	case button_click2:
 	{
 		Serial.println("KEY_up");		
@@ -164,7 +166,7 @@ static key_value_e Key5Value_transition_function(button_status_e button5, button
 		break;
 	}
 
-	// key0 ¶Ì°´2ÏÂhome¼ü (Ö»ÔÚÀ¶ÑÀÓĞĞ§)
+	// key0 çŸ­æŒ‰2ä¸‹homeé”® (åªåœ¨è“ç‰™æœ‰æ•ˆ)
 	case button_doubleclick2:
 	{
 		Serial.println("KEY_home");		
@@ -181,9 +183,9 @@ static key_value_e Key5Value_transition_function(button_status_e button5, button
 
 
 /**
- * @brief		¸´Î»Ë÷ÒıºÍÑ¡Ôñ¿ò½ø¶ÈÌõµÄÎ»ÖÃ
- * @param[in]   status: ½øÈëĞÂµÄÒ³ÃæÊÇÎªture;  ÍË»ØÉÏ¼¶Ê±Îªfalse
- * 				len   : ĞÂµÄÒ³ÃæµÚÒ»ÏîµÄÑ¡Ôñ¿ò³¤¶È
+ * @brief		å¤ä½ç´¢å¼•å’Œé€‰æ‹©æ¡†è¿›åº¦æ¡çš„ä½ç½®
+ * @param[in]   status: è¿›å…¥æ–°çš„é¡µé¢æ˜¯ä¸ºture;  é€€å›ä¸Šçº§æ—¶ä¸ºfalse
+ * 				len   : æ–°çš„é¡µé¢ç¬¬ä¸€é¡¹çš„é€‰æ‹©æ¡†é•¿åº¦
  * @retval      none
  * @attention
  */
@@ -192,12 +194,12 @@ void index_reset(bool status, int16_t len)
 	if(status == false) 
 	{
 		sub_index.main_current_index = 0;
-		sub_index.select_current_index = 2;				// Ë÷ÒıÖµ2 ~ 10 Áô¸ø ²Ëµ¥±íµ¥¼°Æä×Ó±íµ¥ 
-		sub_index.wifi_config_current_index = 11;		// Ë÷ÒıÖµ11 ~ 15 Áô¸øÍøÂçÅäÖÃÒ³Ãæ
+		sub_index.select_current_index = 2;				// ç´¢å¼•å€¼2 ~ 10 ç•™ç»™ èœå•è¡¨å•åŠå…¶å­è¡¨å• 
+		sub_index.wifi_config_current_index = 11;		// ç´¢å¼•å€¼11 ~ 15 ç•™ç»™ç½‘ç»œé…ç½®é¡µé¢
 	}
-	ui_show.frame_len = {len, len};																// ¸´Î»Ñ¡Ôñ¿ò
+	ui_show.frame_len = {len, len};																// å¤ä½é€‰æ‹©æ¡†
 	ui_show.frame_y	  = {17, 17};
-	ui_show.progress_position = {16, 16};														// ¸´Î»½ø¶ÈÌõ
+	ui_show.progress_position = {16, 16};														// å¤ä½è¿›åº¦æ¡
 }
 
 uint8_t return_UI_loging_flag(void)
@@ -206,31 +208,31 @@ uint8_t return_UI_loging_flag(void)
 }
 
 /************************************************************************************************************************************/
-/*********************************************************** ½ø³Ì´¦Àí **********************************************************/
+/*********************************************************** è¿›ç¨‹å¤„ç† **********************************************************/
 /************************************************************************************************************************************/
 
 /**
- * @brief       Ö÷Ò³Ãæ´¦Àí
- * @param[in]   KeyValue £º ¼üÖµ
+ * @brief       ä¸»é¡µé¢å¤„ç†
+ * @param[in]   KeyValue ï¼š é”®å€¼
  * @retval      none
  * @attention
  */
 void main_page_process(button_status_e Key5Value, button_status_e Key0Value)
 {
-	main_page_ui_process();					// Ö÷Ò³Ãæui»æÖÆ
+	main_page_ui_process();					// ä¸»é¡µé¢uiç»˜åˆ¶
 	switch (Key5Value_transition_function(Key5Value, Key0Value))
 	{
 	case KEY_dowm:
 	{
-		ui_show.ui_disapper();								// ÏûÊ§º¯Êı
-		Enter_Page(SELECT_PAGE, Key5Value, Key0Value);		// ½øÈëÑ¡ÔñÒ³Ãæ
+		ui_show.ui_disapper();								// æ¶ˆå¤±å‡½æ•°
+		Enter_Page(SELECT_PAGE, Key5Value, Key0Value);		// è¿›å…¥é€‰æ‹©é¡µé¢
 		break;
 	}
 
 	case KEY_up:
 	{
-		ui_show.ui_disapper();								// ÏûÊ§º¯Êı
-		Enter_Page(SELECT_PAGE, Key5Value, Key0Value);		// ½øÈëÑ¡ÔñÒ³Ãæ
+		ui_show.ui_disapper();								// æ¶ˆå¤±å‡½æ•°
+		Enter_Page(SELECT_PAGE, Key5Value, Key0Value);		// è¿›å…¥é€‰æ‹©é¡µé¢
 		break ;
 	}
 
@@ -257,8 +259,8 @@ void main_page_process(button_status_e Key5Value, button_status_e Key0Value)
 }
 
 /**
- * @brief       ²Ëµ¥Ò³Ãæ´¦Àí
- * @param[in]   KeyValue £º ¼üÖµ
+ * @brief       èœå•é¡µé¢å¤„ç†
+ * @param[in]   KeyValue ï¼š é”®å€¼
  * @retval      none
  * @attention
  */
@@ -267,37 +269,37 @@ void select_page_process(button_status_e Key5Value, button_status_e Key0Value)
 	// Serial.println("select status");
 
 	select_page_ui_process();	
-										// ²Ëµ¥Ò³Ãæui»æÖÆ
+										// èœå•é¡µé¢uiç»˜åˆ¶
 	switch (Key5Value_transition_function(Key5Value, Key0Value))
 	{
 	case KEY_dowm:
 	{
-		// ÁÙ½çÌõ¼şÅĞ¶Ï
+		// ä¸´ç•Œæ¡ä»¶åˆ¤æ–­
 		(sub_index.select_current_index < (2 + ui_show.line_len - 1)) ? (sub_index.select_current_index++) : (sub_index.select_current_index = (2 + ui_show.line_len - 1));
 
-		// ½ø¶ÈÌõÄ¿±êÎ»ÖÃ
+		// è¿›åº¦æ¡ç›®æ ‡ä½ç½®
 		if(ui_show.progress_position.position_trg < (ui_show.max_bar - ui_show.single_line_length -  1))  {
 			(ui_show.progress_position.position_trg += ui_show.single_line_length);
 		}
 		
-		// ui_show.frame_y.position_trg    =  (sub_index.select_current_index  - 2)* 11 + (ui_show.y_offset + 2);								 // Ñ¡Ôñ¿òÎ»ÖÃÄ¿±êÖµ
+		// ui_show.frame_y.position_trg    =  (sub_index.select_current_index  - 2)* 11 + (ui_show.y_offset + 2);								 // é€‰æ‹©æ¡†ä½ç½®ç›®æ ‡å€¼
 		
-		// µ±Ç°Ö¸ÏòµÄÒ³ÃæÔÚÆÁÄ»ÍâÃæ
+		// å½“å‰æŒ‡å‘çš„é¡µé¢åœ¨å±å¹•å¤–é¢
 		if((sub_index.select_current_index - 2) > (ui_show.text_bottom_index))
 		{
-			// ui_show.menu_y_position.position_trg -= 11;					// ÉÏÒÆ²Ëµ¥ 
-			ui_show.text_bottom_index += 1;								// ¸üĞÂË÷Òı
+			// ui_show.menu_y_position.position_trg -= 11;					// ä¸Šç§»èœå• 
+			ui_show.text_bottom_index += 1;								// æ›´æ–°ç´¢å¼•
 			ui_show.text_top_index = ui_show.text_bottom_index - 2;
 		} 
 		else 
 		{
-			ui_show.frame_y.position_trg += 15;							// ÏÂÒÆ¿ò
+			ui_show.frame_y.position_trg += 15;							// ä¸‹ç§»æ¡†
 			Serial.println("y.position_trg");
 			Serial.println(ui_show.frame_y.position_trg);		
 			
 		}
 
-		(ui_show.frame_y.position_trg < (ui_show.screen_height - 5)) ? (ui_show.frame_y.position_trg += 0) : (ui_show.frame_y.position_trg = 47);  // Ñ¡Ôñ¿òÎ»ÖÃÏŞÖÆ
+		(ui_show.frame_y.position_trg < (ui_show.screen_height - 5)) ? (ui_show.frame_y.position_trg += 0) : (ui_show.frame_y.position_trg = 47);  // é€‰æ‹©æ¡†ä½ç½®é™åˆ¶
 		(ui_show.frame_y.position_trg > ui_show.y_offset) ? (ui_show.frame_y.position_trg -= 0) : (ui_show.frame_y.position_trg = 18);
   		
 		ui_show.frame_len.position_trg  =  ui_show.list[sub_index.select_current_index - 2].len * 5;
@@ -311,25 +313,25 @@ void select_page_process(button_status_e Key5Value, button_status_e Key0Value)
 	{
 		(sub_index.select_current_index > 2) ? (sub_index.select_current_index--) : (sub_index.select_current_index = 2);
 
-		// ½ø¶ÈÌõÄ¿±êÎ»ÖÃ
+		// è¿›åº¦æ¡ç›®æ ‡ä½ç½®
 		if(ui_show.progress_position.position_trg > (ui_show.single_line_length + ui_show.y_offset - 2))  {
 			(ui_show.progress_position.position_trg -= ui_show.single_line_length);
 		}
 
 
-		// µ±Ç°Ö¸ÏòµÄÒ³ÃæÔÚÆÁÄ»ÍâÃæ
+		// å½“å‰æŒ‡å‘çš„é¡µé¢åœ¨å±å¹•å¤–é¢
 		if((sub_index.select_current_index - 2) < (ui_show.text_top_index))
 		{
-			// ui_show.menu_y_position.position_trg += 11;					// ÏÂÒÆ²Ëµ¥ 
+			// ui_show.menu_y_position.position_trg += 11;					// ä¸‹ç§»èœå• 
 			ui_show.text_top_index -= 1;
 			ui_show.text_bottom_index = ui_show.text_top_index + 2;
 		} 
 		else 
 		{
-			ui_show.frame_y.position_trg -= 15;							// ÉÏÒÆ¿ò
+			ui_show.frame_y.position_trg -= 15;							// ä¸Šç§»æ¡†
 		}	
 
-		(ui_show.frame_y.position_trg > ui_show.y_offset) ? (ui_show.frame_y.position_trg -= 0) : (ui_show.frame_y.position_trg = 18);	// Ñ¡Ôñ¿òÎ»ÖÃÏŞÖÆ
+		(ui_show.frame_y.position_trg > ui_show.y_offset) ? (ui_show.frame_y.position_trg -= 0) : (ui_show.frame_y.position_trg = 18);	// é€‰æ‹©æ¡†ä½ç½®é™åˆ¶
 		(ui_show.frame_y.position_trg < (ui_show.screen_height - 5)) ? (ui_show.frame_y.position_trg += 0) : (ui_show.frame_y.position_trg = 47);
 
   		ui_show.frame_len.position_trg  =  ui_show.list[sub_index.select_current_index - 2].len * 5;		
@@ -343,25 +345,25 @@ void select_page_process(button_status_e Key5Value, button_status_e Key0Value)
 		Serial.println("Enter the choice");
 		Serial.println((sub_index.select_current_index));
 
-		index_reset(true, 55);																		// ¸´Î»Ñ¡Ôñ¿òÓë½ø¶ÈÌõ
-		ui_show.ui_disapper();																		// ÏûÊ§º¯Êı
-		Enter_Page((sub_index.select_current_index ), button_none, button_none);					// Ò³ÃæÌø×ª
+		index_reset(true, 55);																		// å¤ä½é€‰æ‹©æ¡†ä¸è¿›åº¦æ¡
+		ui_show.ui_disapper();																		// æ¶ˆå¤±å‡½æ•°
+		Enter_Page((sub_index.select_current_index ), button_none, button_none);					// é¡µé¢è·³è½¬
 		break;
 	}
 
 	case KEY_home:
 	{
-		index_reset(false, 55);																		// ¸´Î»Ñ¡Ôñ¿òÓë½ø¶ÈÌõ
-		ui_show.ui_disapper();																		// ÏûÊ§º¯Êı											
-		Enter_Page(MAIN_PAGE,button_none,button_none);												// home¼ü·µ»ØÖ÷Ò³Ãæ
+		index_reset(false, 55);																		// å¤ä½é€‰æ‹©æ¡†ä¸è¿›åº¦æ¡
+		ui_show.ui_disapper();																		// æ¶ˆå¤±å‡½æ•°											
+		Enter_Page(MAIN_PAGE,button_none,button_none);												// homeé”®è¿”å›ä¸»é¡µé¢
 		break;
 	}
 
 	case KEY_esc:
 	{	
-		index_reset(false, 55);																		// ¸´Î»Ñ¡Ôñ¿òÓë½ø¶ÈÌõ
-		ui_show.ui_disapper();																		// ÏûÊ§º¯Êı	
-		Enter_Page(MAIN_PAGE,button_none,button_none);												// ·µ»ØÉÏ¼¶Ò³Ãæ ¼´main
+		index_reset(false, 55);																		// å¤ä½é€‰æ‹©æ¡†ä¸è¿›åº¦æ¡
+		ui_show.ui_disapper();																		// æ¶ˆå¤±å‡½æ•°	
+		Enter_Page(MAIN_PAGE,button_none,button_none);												// è¿”å›ä¸Šçº§é¡µé¢ å³main
 		break;
 	}
 	default:
@@ -370,36 +372,36 @@ void select_page_process(button_status_e Key5Value, button_status_e Key0Value)
 }
 
 /**
- * @brief       wifiÉèÖÃÒ³Ãæ´¦Àí
- * @param[in]   KeyValue £º ¼üÖµ
+ * @brief       wifiè®¾ç½®é¡µé¢å¤„ç†
+ * @param[in]   KeyValue ï¼š é”®å€¼
  * @retval      none
  * @attention
  */
 void wifi_page_process(button_status_e Key5Value, button_status_e Key0Value)
 {
 	// Serial.println("wifi status");
-	wifi_page_ui_process();												// ui»æÖÆ
-	/*************************** ¼üÖµ´¦Àí **************************/
+	wifi_page_ui_process();												// uiç»˜åˆ¶
+	/*************************** é”®å€¼å¤„ç† **************************/
 	switch (Key5Value_transition_function(Key5Value, Key0Value))
 	{
 	case KEY_dowm:
 	{
-		// ÁÙ½çÌõ¼şÅĞ¶Ï
+		// ä¸´ç•Œæ¡ä»¶åˆ¤æ–­
 		(sub_index.wifi_config_current_index < (11 + ui_show.wifi_line_len - 1)) ? (sub_index.wifi_config_current_index++) : (sub_index.wifi_config_current_index = (11 + ui_show.wifi_line_len - 1));
 		
-		// ½ø¶ÈÌõÄ¿±êÎ»ÖÃ
+		// è¿›åº¦æ¡ç›®æ ‡ä½ç½®
 		if(ui_show.progress_position.position_trg < (ui_show.max_bar - ui_show.wifi_single_line_length -  1))  {
 			(ui_show.progress_position.position_trg += ui_show.wifi_single_line_length);
 		}
 	
 		{
-			ui_show.frame_y.position_trg += 15;							// ÏÂÒÆ¿ò
+			ui_show.frame_y.position_trg += 15;							// ä¸‹ç§»æ¡†
 			Serial.println("y.position_trg");
 			Serial.println(ui_show.frame_y.position_trg);		
 			
 		}
 
-		(ui_show.frame_y.position_trg < (ui_show.screen_height - 5)) ? (ui_show.frame_y.position_trg += 0) : (ui_show.frame_y.position_trg = 47);  // Ñ¡Ôñ¿òÎ»ÖÃÏŞÖÆ
+		(ui_show.frame_y.position_trg < (ui_show.screen_height - 5)) ? (ui_show.frame_y.position_trg += 0) : (ui_show.frame_y.position_trg = 47);  // é€‰æ‹©æ¡†ä½ç½®é™åˆ¶
 		(ui_show.frame_y.position_trg > ui_show.y_offset) ? (ui_show.frame_y.position_trg -= 0) : (ui_show.frame_y.position_trg = 18);
   		
 		ui_show.frame_len.position_trg  =  ui_show.wifi_list[sub_index.wifi_config_current_index - 11].len * 5;
@@ -414,16 +416,16 @@ void wifi_page_process(button_status_e Key5Value, button_status_e Key0Value)
 	{
 		(sub_index.wifi_config_current_index > 11) ? (sub_index.wifi_config_current_index--) : (sub_index.wifi_config_current_index = 11);
 
-		// ½ø¶ÈÌõÄ¿±êÎ»ÖÃ
+		// è¿›åº¦æ¡ç›®æ ‡ä½ç½®
 		if(ui_show.progress_position.position_trg > (ui_show.wifi_single_line_length + ui_show.y_offset - 2))  {
 			(ui_show.progress_position.position_trg -= ui_show.wifi_single_line_length);
 		}
 
 		{
-			ui_show.frame_y.position_trg -= 15;							// ÉÏÒÆ¿ò
+			ui_show.frame_y.position_trg -= 15;							// ä¸Šç§»æ¡†
 		}	
 
-		(ui_show.frame_y.position_trg > ui_show.y_offset) ? (ui_show.frame_y.position_trg -= 0) : (ui_show.frame_y.position_trg = 18);	// Ñ¡Ôñ¿òÎ»ÖÃÏŞÖÆ
+		(ui_show.frame_y.position_trg > ui_show.y_offset) ? (ui_show.frame_y.position_trg -= 0) : (ui_show.frame_y.position_trg = 18);	// é€‰æ‹©æ¡†ä½ç½®é™åˆ¶
 		(ui_show.frame_y.position_trg < (ui_show.screen_height - 5)) ? (ui_show.frame_y.position_trg += 0) : (ui_show.frame_y.position_trg = 47);
 
   		ui_show.frame_len.position_trg  =  ui_show.wifi_list[sub_index.wifi_config_current_index - 11].len * 5;		
@@ -434,27 +436,27 @@ void wifi_page_process(button_status_e Key5Value, button_status_e Key0Value)
 	}
 	case KEY_enter:
 	{
-		index_reset(true, 55);																		// ¸´Î»Ñ¡Ôñ¿òÓë½ø¶ÈÌõ
-		ui_show.ui_disapper();																		// ÏûÊ§º¯Êı
+		index_reset(true, 55);																		// å¤ä½é€‰æ‹©æ¡†ä¸è¿›åº¦æ¡
+		ui_show.ui_disapper();																		// æ¶ˆå¤±å‡½æ•°
 		Serial.println("Enter the choice");
 		Serial.println((sub_index.wifi_config_current_index));																
-		Enter_Page((sub_index.wifi_config_current_index ), button_none, button_none);				// Ò³ÃæÌø×ª
+		Enter_Page((sub_index.wifi_config_current_index ), button_none, button_none);				// é¡µé¢è·³è½¬
 		break;
 	}
 
 	case KEY_home:
 	{
-		index_reset(false, 55);																		// ¸´Î»Ñ¡Ôñ¿òÓë½ø¶ÈÌõ
-		ui_show.ui_disapper();																		// ÏûÊ§º¯Êı
-		Enter_Page(MAIN_PAGE,button_none,button_none);												// home¼ü·µ»ØÖ÷Ò³Ãæ
+		index_reset(false, 55);																		// å¤ä½é€‰æ‹©æ¡†ä¸è¿›åº¦æ¡
+		ui_show.ui_disapper();																		// æ¶ˆå¤±å‡½æ•°
+		Enter_Page(MAIN_PAGE,button_none,button_none);												// homeé”®è¿”å›ä¸»é¡µé¢
 		break;
 	}
 
 	case KEY_esc:
 	{	
-		index_reset(false, 55);																		// ¸´Î»Ñ¡Ôñ¿òÓë½ø¶ÈÌõ
-		ui_show.ui_disapper();																		// ÏûÊ§º¯Êı
-		Enter_Page(SELECT_PAGE,button_none,button_none);											// ·µ»ØÑ¡ÔñÒ³Ãæ
+		index_reset(false, 55);																		// å¤ä½é€‰æ‹©æ¡†ä¸è¿›åº¦æ¡
+		ui_show.ui_disapper();																		// æ¶ˆå¤±å‡½æ•°
+		Enter_Page(SELECT_PAGE,button_none,button_none);											// è¿”å›é€‰æ‹©é¡µé¢
 		break;
 	}
 	default:
@@ -464,14 +466,14 @@ void wifi_page_process(button_status_e Key5Value, button_status_e Key0Value)
 
 
 /**
- * @brief      	ÎÂÊª¶ÈÒ³Ãæ´¦Àí
- * @param[in]   KeyValue £º ¼üÖµ
+ * @brief      	æ¸©æ¹¿åº¦é¡µé¢å¤„ç†
+ * @param[in]   KeyValue ï¼š é”®å€¼
  * @retval      none
  * @attention
  */
 void temp_hum_page_process(button_status_e Key5Value, button_status_e Key0Value)
 {
-	Serial.println("temp status");
+	// Serial.println("temp status");
 	switch (Key5Value_transition_function(Key5Value, Key0Value))
 	{
 
@@ -489,23 +491,23 @@ void temp_hum_page_process(button_status_e Key5Value, button_status_e Key0Value)
 
 	case KEY_enter:
 	{
-		index_reset(true, 55);																		// ¸´Î»Ñ¡Ôñ¿òÓë½ø¶ÈÌõ
+		index_reset(true, 55);																		// å¤ä½é€‰æ‹©æ¡†ä¸è¿›åº¦æ¡
 		ui_show.ui_disapper();		
 		Enter_Page(MAIN_PAGE,button_none,button_none);;
 		break;
 	}
 	case KEY_home:
 	{
-		index_reset(false, 55);																		// ¸´Î»Ñ¡Ôñ¿òÓë½ø¶ÈÌõ
-		ui_show.ui_disapper();																		// ÏûÊ§º¯Êı
+		index_reset(false, 55);																		// å¤ä½é€‰æ‹©æ¡†ä¸è¿›åº¦æ¡
+		ui_show.ui_disapper();																		// æ¶ˆå¤±å‡½æ•°
 		Enter_Page(MAIN_PAGE,button_none,button_none);
 		break;
 	}
 
 	case KEY_esc:
 	{	
-		index_reset(false, 55);																		// ¸´Î»Ñ¡Ôñ¿òÓë½ø¶ÈÌõ
-		ui_show.ui_disapper();																		// ÏûÊ§º¯Êı
+		index_reset(false, 55);																		// å¤ä½é€‰æ‹©æ¡†ä¸è¿›åº¦æ¡
+		ui_show.ui_disapper();																		// æ¶ˆå¤±å‡½æ•°
 		Enter_Page(SELECT_PAGE,button_none,button_none);
 		break;
 	}
@@ -516,14 +518,14 @@ void temp_hum_page_process(button_status_e Key5Value, button_status_e Key0Value)
 
 
 /**
- * @brief      	Î¢ĞÅĞ¡³ÌĞòÒ³Ãæ´¦Àí
- * @param[in]   KeyValue £º ¼üÖµ
+ * @brief      	å¾®ä¿¡å°ç¨‹åºé¡µé¢å¤„ç†
+ * @param[in]   KeyValue ï¼š é”®å€¼
  * @retval      none
  * @attention
  */
 void wechat_page_process(button_status_e Key5Value, button_status_e Key0Value)
 {
-	Serial.println("wechat status");
+	// Serial.println("wechat status");
 	switch (Key5Value_transition_function(Key5Value, Key0Value))
 	{
 
@@ -541,23 +543,23 @@ void wechat_page_process(button_status_e Key5Value, button_status_e Key0Value)
 
 	case KEY_enter:
 	{
-		index_reset(true, 55);																		// ¸´Î»Ñ¡Ôñ¿òÓë½ø¶ÈÌõ
+		index_reset(true, 55);																		// å¤ä½é€‰æ‹©æ¡†ä¸è¿›åº¦æ¡
 		ui_show.ui_disapper();		
 		Enter_Page(MAIN_PAGE,button_none,button_none);;
 		break;
 	}
 	case KEY_home:
 	{
-		index_reset(false, 55);																		// ¸´Î»Ñ¡Ôñ¿òÓë½ø¶ÈÌõ
-		ui_show.ui_disapper();																		// ÏûÊ§º¯Êı
+		index_reset(false, 55);																		// å¤ä½é€‰æ‹©æ¡†ä¸è¿›åº¦æ¡
+		ui_show.ui_disapper();																		// æ¶ˆå¤±å‡½æ•°
 		Enter_Page(MAIN_PAGE,button_none,button_none);
 		break;
 	}
 
 	case KEY_esc:
 	{	
-		index_reset(false, 55);																		// ¸´Î»Ñ¡Ôñ¿òÓë½ø¶ÈÌõ
-		ui_show.ui_disapper();																		// ÏûÊ§º¯Êı
+		index_reset(false, 55);																		// å¤ä½é€‰æ‹©æ¡†ä¸è¿›åº¦æ¡
+		ui_show.ui_disapper();																		// æ¶ˆå¤±å‡½æ•°
 		Enter_Page(SELECT_PAGE,button_none,button_none);
 		break;
 	}
@@ -567,14 +569,14 @@ void wechat_page_process(button_status_e Key5Value, button_status_e Key0Value)
 }
 
 /**
- * @brief      	Ò£¿ØÒ³Ãæ´¦Àí
- * @param[in]   KeyValue £º ¼üÖµ
+ * @brief      	é¥æ§é¡µé¢å¤„ç†
+ * @param[in]   KeyValue ï¼š é”®å€¼
  * @retval      none
  * @attention
  */
 void remote_page_process(button_status_e Key5Value, button_status_e Key0Value)
 {
-	Serial.println("remote status");
+	// Serial.println("remote status");
 	switch (Key5Value_transition_function(Key5Value, Key0Value))
 	{
 
@@ -592,23 +594,23 @@ void remote_page_process(button_status_e Key5Value, button_status_e Key0Value)
 
 	case KEY_enter:
 	{
-		index_reset(true, 55);																		// ¸´Î»Ñ¡Ôñ¿òÓë½ø¶ÈÌõ
+		index_reset(true, 55);																		// å¤ä½é€‰æ‹©æ¡†ä¸è¿›åº¦æ¡
 		ui_show.ui_disapper();		
 		Enter_Page(MAIN_PAGE,button_none,button_none);;
 		break;
 	}
 	case KEY_home:
 	{
-		index_reset(false, 55);																		// ¸´Î»Ñ¡Ôñ¿òÓë½ø¶ÈÌõ
-		ui_show.ui_disapper();																		// ÏûÊ§º¯Êı
+		index_reset(false, 55);																		// å¤ä½é€‰æ‹©æ¡†ä¸è¿›åº¦æ¡
+		ui_show.ui_disapper();																		// æ¶ˆå¤±å‡½æ•°
 		Enter_Page(MAIN_PAGE,button_none,button_none);
 		break;
 	}
 
 	case KEY_esc:
 	{	
-		index_reset(false, 55);																		// ¸´Î»Ñ¡Ôñ¿òÓë½ø¶ÈÌõ
-		ui_show.ui_disapper();																		// ÏûÊ§º¯Êı
+		index_reset(false, 55);																		// å¤ä½é€‰æ‹©æ¡†ä¸è¿›åº¦æ¡
+		ui_show.ui_disapper();																		// æ¶ˆå¤±å‡½æ•°
 		Enter_Page(SELECT_PAGE,button_none,button_none);
 		break;
 	}
@@ -619,14 +621,14 @@ void remote_page_process(button_status_e Key5Value, button_status_e Key0Value)
 
 
 /**
- * @brief      	ºìÍâ¼ì²âÒ³Ãæ´¦Àí
- * @param[in]   KeyValue £º ¼üÖµ
+ * @brief      	çº¢å¤–æ£€æµ‹é¡µé¢å¤„ç†
+ * @param[in]   KeyValue ï¼š é”®å€¼
  * @retval      none
  * @attention
  */
 void ir_check_page_process(button_status_e Key5Value, button_status_e Key0Value)
 {
-	Serial.println("ir_check status");
+	// Serial.println("ir_check status");
 	switch (Key5Value_transition_function(Key5Value, Key0Value))
 	{
 
@@ -644,23 +646,23 @@ void ir_check_page_process(button_status_e Key5Value, button_status_e Key0Value)
 
 	case KEY_enter:
 	{
-		index_reset(true, 55);																		// ¸´Î»Ñ¡Ôñ¿òÓë½ø¶ÈÌõ
+		index_reset(true, 55);																		// å¤ä½é€‰æ‹©æ¡†ä¸è¿›åº¦æ¡
 		ui_show.ui_disapper();		
 		Enter_Page(MAIN_PAGE,button_none,button_none);;
 		break;
 	}
 	case KEY_home:
 	{
-		index_reset(false, 55);																		// ¸´Î»Ñ¡Ôñ¿òÓë½ø¶ÈÌõ
-		ui_show.ui_disapper();																		// ÏûÊ§º¯Êı
+		index_reset(false, 55);																		// å¤ä½é€‰æ‹©æ¡†ä¸è¿›åº¦æ¡
+		ui_show.ui_disapper();																		// æ¶ˆå¤±å‡½æ•°
 		Enter_Page(MAIN_PAGE,button_none,button_none);
 		break;
 	}
 
 	case KEY_esc:
 	{	
-		index_reset(false, 55);																		// ¸´Î»Ñ¡Ôñ¿òÓë½ø¶ÈÌõ
-		ui_show.ui_disapper();																		// ÏûÊ§º¯Êı
+		index_reset(false, 55);																		// å¤ä½é€‰æ‹©æ¡†ä¸è¿›åº¦æ¡
+		ui_show.ui_disapper();																		// æ¶ˆå¤±å‡½æ•°
 		Enter_Page(SELECT_PAGE,button_none,button_none);
 		break;
 	}
@@ -672,14 +674,14 @@ void ir_check_page_process(button_status_e Key5Value, button_status_e Key0Value)
 
 
 /**
- * @brief      	¹ØÓÚÉè±¸Ò³Ãæ´¦Àí
- * @param[in]   KeyValue £º ¼üÖµ
+ * @brief      	å…³äºè®¾å¤‡é¡µé¢å¤„ç†
+ * @param[in]   KeyValue ï¼š é”®å€¼
  * @retval      none
  * @attention
  */
 void about_page_process(button_status_e Key5Value, button_status_e Key0Value)
 {
-	Serial.println("about status");
+	// Serial.println("about status");
 	switch (Key5Value_transition_function(Key5Value, Key0Value))
 	{
 
@@ -697,23 +699,23 @@ void about_page_process(button_status_e Key5Value, button_status_e Key0Value)
 
 	case KEY_enter:
 	{
-		index_reset(true, 55);																		// ¸´Î»Ñ¡Ôñ¿òÓë½ø¶ÈÌõ
+		index_reset(true, 55);																		// å¤ä½é€‰æ‹©æ¡†ä¸è¿›åº¦æ¡
 		ui_show.ui_disapper();		
 		Enter_Page(MAIN_PAGE,button_none,button_none);;
 		break;
 	}
 	case KEY_home:
 	{
-		index_reset(false, 55);																		// ¸´Î»Ñ¡Ôñ¿òÓë½ø¶ÈÌõ
-		ui_show.ui_disapper();																		// ÏûÊ§º¯Êı
+		index_reset(false, 55);																		// å¤ä½é€‰æ‹©æ¡†ä¸è¿›åº¦æ¡
+		ui_show.ui_disapper();																		// æ¶ˆå¤±å‡½æ•°
 		Enter_Page(MAIN_PAGE,button_none,button_none);
 		break;
 	}
 
 	case KEY_esc:
 	{	
-		index_reset(false, 55);																		// ¸´Î»Ñ¡Ôñ¿òÓë½ø¶ÈÌõ
-		ui_show.ui_disapper();																		// ÏûÊ§º¯Êı
+		index_reset(false, 55);																		// å¤ä½é€‰æ‹©æ¡†ä¸è¿›åº¦æ¡
+		ui_show.ui_disapper();																		// æ¶ˆå¤±å‡½æ•°
 		Enter_Page(SELECT_PAGE,button_none,button_none);
 		break;
 	}
@@ -725,48 +727,41 @@ void about_page_process(button_status_e Key5Value, button_status_e Key0Value)
 
 
 /**
- * @brief      	ÍøÂçĞÅÏ¢Ò³Ãæ´¦Àí
- * @param[in]   KeyValue £º ¼üÖµ
+ * @brief      	ç½‘ç»œä¿¡æ¯é¡µé¢å¤„ç†
+ * @param[in]   KeyValue ï¼š é”®å€¼
  * @retval      none
  * @attention
  */
 void wifi_info_page_process(button_status_e Key5Value, button_status_e Key0Value)
 {
-	Serial.println("wifi_info status");
+	// Serial.println("wifi_info status");
+	wifi_info_ui_process();
 	switch (Key5Value_transition_function(Key5Value, Key0Value))
 	{
 
 	case KEY_dowm:
 	{
-
+		usr_Wifi.wifi_quick_link();								//å¿«é€Ÿè¿æ¥
 		break;
 	}
 
 	case KEY_up:
 	{
-
+		usr_Wifi.wifi_quick_link();								//å¿«é€Ÿè¿æ¥
 		break ;
-	}
-
-	case KEY_enter:
-	{
-		index_reset(true, 55);																		// ¸´Î»Ñ¡Ôñ¿òÓë½ø¶ÈÌõ
-		ui_show.ui_disapper();		
-		Enter_Page(MAIN_PAGE,button_none,button_none);;
-		break;
 	}
 	case KEY_home:
 	{
-		index_reset(false, 55);																		// ¸´Î»Ñ¡Ôñ¿òÓë½ø¶ÈÌõ
-		ui_show.ui_disapper();																		// ÏûÊ§º¯Êı
+		index_reset(false, 55);																		// å¤ä½é€‰æ‹©æ¡†ä¸è¿›åº¦æ¡
+		ui_show.ui_disapper();																		// æ¶ˆå¤±å‡½æ•°
 		Enter_Page(MAIN_PAGE,button_none,button_none);
 		break;
 	}
 
 	case KEY_esc:
 	{	
-		index_reset(false, 55);																		// ¸´Î»Ñ¡Ôñ¿òÓë½ø¶ÈÌõ
-		ui_show.ui_disapper();																		// ÏûÊ§º¯Êı
+		index_reset(false, 55);																		// å¤ä½é€‰æ‹©æ¡†ä¸è¿›åº¦æ¡
+		ui_show.ui_disapper();																		// æ¶ˆå¤±å‡½æ•°
 		Enter_Page(WiFi_PAGE,button_none,button_none);
 		break;
 	}
@@ -777,48 +772,54 @@ void wifi_info_page_process(button_status_e Key5Value, button_status_e Key0Value
 
 
 /**
- * @brief      	¶Ï¿ªÍøÂçÒ³Ãæ´¦Àí
- * @param[in]   KeyValue £º ¼üÖµ
+ * @brief      	æ–­å¼€ç½‘ç»œé¡µé¢å¤„ç†
+ * @param[in]   KeyValue ï¼š é”®å€¼
  * @retval      none
  * @attention
  */
 void wifi_disconnect_page_process(button_status_e Key5Value, button_status_e Key0Value)
 {
-	Serial.println("wifi_disconnect status");
+	// Serial.println("wifi_disconnect status");
+	usr_Wifi.wifi_disconnect();										// æ–­å¼€ç½‘ç»œ
+	wifi_discon_ui_process();
 	switch (Key5Value_transition_function(Key5Value, Key0Value))
 	{
 
 	case KEY_dowm:
 	{
-
+		index_reset(false, 55);																		// å¤ä½é€‰æ‹©æ¡†ä¸è¿›åº¦æ¡
+		ui_show.ui_disapper();		
+		Enter_Page(WiFi_PAGE,button_none,button_none);
 		break;
 	}
 
 	case KEY_up:
 	{
-
+		index_reset(false, 55);																		// å¤ä½é€‰æ‹©æ¡†ä¸è¿›åº¦æ¡
+		ui_show.ui_disapper();		
+		Enter_Page(WiFi_PAGE,button_none,button_none);
 		break ;
 	}
 
 	case KEY_enter:
 	{
-		index_reset(true, 55);																		// ¸´Î»Ñ¡Ôñ¿òÓë½ø¶ÈÌõ
+		index_reset(false, 55);																		// å¤ä½é€‰æ‹©æ¡†ä¸è¿›åº¦æ¡
 		ui_show.ui_disapper();		
-		Enter_Page(MAIN_PAGE,button_none,button_none);;
+		Enter_Page(WiFi_PAGE,button_none,button_none);
 		break;
 	}
 	case KEY_home:
 	{
-		index_reset(false, 55);																		// ¸´Î»Ñ¡Ôñ¿òÓë½ø¶ÈÌõ
-		ui_show.ui_disapper();																		// ÏûÊ§º¯Êı
+		index_reset(false, 55);																		// å¤ä½é€‰æ‹©æ¡†ä¸è¿›åº¦æ¡
+		ui_show.ui_disapper();																		// æ¶ˆå¤±å‡½æ•°
 		Enter_Page(MAIN_PAGE,button_none,button_none);
 		break;
 	}
 
 	case KEY_esc:
 	{	
-		index_reset(false, 55);																		// ¸´Î»Ñ¡Ôñ¿òÓë½ø¶ÈÌõ
-		ui_show.ui_disapper();																		// ÏûÊ§º¯Êı
+		index_reset(false, 55);																		// å¤ä½é€‰æ‹©æ¡†ä¸è¿›åº¦æ¡
+		ui_show.ui_disapper();																		// æ¶ˆå¤±å‡½æ•°
 		Enter_Page(WiFi_PAGE,button_none,button_none);
 		break;
 	}
@@ -829,48 +830,35 @@ void wifi_disconnect_page_process(button_status_e Key5Value, button_status_e Key
 
 
 /**
- * @brief      	É¨ÂëÅäÍøÒ³Ãæ´¦Àí
- * @param[in]   KeyValue £º ¼üÖµ
+ * @brief      	æ‰«ç é…ç½‘é¡µé¢å¤„ç†
+ * @param[in]   KeyValue ï¼š é”®å€¼
  * @retval      none
  * @attention
  */
 void wifi_smart_page_process(button_status_e Key5Value, button_status_e Key0Value)
 {
-	Serial.println("wifi_smart status");
+	// Serial.println("wifi_smart status");
+	wifi_smart_conf_ui_process();
 	switch (Key5Value_transition_function(Key5Value, Key0Value))
 	{
-
 	case KEY_dowm:
 	{
-
-		break;
-	}
-
-	case KEY_up:
-	{
-
-		break ;
-	}
-
-	case KEY_enter:
-	{
-		index_reset(true, 55);																		// ¸´Î»Ñ¡Ôñ¿òÓë½ø¶ÈÌõ
-		ui_show.ui_disapper();		
-		Enter_Page(MAIN_PAGE,button_none,button_none);;
+		usr_Wifi.wifi_smartconfig();
+		clock_updata();               													     		//æ›´æ–°æ—¶é—´æ•°æ®
 		break;
 	}
 	case KEY_home:
 	{
-		index_reset(false, 55);																		// ¸´Î»Ñ¡Ôñ¿òÓë½ø¶ÈÌõ
-		ui_show.ui_disapper();																		// ÏûÊ§º¯Êı
+		index_reset(false, 55);																		// å¤ä½é€‰æ‹©æ¡†ä¸è¿›åº¦æ¡
+		ui_show.ui_disapper();																		// æ¶ˆå¤±å‡½æ•°
 		Enter_Page(MAIN_PAGE,button_none,button_none);
 		break;
 	}
 
 	case KEY_esc:
 	{	
-		index_reset(false, 55);																		// ¸´Î»Ñ¡Ôñ¿òÓë½ø¶ÈÌõ
-		ui_show.ui_disapper();																		// ÏûÊ§º¯Êı
+		index_reset(false, 55);																		// å¤ä½é€‰æ‹©æ¡†ä¸è¿›åº¦æ¡
+		ui_show.ui_disapper();																		// æ¶ˆå¤±å‡½æ•°
 		Enter_Page(WiFi_PAGE,button_none,button_none);
 		break;
 	}
@@ -881,7 +869,7 @@ void wifi_smart_page_process(button_status_e Key5Value, button_status_e Key0Valu
 
 
 /**
- * @brief       ¿ÕÏĞÒ³Ãæ´¦Àí
+ * @brief       ç©ºé—²é¡µé¢å¤„ç†
  * @param[in]   none
  * @retval      none
  * @attention

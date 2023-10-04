@@ -80,3 +80,9 @@ void wifi_eeprom(const char* SSID,const char* Password) {
 
 }
 
+
+// 读取EEPROM数据
+void eeprom_read(void)
+{
+  EEPROM.get(eeprom_address0,eepUserSet);
+}

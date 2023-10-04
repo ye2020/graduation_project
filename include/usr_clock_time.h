@@ -11,6 +11,8 @@ typedef struct
 
 
 void clock_init(void);
+void clock_updata(void);
+
 String return_time_hours(void);
 String return_time_minutes(void);
 
