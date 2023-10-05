@@ -37,15 +37,15 @@
 #include "usr_irremote.h"
 #include "usr_dht.h"
 #include "usr_server.h"
+#include "usr_SR505.h"
 
 
 using namespace std;
 
 
 
-
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   auto_eeprom();                                                      // 读取保存在flash中的数据
   ui_show.ui_init();                                                  // ui初始化
   Menu_Main_Init();                                                   // 菜单初始化
@@ -53,9 +53,11 @@ void setup() {
 
   usr_Wifi.wifi_init();                                               // wifi 初始化函数,自动调用上次连接成功的网络
   
+  // buletooth_init();
   button_init();                                                      // 按键初始化
   usr_dht.dht_init();                                                 // 温湿度初始化
   startTCPClient();
+  sr_init();
   // IR_init();
   // PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTDI_U, FUNC_GPIO14);
   // GPIO_OUTPUT_SET(GPIO_ID_PIN(14), 1);
@@ -74,7 +76,6 @@ void loop()
   Menu_Select_main(key5_status_return(),key0_status_return());
   // doTCPClientTick();                        // 定时发送到云端
 }
-
 
 
 

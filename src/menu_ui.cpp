@@ -243,3 +243,21 @@ void about_ui_process(void)
 	u8g2.drawStr(3, 60, "SRAM  :  80KB");
 	u8g2.sendBuffer();
 }
+
+
+// 红外检测页面UI进程
+void ir_check_ui_process(bool status)
+{
+	u8g2.clearBuffer();	
+	top_ui_show();
+	if(status)
+	{
+		u8g2.drawXBMP(40,16,50,47,ir_check_50_47);
+	}
+	else
+	{
+		// u8g2.drawUTF8(35, 48, "未检测到...");
+		u8g2.drawXBMP(40,16,50,47,ir_fail_50_47);
+	}
+	u8g2.sendBuffer();
+}

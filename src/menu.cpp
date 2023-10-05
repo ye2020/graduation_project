@@ -36,6 +36,7 @@
 #include "usr_wifi.h"
 #include "usr_clock_time.h"
 #include "usr_dht.h"
+#include "usr_SR505.h"
 
 
 // 定义菜单索引变量
@@ -201,6 +202,8 @@ void index_reset(bool status, int16_t len)
 	ui_show.frame_len = {len, len};																// 复位选择框
 	ui_show.frame_y	  = {17, 17};
 	ui_show.progress_position = {16, 16};														// 复位进度条
+	ui_show.text_bottom_index = 2;
+	ui_show.text_top_index = 0;
 }
 
 uint8_t return_UI_loging_flag(void)
@@ -595,6 +598,7 @@ void remote_page_process(button_status_e Key5Value, button_status_e Key0Value)
 void ir_check_page_process(button_status_e Key5Value, button_status_e Key0Value)
 {
 	// Serial.println("ir_check status");
+	ir_check_ui_process(sr_tick());
 	switch (Key5Value_transition_function(Key5Value, Key0Value))
 	{
 
