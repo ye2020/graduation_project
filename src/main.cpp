@@ -61,8 +61,6 @@ void setup() {
   // IR_init();
   // PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTDI_U, FUNC_GPIO14);
   // GPIO_OUTPUT_SET(GPIO_ID_PIN(14), 1);
-
-
 }
 
 
@@ -70,11 +68,10 @@ void loop()
 {
   // IR_send();
   // IR_receive();
-  // usr_dht.dht_data_receive();                        // 温湿度检查
   button_loop();                           // 按键循环函数 
   buletooth_loop();                        // 蓝牙循环函数 
   Menu_Select_main(key5_status_return(),key0_status_return());
-  // doTCPClientTick();                        // 定时发送到云端
+  doTCPClientTick();                        // 定时发送到云端
 }
 
 
