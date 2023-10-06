@@ -27,6 +27,7 @@ void Menu_Main_Init(void)
 	sub_index.main_current_index = 0;
 	sub_index.select_current_index = 2;				// 索引值2 ~ 10 留给 菜单表单及其子表单 
 	sub_index.wifi_config_current_index = 11;		// 索引值11 ~ 15 留给网络配置页面
+	sub_index.remote_current_index	= 0;			// 遥控索引, 因为不需要调用子表单, 所以无所谓
 			
 
 
@@ -158,6 +159,15 @@ void wifi_page_ui_process(void)
 	u8g2.sendBuffer();
 }
 
+// 遥控页面UI进程
+void remote_page_ui_process(void)
+{
+	u8g2.clearBuffer();	
+	top_ui_show();
+	ui_show.menu_ui_show(ui_show.remote_list);	
+	ui_show.progress_ui_show(ui_show.remote_line_len, ui_show.remote_single_line_length);      // 进度条UI绘制			
+	u8g2.sendBuffer();	
+}
 
 // 扫码配网页面UI进程
 void wifi_smart_conf_ui_process(void)

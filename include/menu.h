@@ -48,6 +48,7 @@ typedef struct Menu_Key_Index
 	menu_u8 main_current_index ;
 	menu_u8 wifi_config_current_index ; 
   menu_u8 select_current_index;
+  menu_u8 remote_current_index;
 
 	menu_u8 Current_Page ;      // µ±Ç°Ò³Ãæ
 }Key_Index;

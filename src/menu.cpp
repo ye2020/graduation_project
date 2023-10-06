@@ -37,6 +37,7 @@
 #include "usr_clock_time.h"
 #include "usr_dht.h"
 #include "usr_SR505.h"
+#include "usr_irremote.h"
 
 
 // 定义菜单索引变量
@@ -198,6 +199,7 @@ void index_reset(bool status, int16_t len)
 		sub_index.main_current_index = 0;
 		sub_index.select_current_index = 2;				// 索引值2 ~ 10 留给 菜单表单及其子表单 
 		sub_index.wifi_config_current_index = 11;		// 索引值11 ~ 15 留给网络配置页面
+		sub_index.remote_current_index = 0;
 	}
 	ui_show.frame_len = {len, len};																// 复位选择框
 	ui_show.frame_y	  = {17, 17};
@@ -546,26 +548,63 @@ void wechat_page_process(button_status_e Key5Value, button_status_e Key0Value)
 void remote_page_process(button_status_e Key5Value, button_status_e Key0Value)
 {
 	// Serial.println("remote status");
+	remote_page_ui_process();
 	switch (Key5Value_transition_function(Key5Value, Key0Value))
 	{
 
 	case KEY_dowm:
 	{
+		// 临界条件判断
+		(sub_index.remote_current_index < 2) ? (sub_index.remote_current_index++) : (sub_index.remote_current_index = 2);
+		
+		// 进度条目标位置
+		if(ui_show.progress_position.position_trg < (ui_show.max_bar - ui_show.remote_single_line_length -  1))  {
+			(ui_show.progress_position.position_trg += ui_show.remote_single_line_length);
+		}
+	
+		{
+			ui_show.frame_y.position_trg += 15;							// 下移框
+			Serial.println("y.position_trg");
+			Serial.println(ui_show.frame_y.position_trg);		
+			
+		}
 
-		break;
+		(ui_show.frame_y.position_trg < (ui_show.screen_height - 5)) ? (ui_show.frame_y.position_trg += 0) : (ui_show.frame_y.position_trg = 47);  // 选择框位置限制
+		(ui_show.frame_y.position_trg > ui_show.y_offset) ? (ui_show.frame_y.position_trg -= 0) : (ui_show.frame_y.position_trg = 18);
+  		
+		ui_show.frame_len.position_trg  =  ui_show.remote_list[sub_index.remote_current_index].len * 5;
+
+		Serial.println("down to choose");
+		Serial.println(sub_index.remote_current_index);		
+		break;					
 	}
 
 	case KEY_up:
 	{
+		(sub_index.remote_current_index > 0) ? (sub_index.remote_current_index--) : (sub_index.remote_current_index = 0);
 
+		// 进度条目标位置
+		if(ui_show.progress_position.position_trg > (ui_show.remote_single_line_length + ui_show.y_offset - 2))  {
+			(ui_show.progress_position.position_trg -= ui_show.remote_single_line_length);
+		}
+
+		{
+			ui_show.frame_y.position_trg -= 15;							// 上移框
+		}	
+
+		(ui_show.frame_y.position_trg > ui_show.y_offset) ? (ui_show.frame_y.position_trg -= 0) : (ui_show.frame_y.position_trg = 18);	// 选择框位置限制
+		(ui_show.frame_y.position_trg < (ui_show.screen_height - 5)) ? (ui_show.frame_y.position_trg += 0) : (ui_show.frame_y.position_trg = 47);
+
+  		ui_show.frame_len.position_trg  =  ui_show.remote_list[sub_index.remote_current_index].len * 5;		
+
+		Serial.println("down to choose");
+		Serial.println(sub_index.remote_current_index);		
 		break ;
 	}
 
 	case KEY_enter:
 	{
-		index_reset(true, 55);																		// 复位选择框与进度条
-		ui_show.ui_disapper();		
-		Enter_Page(MAIN_PAGE,button_none,button_none);;
+		ac_func[sub_index.remote_current_index]();						// 调用对应回调函数
 		break;
 	}
 	case KEY_home:
@@ -580,7 +619,7 @@ void remote_page_process(button_status_e Key5Value, button_status_e Key0Value)
 	{	
 		index_reset(false, 55);																		// 复位选择框与进度条
 		ui_show.ui_disapper();																		// 消失函数
-		Enter_Page(SELECT_PAGE,button_none,button_none);
+		Enter_Page(REMOTE_PAGE,button_none,button_none);
 		break;
 	}
 	default:

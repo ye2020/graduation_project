@@ -55,12 +55,20 @@ ui_show_t::ui_show_t()
                   {"断开网络", 11},
                   {"扫码配网", 11}
     };
+
+    remote_list = {
+                    {"开/关", 9},
+                    {"温度低", 8},
+                    {"温度高", 8}
+    };
             
 
     line_len                  = list.size();                                      // 选择页面的数量              
     single_line_length        = (screen_height - 1 - 16) / line_len;              // 进度条单元格长度
     wifi_line_len             = wifi_list.size();                                 // wifi页面数量
     wifi_single_line_length   = (screen_height - 1 - 16) / wifi_line_len;         // wifi页面单元格长度
+    remote_line_len             = remote_list.size();                                 // wifi页面数量
+    remote_single_line_length   = (screen_height - 1 - 16) / remote_line_len;         // wifi页面单元格长度
 
     total_line_length  = single_line_length * line_len + 1;                // 进度条长竖线的长度
 

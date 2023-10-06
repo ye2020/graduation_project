@@ -45,7 +45,7 @@ using namespace std;
 
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   auto_eeprom();                                                      // 读取保存在flash中的数据
   ui_show.ui_init();                                                  // ui初始化
   Menu_Main_Init();                                                   // 菜单初始化
@@ -53,11 +53,11 @@ void setup() {
 
   usr_Wifi.wifi_init();                                               // wifi 初始化函数,自动调用上次连接成功的网络
   
-  // buletooth_init();
+  buletooth_init();                                                   // 蓝牙软串口初始化
   button_init();                                                      // 按键初始化
   usr_dht.dht_init();                                                 // 温湿度初始化
-  startTCPClient();
-  sr_init();
+  startTCPClient();                                                   // 上传云端初始化
+  sr_init();                                                          // 红外传感器初始化
   // IR_init();
   // PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTDI_U, FUNC_GPIO14);
   // GPIO_OUTPUT_SET(GPIO_ID_PIN(14), 1);

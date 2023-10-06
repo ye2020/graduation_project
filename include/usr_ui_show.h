@@ -140,6 +140,9 @@ class ui_show_t{
     int16_t wifi_line_len;                                                  // wifi页面的数量
     uint8_t wifi_single_line_length;                                        // 进度条单元格长度
 
+    int16_t remote_line_len;                                                  // wifi页面的数量
+    uint8_t remote_single_line_length;                                        // 进度条单元格长度
+
     uint8_t screen_length = 128;                                            // 屏幕长度
     uint8_t screen_height = 64 ;                                            // 屏幕高度
 
@@ -154,6 +157,7 @@ class ui_show_t{
 
     std::vector<Ui_list_t> list;                                             // 菜单项数组
     std::vector<Ui_list_t> wifi_list;                                        // wifi配置页面子菜单
+    std::vector<Ui_list_t> remote_list;                                      // 遥控页面子菜单
 
     ui_show_t();                                                            // 构造函数
 

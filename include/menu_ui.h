@@ -33,6 +33,7 @@ void temp_hum_ui_process(void);
 void wechat_ui_process(void);
 void about_ui_process(void);
 void ir_check_ui_process(bool status);
+void remote_page_ui_process(void);
 
 
 

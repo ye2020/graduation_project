@@ -18,8 +18,13 @@
 
 void IR_init(void);
 void IR_receive(void);
-void IR_send(void);
+void IR_on_send(void);
+void IR_off_send(void);
+void IR_temp_up_send(void);
+void IR_temp_dowm_send(void);
+void IR_power_send(void);
 
 
+extern void (*ac_func[3])(void);      // 函数指针数组
 
 #endif
