@@ -164,8 +164,8 @@ class ui_show_t{
     int  ui_run(int16_t *res, int16_t *res_trg, int16_t step);              // 实现动画效果(渐进)
     void select_ui_show(int16_t speed_x, int16_t speed_y);                  // 选择框绘制函数
     void ui_init(void);                                                     // ui初始化函数
-    void progress_ui_show(int16_t list_len, uint8_t single_length);         // 进度条绘制函数
-    void menu_ui_show(std::vector<Ui_list_t>& list);                         // 菜单绘制函数
+    void progress_ui_show(int16_t list_len, uint8_t single_length, int16_t speed);         // 进度条绘制函数
+    void menu_ui_show(std::vector<Ui_list_t>& list, int16_t speed_x, int16_t speed_y);                        // 菜单绘制函数
     bool ui_disapper(void);                                                 // 消失函数
 
     private:

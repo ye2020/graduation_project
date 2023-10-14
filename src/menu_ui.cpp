@@ -3,7 +3,7 @@
   * @file       menu_ui.c/h
   * @brief      提供菜单框架中UI的处理，储存UI绘制的进程函数
   * @note
-  * @history    2022.7.8
+  * @history    2023.9.20
   *
   @verbatim     v1.0
   ==============================================================================
@@ -143,8 +143,8 @@ void select_page_ui_process(void)
 {
 	u8g2.clearBuffer();             														 // 清除缓存
 	top_ui_show();																			 // 表头常驻UI
-	ui_show.menu_ui_show(ui_show.list);														 // 绘制菜单
-	ui_show.progress_ui_show(ui_show.line_len, ui_show.single_line_length);                  // 进度条UI绘制
+	ui_show.menu_ui_show(ui_show.list, 13, 9);														 // 绘制菜单
+	ui_show.progress_ui_show(ui_show.line_len, ui_show.single_line_length, 4);                  // 进度条UI绘制
 	u8g2.sendBuffer();              														 // 将缓存发送并显示
 }
 
@@ -154,8 +154,8 @@ void wifi_page_ui_process(void)
 {
 	u8g2.clearBuffer();	
 	top_ui_show();
-	ui_show.menu_ui_show(ui_show.wifi_list);	
-	ui_show.progress_ui_show(ui_show.wifi_line_len, ui_show.wifi_single_line_length);      // 进度条UI绘制						
+	ui_show.menu_ui_show(ui_show.wifi_list, 13, 9);	
+	ui_show.progress_ui_show(ui_show.wifi_line_len, ui_show.wifi_single_line_length, 4);      // 进度条UI绘制						
 	u8g2.sendBuffer();
 }
 
@@ -164,8 +164,8 @@ void remote_page_ui_process(void)
 {
 	u8g2.clearBuffer();	
 	top_ui_show();
-	ui_show.menu_ui_show(ui_show.remote_list);	
-	ui_show.progress_ui_show(ui_show.remote_line_len, ui_show.remote_single_line_length);      // 进度条UI绘制			
+	ui_show.menu_ui_show(ui_show.remote_list, 13, 9);	
+	ui_show.progress_ui_show(ui_show.remote_line_len, ui_show.remote_single_line_length, 20);      // 进度条UI绘制			
 	u8g2.sendBuffer();	
 }
 

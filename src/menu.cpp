@@ -3,7 +3,7 @@
   * @file       menu.c/h
   * @brief      提供键值适配等UI菜单框架数据
   * @note       框架移植自STM32工程，因项目UI子菜单仅2层，有些函数不是很必要，故稍显臃肿和混乱
-  * @history    2022.7.8
+  * @history    2023.9.20
   *
   @verbatim     v1.0
   ==============================================================================
@@ -548,12 +548,14 @@ void wechat_page_process(button_status_e Key5Value, button_status_e Key0Value)
 void remote_page_process(button_status_e Key5Value, button_status_e Key0Value)
 {
 	// Serial.println("remote status");
-	remote_page_ui_process();
+
+	remote_page_ui_process(); 
 	switch (Key5Value_transition_function(Key5Value, Key0Value))
 	{
 
 	case KEY_dowm:
 	{
+
 		// 临界条件判断
 		(sub_index.remote_current_index < 2) ? (sub_index.remote_current_index++) : (sub_index.remote_current_index = 2);
 		
@@ -581,6 +583,7 @@ void remote_page_process(button_status_e Key5Value, button_status_e Key0Value)
 
 	case KEY_up:
 	{
+
 		(sub_index.remote_current_index > 0) ? (sub_index.remote_current_index--) : (sub_index.remote_current_index = 0);
 
 		// 进度条目标位置
@@ -611,6 +614,7 @@ void remote_page_process(button_status_e Key5Value, button_status_e Key0Value)
 	{
 		index_reset(false, 55);																		// 复位选择框与进度条
 		ui_show.ui_disapper();																		// 消失函数
+
 		Enter_Page(MAIN_PAGE,button_none,button_none);
 		break;
 	}
@@ -619,7 +623,8 @@ void remote_page_process(button_status_e Key5Value, button_status_e Key0Value)
 	{	
 		index_reset(false, 55);																		// 复位选择框与进度条
 		ui_show.ui_disapper();																		// 消失函数
-		Enter_Page(REMOTE_PAGE,button_none,button_none);
+
+		Enter_Page(SELECT_PAGE,button_none,button_none);
 		break;
 	}
 	default:

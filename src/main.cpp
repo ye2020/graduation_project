@@ -58,7 +58,9 @@ void setup() {
   usr_dht.dht_init();                                                 // 温湿度初始化
   startTCPClient();                                                   // 上传云端初始化
   sr_init();                                                          // 红外传感器初始化
-  // IR_init();
+
+
+  IR_init();
   // PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTDI_U, FUNC_GPIO14);
   // GPIO_OUTPUT_SET(GPIO_ID_PIN(14), 1);
 }
@@ -66,12 +68,26 @@ void setup() {
 
 void loop() 
 {
-  // IR_send();
-  // IR_receive();
+#if 0
+  
+  IR_receive();
+  button_loop();                           // 按键循环函数 
+  if(key5_status_return() == button_click)
+  {
+    IR_power_send_2();
+  }
+  doTCPClientTick();                        // 定时发送到云端
+
+
+#endif
+
+  #if 1
   button_loop();                           // 按键循环函数 
   buletooth_loop();                        // 蓝牙循环函数 
   Menu_Select_main(key5_status_return(),key0_status_return());
   doTCPClientTick();                        // 定时发送到云端
+
+  #endif
 }
 
 

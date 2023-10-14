@@ -1,7 +1,7 @@
 #include "usr_server.h"
 #include "usr_wifi.h"
 #include "usr_dht.h"
-
+#include "usr_irremote.h"
 
 
 #define TCP_SERVER_ADDR "bemfa.com"     // 云服务器地址
@@ -151,10 +151,12 @@ void doTCPClientTick()
 void air_on_callback(void)
 {
     Serial.println("air one");
+    IR_on_send_2();
 }
 
 // 关闭状态回调函数
 void air_off_callback(void)
 {
     Serial.println("air off");
+    IR_off_send_2();
 }

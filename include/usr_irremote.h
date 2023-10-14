@@ -24,6 +24,12 @@ void IR_temp_up_send(void);
 void IR_temp_dowm_send(void);
 void IR_power_send(void);
 
+void IR_on_send_2(void);
+void IR_off_send_2(void);
+void IR_power_send_2(void);
+void IR_temp_up_send_2(void);
+void IR_temp_dowm_send_2(void);
+
 
 extern void (*ac_func[3])(void);      // 函数指针数组
 
