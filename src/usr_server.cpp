@@ -91,7 +91,7 @@ void doTCPClientTick()
         Serial.println("TCP Client disconnected.");
         TCPclient.stop();
     }
-    else if(millis() - preTCPStartTick > 1*1000)//重新连接
+    else if(millis() - preTCPStartTick > 1*1000)   //重新连接
         startTCPClient();
   }
   else

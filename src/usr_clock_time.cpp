@@ -4,8 +4,6 @@
 #include <WiFiUdp.h>
 
 
-
-
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "ntp1.aliyun.com", 8 * 3600, 60000);       //udp，服务器地址，时间偏移量，更新间隔
 

@@ -38,7 +38,7 @@
 #include "usr_dht.h"
 #include "usr_server.h"
 #include "usr_SR505.h"
-
+#include "bsp_adc.h"
 
 using namespace std;
 
@@ -50,7 +50,7 @@ void setup() {
   ui_show.ui_init();                                                  // ui初始化
   Menu_Main_Init();                                                   // 菜单初始化
 
-
+  
   usr_Wifi.wifi_init();                                               // wifi 初始化函数,自动调用上次连接成功的网络
   
   buletooth_init();                                                   // 蓝牙软串口初始化
@@ -58,7 +58,7 @@ void setup() {
   usr_dht.dht_init();                                                 // 温湿度初始化
   startTCPClient();                                                   // 上传云端初始化
   sr_init();                                                          // 红外传感器初始化
-
+  bsp_adc_init();
 
   IR_init();
   // PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTDI_U, FUNC_GPIO14);
@@ -87,6 +87,10 @@ void loop()
   Menu_Select_main(key5_status_return(),key0_status_return());
   doTCPClientTick();                        // 定时发送到云端
 
+  #endif
+  #if 0
+  Serial.println("vcc: ");	
+  Serial.println(get_bat_vcc());	
   #endif
 }
 

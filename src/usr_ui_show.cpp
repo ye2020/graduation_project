@@ -19,6 +19,7 @@
 #include <Wire.h>
 #include "usr_wifi.h"
 #include "usr_clock_time.h"
+#include "bsp_adc.h"
 
 
 // U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C u8g2(U8G2_R0, /* clock=*/14, /* data=*/2, /* reset=*/ U8X8_PIN_NONE);     // 0.91寸OLED驱动
@@ -245,7 +246,7 @@ bool ui_show_t::ui_disapper(void)
  */
 void top_ui_show(void)
 {
-
+  bat_vcc_percentage();
   u8g2.drawXBMP(108,2,16,9,battery_16_9);
 
   if(WiFi.status() == WL_CONNECTED) {
