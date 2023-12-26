@@ -78,7 +78,9 @@ uint8_t bat_vcc_percentage(void)
         voltage_value = (int)(get_bat_vcc() * 1000);          // 获取当前电压值
 
         Serial.println("vcc: ");	
-        Serial.println(voltage_value);	
+        Serial.println(voltage_value);
+        Serial.println("percen: ");	
+        Serial.println(bat_percen);		
 
         /* 电压小于最低电压 */
         if(voltage_value < Battery_Level_Percent_Table[0])
@@ -95,6 +97,8 @@ uint8_t bat_vcc_percentage(void)
                 // 百分比 计算可看成每10%的电量为一个固定斜率 即 10/(a[i]-a[i-1]) 以该斜率乘上区间内的电压值 (a[i]-voltage)
                 bat_percen = i*10 - ((10UL * (int)(Battery_Level_Percent_Table[i] - voltage_value)) / 
                                              (int)(Battery_Level_Percent_Table[i] - Battery_Level_Percent_Table[i-1]));
+
+                return bat_percen;                                             
             }
         }
 

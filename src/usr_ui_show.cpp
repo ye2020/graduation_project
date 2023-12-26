@@ -247,7 +247,8 @@ bool ui_show_t::ui_disapper(void)
 void top_ui_show(void)
 {
   bat_vcc_percentage();
-  u8g2.drawXBMP(108,2,16,9,battery_16_9);
+  // u8g2.drawXBMP(108,2,16,9,battery_16_9);
+  u8g2.drawXBMP(108,2,20,11,battery_25_20_11);
 
   if(WiFi.status() == WL_CONNECTED) {
      u8g2.drawXBMP(88,2,13,10,wifi_13_10);
