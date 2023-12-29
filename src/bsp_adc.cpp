@@ -21,11 +21,13 @@ const int analogInPin = A0;      // 模拟输入引脚
 
 #define checkBatTime 3 * 1000               // 读取电池电量速率1s (1s<=upDataTime<=60s）
 unsigned long bat_vcc_preTick = 0;      // 上次读取电压时的心跳值
+static bool vol_state = false;          // 充放电状态值 , 默认为放电
  
  
 const static int Battery_Level_Percent_Table[11] = {3000, 3650, 3700, 3740, 3760, 3795, 3840, 3910, 3980, 4070, 4150};     // 电池电量表
 int sensorvalue = 0;
 
+static void recharge_check(int vol_value);  // 充电检测
 
 /**
  * @brief 初始化adc
@@ -76,6 +78,7 @@ uint8_t bat_vcc_percentage(void)
     {
         bat_vcc_preTick = millis();                           // 更新心跳值
         voltage_value = (int)(get_bat_vcc() * 1000);          // 获取当前电压值
+        recharge_check(voltage_value);
 
         Serial.println("vcc: ");	
         Serial.println(voltage_value);
@@ -106,4 +109,51 @@ uint8_t bat_vcc_percentage(void)
     }
 
     return bat_percen;
+}
+
+
+
+/**
+ * @brief 充电检测函数
+ * 
+ * @param  vol_value 实时电压值
+ * 
+ */
+static void recharge_check(int vol_value)
+{
+    static int voltage_old = 0;
+    static int vol_increase_count = 0;
+
+    if((vol_value - voltage_old) > 1 ){
+        vol_increase_count++;
+    } else if((vol_value - voltage_old) <= 0){
+        vol_increase_count = 0;
+        vol_state = false;                  // 电池状态为放电             
+    }
+
+    if (vol_increase_count > 3)
+    {
+        vol_increase_count = 0;
+        vol_state = true;               // 电池状态位充电
+    }
+
+   voltage_old = vol_value;            // 更新电压值
+
+}
+
+/**
+ * @brief 返回充电状态
+ * 
+ * 
+ * @return true  : 充电中
+ * @return false : 放电中
+ */
+bool return_recharge_state(void)
+{
+    if(vol_state){
+        return true;
+    } else {
+        return false;
+    }
+
 }

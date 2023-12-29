@@ -239,6 +239,40 @@ bool ui_show_t::ui_disapper(void)
 
 
 /**
+ * @brief 电量表头信息
+ * 
+ * 
+ */
+void top_battery_ui(void)
+{
+  uint8_t vol_percen = bat_vcc_percentage();  //电池电量百分比
+
+  if( false == return_recharge_state())        // 放电状态
+  {
+      if(vol_percen > 75){
+        u8g2.drawXBMP(108,2,20,11,battery_100_20_11);
+    } else if(vol_percen <= 75 && vol_percen > 50){
+        u8g2.drawXBMP(108,2,20,11,battery_75_20_11);
+    } else if(vol_percen <= 50 && vol_percen > 25){
+        u8g2.drawXBMP(108,2,20,11,battery_50_20_11);
+    } else if(vol_percen <= 25 && vol_percen > 0){
+        u8g2.drawXBMP(108,2,20,11,battery_25_20_11);
+    } else if(vol_percen <= 0){
+        u8g2.drawXBMP(108,2,20,11,battery_00_20_11);
+    }
+  }      
+   else                                     // 充电状态
+  {
+      u8g2.drawXBMP(108,2,20,11,battery_in_black2_20_11);
+  }
+
+  u8g2.drawUTF8(100, 10, "%");
+	u8g2.setCursor(88, 10);
+  u8g2.print(vol_percen);
+
+}
+
+/**
  * @brief       绘制表头常驻UI
  * @param[in]   
  * @retval      none
@@ -246,14 +280,14 @@ bool ui_show_t::ui_disapper(void)
  */
 void top_ui_show(void)
 {
-  bat_vcc_percentage();
-  // u8g2.drawXBMP(108,2,16,9,battery_16_9);
-  u8g2.drawXBMP(108,2,20,11,battery_25_20_11);
+ 
+  //  u8g2.drawXBMP(108,2,20,11,battery_in_black2_20_11);
+  top_battery_ui();                 // 绘制表头电池信息
 
   if(WiFi.status() == WL_CONNECTED) {
-     u8g2.drawXBMP(88,2,13,10,wifi_13_10);
+     u8g2.drawXBMP(70,2,13,10,wifi_13_10);
   } else if( WiFi.status() != WL_CONNECTED) {
-    u8g2.drawXBMP(88,2,13,11,dis_wifi_13_11);
+    u8g2.drawXBMP(70,2,13,11,dis_wifi_13_11);
   }
    
 	u8g2.drawStr(10, 10, return_time_hours().c_str());

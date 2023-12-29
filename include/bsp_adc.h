@@ -20,6 +20,8 @@
 void bsp_adc_init(void);
 float get_bat_vcc(void);
 uint8_t bat_vcc_percentage(void);
+bool return_recharge_state(void);
+
 
 
 #endif
