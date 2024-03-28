@@ -221,17 +221,17 @@ void wifi_info_ui_process(void)
 // 温湿度页面UI进程
 void temp_hum_ui_process(void)
 {
-	u8g2.clearBuffer();	
-	top_ui_show();
-	u8g2.drawUTF8(3, 30, "温度 :");
-	u8g2.setCursor(40, 30);
-    u8g2.print(usr_dht.temp);
-	u8g2.drawStr(74, 28, "*C");
-	u8g2.drawUTF8(3, 55, "湿度 :");
-	u8g2.setCursor(40, 55);
-    u8g2.print(usr_dht.Hum);
-	u8g2.drawStr(74, 53, "%");
-	u8g2.sendBuffer();
+	// u8g2.clearBuffer();	
+	// top_ui_show();
+	// u8g2.drawUTF8(3, 30, "温度 :");
+	// u8g2.setCursor(40, 30);
+    // u8g2.print(usr_dht.temp);
+	// u8g2.drawStr(74, 28, "*C");
+	// u8g2.drawUTF8(3, 55, "湿度 :");
+	// u8g2.setCursor(40, 55);
+    // u8g2.print(usr_dht.Hum);
+	// u8g2.drawStr(74, 53, "%");
+	// u8g2.sendBuffer();
 }
 
 // 小程序页面UI进程
@@ -258,16 +258,16 @@ void about_ui_process(void)
 // 红外检测页面UI进程
 void ir_check_ui_process(bool status)
 {
-	u8g2.clearBuffer();	
-	top_ui_show();
-	if(status)
-	{
-		u8g2.drawXBMP(40,16,50,47,ir_check_50_47);
-	}
-	else
-	{
-		// u8g2.drawUTF8(35, 48, "未检测到...");
-		u8g2.drawXBMP(40,16,50,47,ir_fail_50_47);
-	}
-	u8g2.sendBuffer();
+	// u8g2.clearBuffer();	
+	// top_ui_show();
+	// if(status)
+	// {
+	// 	u8g2.drawXBMP(40,16,50,47,ir_check_50_47);
+	// }
+	// else
+	// {
+	// 	// u8g2.drawUTF8(35, 48, "未检测到...");
+	// 	u8g2.drawXBMP(40,16,50,47,ir_fail_50_47);
+	// }
+	// u8g2.sendBuffer();
 }

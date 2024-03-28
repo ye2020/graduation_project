@@ -2,6 +2,7 @@
 #include <SoftwareSerial.h>
 
 SoftwareSerial BT(15);
+const int BT_PIN = 15;
 
 static String comdata = "";
 
@@ -12,6 +13,8 @@ extern button_status_e button0_current_state;
 void buletooth_init(void)
 {
     BT.begin(9600);
+    pinMode(BT_PIN, OUTPUT);
+    digitalWrite(BT_PIN,0);
 }
 
 void buletooth_loop(void)

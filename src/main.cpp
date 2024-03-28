@@ -55,12 +55,15 @@ void setup() {
   
   buletooth_init();                                                   // 蓝牙软串口初始化
   button_init();                                                      // 按键初始化
-  usr_dht.dht_init();                                                 // 温湿度初始化
+
+ // usr_dht.dht_init();                                                 // 温湿度初始化
+  //sr_init();                                                          // 红外传感器初始化
+  // IR_init();
+
   startTCPClient();                                                   // 上传云端初始化
-  sr_init();                                                          // 红外传感器初始化
   bsp_adc_init();
 
-  IR_init();
+ 
   // PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTDI_U, FUNC_GPIO14);
   // GPIO_OUTPUT_SET(GPIO_ID_PIN(14), 1);
 }

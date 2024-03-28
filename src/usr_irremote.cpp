@@ -17,6 +17,7 @@
 #include <IRrecv.h>                 // 红外接收库
 #include <ir_Gree.h>                // 格力空调库
 
+#if 0
 
 const uint16_t kRecvPin = 5;        // 接收io
 const uint16_t ksendPin = 14;       // 发送io
@@ -163,3 +164,5 @@ void IR_temp_up_send_2(void)
     irsend.sendRaw(rawData_up,279,38);
     Serial.println("up"); 
 }
+
+#endif

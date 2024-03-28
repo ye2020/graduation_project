@@ -607,7 +607,7 @@ void remote_page_process(button_status_e Key5Value, button_status_e Key0Value)
 
 	case KEY_enter:
 	{
-		ac_func[sub_index.remote_current_index]();						// 调用对应回调函数
+		//ac_func[sub_index.remote_current_index]();						// 调用对应回调函数
 		break;
 	}
 	case KEY_home:
@@ -642,7 +642,9 @@ void remote_page_process(button_status_e Key5Value, button_status_e Key0Value)
 void ir_check_page_process(button_status_e Key5Value, button_status_e Key0Value)
 {
 	// Serial.println("ir_check status");
-	ir_check_ui_process(sr_tick());
+	//ir_check_ui_process(sr_tick());
+
+
 	switch (Key5Value_transition_function(Key5Value, Key0Value))
 	{
 

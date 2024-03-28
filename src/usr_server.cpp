@@ -116,7 +116,7 @@ void doTCPClientTick()
 
       /*****************获取DHT11 温湿度*****************/
 
-      usr_dht.dht_data_receive();                               
+      // usr_dht.dht_data_receive();                               
       
       /*********************数据上传*******************/
       /*
@@ -124,7 +124,9 @@ void doTCPClientTick()
         如果上传的数据不止温湿度，可在#号后面继续添加&msg=#23#80#data1#data2#data3#data4#\r\n,app字符串分割的时候，要根据上传的数据进行分割
       */
       String upstr = "";
-      upstr = "cmd=2&uid="+UID+"&topic="+TOPIC+"&msg=#"+usr_dht.temp+"#"+usr_dht.Hum+"#"+0+"#\r\n";
+      
+      //upstr = "cmd=2&uid="+UID+"&topic="+TOPIC+"&msg=#"+usr_dht.temp+"#"+usr_dht.Hum+"#"+0+"#\r\n";
+      
       sendtoTCPServer(upstr);
       upstr = "";
     }
@@ -150,13 +152,13 @@ void doTCPClientTick()
 // 打开状态回调函数
 void air_on_callback(void)
 {
-    Serial.println("air one");
-    IR_on_send_2();
+    // Serial.println("air one");
+    // IR_on_send_2();
 }
 
 // 关闭状态回调函数
 void air_off_callback(void)
 {
-    Serial.println("air off");
-    IR_off_send_2();
+    // Serial.println("air off");
+    // IR_off_send_2();
 }

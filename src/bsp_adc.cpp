@@ -54,7 +54,7 @@ float get_bat_vcc(void)
     for (uint8_t i = 0; i < 30; i++)
     {
         //delay(1);
-        vcc_cache += analogRead(analogInPin) * 0.0009765625 * 4.70;          // (1/1024)* 采样分压值
+        vcc_cache += analogRead(analogInPin) * 0.0009765625 * 4.70;          // (1/1024)* 采样分压值 //*5.1
         // vcc_cache += analogRead(analogInPin);
     }
 

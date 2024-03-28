@@ -1,6 +1,6 @@
 #include "usr_SR505.h"
 
-
+#if 0
 const int SR_PIN = 13;
 
 void sr_init(void)
@@ -22,3 +22,5 @@ bool sr_tick(void)
 
     return false;
 }
+
+#endif
