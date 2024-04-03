@@ -19,7 +19,7 @@
 
 const int analogInPin = A0;      // 模拟输入引脚
 
-#define checkBatTime 3 * 1000               // 读取电池电量速率1s (1s<=upDataTime<=60s）
+#define checkBatTime 5*1000//3 * 1000               // 读取电池电量速率1s (1s<=upDataTime<=60s）
 unsigned long bat_vcc_preTick = 0;      // 上次读取电压时的心跳值
 static bool vol_state = false;          // 充放电状态值 , 默认为放电
  
@@ -117,25 +117,41 @@ uint8_t bat_vcc_percentage(void)
  * @brief 充电检测函数
  * 
  * @param  vol_value 实时电压值
- * 
+ * @note   应该调整一下窗口时间
  */
 static void recharge_check(int vol_value)
 {
-    static int voltage_old = 0;
-    static int vol_increase_count = 0;
+    static int voltage_old = 4200;
 
-    if((vol_value - voltage_old) > 1 ){
-        vol_increase_count++;
-    } else if((vol_value - voltage_old) <= 0){
-        vol_increase_count = 0;
-        vol_state = false;                  // 电池状态为放电             
-    }
+    // static int vol_increase_count = 0;
+    // static int vol_discrease_count = 0;
 
-    if (vol_increase_count > 3)
-    {
-        vol_increase_count = 0;
-        vol_state = true;               // 电池状态位充电
+    /* 一次大跳变 */
+    if((vol_value - voltage_old) >= 10 ){
+        vol_state = true; 
+    } else if((vol_value - voltage_old) <= (-10)){
+         vol_state = false;
     }
+    
+    // /* 常规跳变 */
+    // if((vol_value - voltage_old) >= 0 && (vol_value - voltage_old) < 10){
+    //     vol_increase_count++;
+    //     vol_discrease_count = 0;
+    // } else if((vol_value - voltage_old) < 0){
+    //     vol_increase_count = 0;
+    //     vol_discrease_count++;
+    // }
+
+    // if (vol_increase_count > 3)
+    // {
+    //     vol_increase_count = 0;
+    //     vol_state = true;               // 电池状态位充电
+    // }
+    // if (vol_discrease_count > 3)
+    // {
+    //     vol_discrease_count = 0;
+    //     vol_state = false;                  // 电池状态为放电      
+    // }
 
    voltage_old = vol_value;            // 更新电压值
 

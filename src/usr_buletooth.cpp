@@ -2,7 +2,7 @@
 #include <SoftwareSerial.h>
 
 SoftwareSerial BT(15);
-const int BT_PIN = 15;
+const int BT_PIN = 4;
 
 static String comdata = "";
 

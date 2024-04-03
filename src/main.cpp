@@ -39,6 +39,7 @@
 #include "usr_server.h"
 #include "usr_SR505.h"
 #include "bsp_adc.h"
+#include "usr_ws2812.h"
 
 using namespace std;
 
@@ -62,7 +63,7 @@ void setup() {
 
   startTCPClient();                                                   // 上传云端初始化
   bsp_adc_init();
-
+  ws_led.ws2812_led_init();                                           // led初始化
  
   // PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTDI_U, FUNC_GPIO14);
   // GPIO_OUTPUT_SET(GPIO_ID_PIN(14), 1);
@@ -88,7 +89,7 @@ void loop()
   button_loop();                           // 按键循环函数 
   buletooth_loop();                        // 蓝牙循环函数 
   Menu_Select_main(key5_status_return(),key0_status_return());
-  doTCPClientTick();                        // 定时发送到云端
+  //doTCPClientTick();                        // 定时发送到云端
 
   #endif
   #if 0

@@ -80,6 +80,22 @@ void wifi_eeprom(const char* SSID,const char* Password) {
 
 }
 
+/**
+ * @brief  将LED参数写入 EEPROM
+ * 
+ * @param  Brightness  亮度
+ * @param  LED_mode    LED 模式
+ * @param  LED_color   LED 颜色
+ * 
+ */
+void LED_eeprom(uint8_t Brightness, WS_LED_mode_e LED_mode, uint32_t LED_color)
+{
+    eepUserSet.eeprom_Brightness = Brightness;
+    eepUserSet.eeprom_LED_mode   = LED_mode;
+    eepUserSet.eeprom_LED_color  = LED_color;
+    EEPROM.put(eeprom_address0, eepUserSet);
+    EEPROM.commit();                                              // 覆盖掉旧的数值
+}
 
 // 读取EEPROM数据
 void eeprom_read(void)

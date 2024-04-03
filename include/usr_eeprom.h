@@ -19,6 +19,8 @@
 #define _USR_EEPROM_H
 
 #include <Arduino.h>
+#include "usr_ws2812.h"
+
 
 
 
@@ -28,6 +30,12 @@ struct EEPROMStruct
     uint8_t auto_state;         // 自动刷写eeprom状态 0-需要 1-不需要
     char wifi_ssid[32];         // 上次连接的wifi的ssid
     char wifi_password[64];     // 上次连接的wifi的密码
+
+    uint8_t eeprom_Brightness;          // 初始亮度
+    WS_LED_mode_e eeprom_LED_mode;      // LED模式
+    uint32_t eeprom_LED_color;          // LED颜色
+
+
 };
 
 extern EEPROMStruct eepUserSet;
@@ -40,6 +48,6 @@ extern EEPROMStruct eepUserSet;
 void auto_eeprom(void);                 // 自动读取EEPROM
 void wifi_eeprom(const char* SSID,const char* Password);
 void eeprom_read(void);
-
+void LED_eeprom(uint8_t Brightness, WS_LED_mode_e LED_mode, uint32_t LED_color);
 
 #endif
