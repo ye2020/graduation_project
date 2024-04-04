@@ -27,7 +27,7 @@ void Menu_Main_Init(void)
 	sub_index.main_current_index = 0;
 	sub_index.select_current_index = 2;				// 索引值2 ~ 10 留给 菜单表单及其子表单 
 	sub_index.wifi_config_current_index = 11;		// 索引值11 ~ 15 留给网络配置页面
-	sub_index.remote_current_index	= 0;			// 遥控索引, 因为不需要调用子表单, 所以无所谓
+	sub_index.remote_current_index	= 16;			// 遥控索引16 ~ 25 留给遥控页面
 			
 
 
@@ -62,21 +62,21 @@ void Enter_Page(menu_i32 index, button_status_e Key5Value , button_status_e Key0
 		break;
 	}
 
-	//进入菜单页面
-	case TEMP_HUM_PAGE:
+	//进入蓝牙页面
+	case BULEBOOTH_PAGE:
 	{
-		Menu_Select_Item(TEMP_HUM_PAGE,  Key5Value,Key0Value);
+		Menu_Select_Item(BULEBOOTH_PAGE,  Key5Value,Key0Value);
 		break;
 	}
 
-		//进入菜单页面
+		//进入LED设置页面
 	case REMOTE_PAGE:
 	{
 		Menu_Select_Item(REMOTE_PAGE,  Key5Value,Key0Value);
 		break;
 	}
 
-		//进入菜单页面
+		//进入微信小程序页面
 	case WECHAT_PAGE:
 	{
 		Menu_Select_Item(WECHAT_PAGE,  Key5Value,Key0Value);
@@ -97,27 +97,54 @@ void Enter_Page(menu_i32 index, button_status_e Key5Value , button_status_e Key0
 		break;
 	}
 
-		//进入菜单页面
+		//进入网络信息页面
 	case WIFI_INFO_PAGE:
 	{
 		Menu_Select_Item(WIFI_INFO_PAGE,  Key5Value,Key0Value);
 		break;
 	}
 
-		//进入菜单页面
+		//进入断开连接页面
 	case WIFI_DISCONNECT_PAGE:
 	{
 		Menu_Select_Item(WIFI_DISCONNECT_PAGE,  Key5Value,Key0Value);
 		break;
 	}
 
-		//进入菜单页面
+		//进入配网页面
 	case WIFI_SMART_CON_PAGE:
 	{
 		Menu_Select_Item(WIFI_SMART_CON_PAGE,  Key5Value,Key0Value);
 		break;
 	}
 
+	// 进入LED开关页面
+	case REMOTE_PWOER_PAGE:
+	{
+		Menu_Select_Item(MAIN_PAGE, Key5Value,Key0Value);
+		break;
+	}
+
+	// 进入LED颜色页面
+	case REMOTE_COLOR_PAGE:
+	{
+		Menu_Select_Item(REMOTE_COLOR_PAGE, Key5Value,Key0Value);
+		break;
+	}
+
+	// 进入LED模式设置页面
+	case REMOTE_MODE_PAGE:
+	{
+		Menu_Select_Item(REMOTE_MODE_PAGE, Key5Value,Key0Value);
+		break;
+	}
+
+	// 进入LED亮度设置页面
+	case REMOTE_BRIGHTNESS_PAGE:
+	{
+		Menu_Select_Item(REMOTE_BRIGHTNESS_PAGE, Key5Value,Key0Value);
+		break;
+	}
 
 	// 否则返回主页面
 	default:
@@ -165,7 +192,7 @@ void remote_page_ui_process(void)
 	u8g2.clearBuffer();	
 	top_ui_show();
 	ui_show.menu_ui_show(ui_show.remote_list, 13, 9);	
-	ui_show.progress_ui_show(ui_show.remote_line_len, ui_show.remote_single_line_length, 20);      // 进度条UI绘制			
+	ui_show.progress_ui_show(ui_show.remote_line_len, ui_show.remote_single_line_length, 10);      // 进度条UI绘制			
 	u8g2.sendBuffer();	
 }
 

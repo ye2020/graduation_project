@@ -57,7 +57,7 @@ class usr_ws2812_t
     
     usr_ws2812_t(){
         g_ledmode_Struct[0] = &usr_ws2812_t::ws2812_waterled;
-        g_ledmode_Struct[1] = &usr_ws2812_t::ws2812_rainbowled;
+        g_ledmode_Struct[1] = &usr_ws2812_t::ws2812_waterled;
         g_ledmode_Struct[2] = &usr_ws2812_t::ws2812_theaterChase;
         g_ledmode_Struct[3] = &usr_ws2812_t::ws2812_theaterChase_rainbow;
         g_ledmode_Struct[4] = &usr_ws2812_t::ws2812_meteor;
@@ -80,12 +80,12 @@ class usr_ws2812_t
     void ws2812_on(void);
     void ws2812_off(void);
 
-    void ws2812_test(int wait);             //测试函数
+
 
 };
 
 
-
+void ws2812_power_callback(void);             //测试函数
 
 extern usr_ws2812_t ws_led; 
 

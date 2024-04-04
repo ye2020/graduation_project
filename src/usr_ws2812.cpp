@@ -322,7 +322,16 @@ void usr_ws2812_t::ws2812_setting(uint8_t Brightness, WS_LED_mode_e LED_mode, ui
     LED_eeprom(ws_led.Brightness, ws_led.LED_mode, ws_led.LED_color);
 }
 
-void usr_ws2812_t::ws2812_test(int wait)
-{
 
+// 电源设置回调函数
+void ws2812_power_callback(void)
+{
+    static bool i = 0;
+    if( i == 0){
+        ws_led.LED_state = true;
+        i = 1;
+    } else {
+        ws_led.LED_state = false;
+        i = 0;
+    }
 }
