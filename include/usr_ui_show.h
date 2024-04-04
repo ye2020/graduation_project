@@ -151,6 +151,7 @@ class ui_show_t{
     position_expect_t frame_len = {55, 55};                                          // 选择框的宽度
     position_expect_t frame_y = {17, 17};                                            // 选择框的高度
     position_expect_t progress_position {16, 16};                                    // 进度条的位置
+    position_expect_t horizontal_progress_len = {10, 100};                              // 横向选择框长度
 
     uint8_t max_bar;                                                        // 进度条最底部的位置
     uint8_t y_offset = 16;                                                  // y偏移值 , 为了不在最上面的黄色部分显示
@@ -192,6 +193,8 @@ class ui_show_t{
     void progress_ui_show(int16_t list_len, uint8_t single_length, int16_t speed);         // 进度条绘制函数
     void menu_ui_show(std::vector<Ui_list_t>& list, int16_t speed_x, int16_t speed_y);                        // 菜单绘制函数
     bool ui_disapper(void);                                                 // 消失函数
+    void Horizontal_progress_ui_show(int16_t x_position, int16_t y_position, int16_t speed);  //横向进度条
+
 
     private:
 

@@ -298,3 +298,31 @@ void ir_check_ui_process(bool status)
 	// }
 	// u8g2.sendBuffer();
 }
+
+
+// 颜色设置页面页面UI进程
+void led_color_ui_process(void)
+{
+	u8g2.clearBuffer();	
+	top_ui_show();
+	ui_show.Horizontal_progress_ui_show(0,0,0);			// 绘制横向进度条
+	u8g2.sendBuffer();
+}
+
+// 模式设置页面页面UI进程
+void led_mode_ui_process(void)
+{
+	u8g2.clearBuffer();	
+	top_ui_show();
+	
+	u8g2.sendBuffer();
+}
+
+// 亮度设置页面页面UI进程
+void led_brightness_ui_process(void)
+{
+	u8g2.clearBuffer();	
+	top_ui_show();
+
+	u8g2.sendBuffer();
+}

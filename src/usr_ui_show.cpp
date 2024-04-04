@@ -239,6 +239,22 @@ bool ui_show_t::ui_disapper(void)
 }
 
 
+
+void ui_show_t::Horizontal_progress_ui_show(int16_t x_position, int16_t y_position, int16_t speed)
+{
+  /* 总进度框 */
+  u8g2.drawVLine(10, 40, 10);                     // 竖线
+  u8g2.drawHLine(10, 40, 100);                    // 横线
+  u8g2.drawVLine(110, 40, 10);                    // 竖线
+  u8g2.drawHLine(10, 50, 100);
+
+  // 进度条
+  u8g2.drawRBox(10, 41, ui_show.horizontal_progress_len.cur_position, 9, 1);
+  ui_run(&ui_show.horizontal_progress_len.cur_position, &ui_show.horizontal_progress_len.position_trg, 8);
+
+}
+
+
 /**
  * @brief 电量表头信息
  * 
@@ -296,6 +312,8 @@ void top_ui_show(void)
   u8g2.drawStr(33, 10, return_time_minutes().c_str());
   
 }
+
+
 
 
 void ui_test(button_status_e keybt0, button_status_e keybt1)

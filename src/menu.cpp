@@ -904,7 +904,7 @@ void wifi_smart_page_process(button_status_e Key5Value, button_status_e Key0Valu
 void remote_color_page_process(button_status_e Key5Value, button_status_e Key0Value)
 {
 
-	wifi_discon_ui_process();
+	led_color_ui_process();
 	switch (Key5Value_transition_function(Key5Value, Key0Value))
 	{
 
@@ -1031,7 +1031,7 @@ void remote_brigtness_page_process(button_status_e Key5Value, button_status_e Ke
 		Enter_Page(WiFi_PAGE,button_none,button_none);
 		break;
 	}
-
+	
 	case KEY_up:
 	{
 		index_reset(false, 55);																		// 复位选择框与进度条

@@ -34,6 +34,11 @@ void wechat_ui_process(void);
 void about_ui_process(void);
 void ir_check_ui_process(bool status);
 void remote_page_ui_process(void);
+void led_color_ui_process(void);
+void led_mode_ui_process(void);
+void led_brightness_ui_process(void);
+
+
 
 
 
