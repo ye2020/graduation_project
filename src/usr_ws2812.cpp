@@ -55,30 +55,64 @@ void usr_ws2812_t::ws2812_led_init(void)
     ws_led.Brightness = eepUserSet.eeprom_Brightness;     // 亮度(从rom中获取) 
     ws_led.LED_mode   = eepUserSet.eeprom_LED_mode;       // 模式
     ws_led.LED_color  = eepUserSet.eeprom_LED_color;      // 颜色
+    ws_led.LED_state  = eepUserSet.eeprom_LED_state; 
     ws_led.color_R    = (LED_color >> 16) & 0xFF;
     ws_led.color_G    = (LED_color >> 8)  & 0xFF;
     ws_led.color_B    = (LED_color)       & 0xFF; 
-    ws_led.wait       = 100;
+    ws_led.wait       = 10;
 
     WS2812.begin();             // 对象初始化
-    ws_led.ws2812_control(ws_led.Brightness, ws_led.LED_mode, ws_led.LED_color, ws_led.wait);    // 总控函数
     
+}
+
+
+// LED循环函数
+void usr_ws2812_t::ws2812_led_loop(void)
+{
+    if(ws_led.LED_state == true){       // 电源开
+        ws_led.ws2812_control(ws_led.Brightness, ws_led.LED_mode, ws_led.LED_color, ws_led.wait);    // 总控函数
+    } else {
+        WS2812.fill(WS2812.Color(0, 0, 0));
+        WS2812.show();
+    } 
 }
 
 /**
  * @brief 三色流水灯
  * 
- * @param  wait :流水灯间隔时间
+ * @param  wait :流水灯间隔时间(ms)
  * 
  */
 void usr_ws2812_t::ws2812_waterled(uint8_t red, uint8_t green, uint8_t blue, uint8_t wait)
-{
-    for(int i=0; i<NUMPIXELS; ++i)  // 设置所有灯颜色 pixels.fill(0x000000);
+{   
+    static int i = 0;
+    static bool flag = true;                       // 异或标志位
+    static unsigned long waitTick = 0;          //连接
+    
+    if(millis() - waitTick > wait)              // 用这种方法延时,防止无效占用CPU
     {
-        WS2812.setPixelColor(led_id[i], WS2812.Color(red, green, blue));
-        WS2812.show();              // 刷新显示
-        delay(wait);
+        waitTick = millis();
+
+        if((i < NUMPIXELS) && (flag == true))  // 设置所有灯颜色 pixels.fill(0x000000);
+        {
+            WS2812.setPixelColor(led_id[i], WS2812.Color(red, green, blue));
+            WS2812.show();              // 刷新显示
+            i++;
+            //delay(wait);
+        } 
+        else if((i < NUMPIXELS) && (flag == false))
+        {
+             WS2812.setPixelColor(led_id[i], WS2812.Color(0, 0, 0));
+            WS2812.show();              // 刷新显示
+            i++;
+        }
+        else
+        {
+            i = 0;
+            flag = !flag;
+        }        
     }
+
 
 }
 
@@ -91,6 +125,7 @@ void usr_ws2812_t::ws2812_waterled(uint8_t red, uint8_t green, uint8_t blue, uin
  */
 void usr_ws2812_t::ws2812_rainbowled(uint8_t red, uint8_t green, uint8_t blue, uint8_t wait)
 {
+    #if 0
      for(long firstPixelHue = 0; firstPixelHue < 5*65536; firstPixelHue += 256) 
      {
         for(int i=0; i<6; i++)  // 设置所有灯颜色 pixels.fill(0x000000);
@@ -104,6 +139,47 @@ void usr_ws2812_t::ws2812_rainbowled(uint8_t red, uint8_t green, uint8_t blue, u
             delay(wait);
         }
      }
+  #endif
+    
+
+  static long firstPixelHue = 0;
+  static int i = 0;
+  static int j = 0;
+//   static unsigned long waitTick = 0;          // 代替delay
+
+
+  if(firstPixelHue < 65536)
+  {
+    if(i < 6)
+    {
+        // if(millis() - waitTick > 1)
+        // {
+            if(j < (NUMPIXELS/6))
+            {
+                int pixelHue = firstPixelHue + (i * 65536L / NUMPIXELS);
+                WS2812.setPixelColor(led_id_2[j][i], WS2812.gamma32(WS2812.ColorHSV(pixelHue)));
+                j++;
+            }
+            else
+            {
+                i++;
+                j = 0;
+            }            
+        // }
+        // delay(wait);
+    }
+    else
+    {
+        firstPixelHue += 1024;
+        i = 0;
+    } 
+  }
+  else
+  {
+    firstPixelHue = 0;
+  }
+
+  WS2812.show();              // 刷新显示
 }
 
 
@@ -269,6 +345,7 @@ void usr_ws2812_t::ws2812_meteor_overturn(uint8_t red, uint8_t green, uint8_t bl
 void usr_ws2812_t::ws2812_fill(uint8_t red, uint8_t green, uint8_t blue, uint8_t wait)
 {
     WS2812.fill(WS2812.Color(red, green, blue));
+    WS2812.show();
 }
 
 
@@ -337,4 +414,7 @@ void ws2812_power_callback(void)
         ws_led.LED_state = false;
         i = 0;
     }
+    LED_state_eeprom(ws_led.LED_state);
 }
+
+

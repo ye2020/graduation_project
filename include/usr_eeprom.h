@@ -34,6 +34,7 @@ struct EEPROMStruct
     uint8_t eeprom_Brightness;          // 初始亮度
     WS_LED_mode_e eeprom_LED_mode;      // LED模式
     uint32_t eeprom_LED_color;          // LED颜色
+    bool eeprom_LED_state;              // LED开关状态
 
 
 };
@@ -49,5 +50,7 @@ void auto_eeprom(void);                 // 自动读取EEPROM
 void wifi_eeprom(const char* SSID,const char* Password);
 void eeprom_read(void);
 void LED_eeprom(uint8_t Brightness, WS_LED_mode_e LED_mode, uint32_t LED_color);
+void LED_state_eeprom(bool LED_state);
+
 
 #endif

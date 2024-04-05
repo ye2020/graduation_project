@@ -50,11 +50,9 @@ void setup() {
   auto_eeprom();                                                      // 读取保存在flash中的数据
   ws_led.ws2812_led_init();                                           // led初始化
   ui_show.ui_init();                                                  // ui初始化
+  usr_Wifi.wifi_init();                                               // wifi 初始化函数,自动调用上次连接成功的网络
   Menu_Main_Init();                                                   // 菜单初始化
 
-  
-  usr_Wifi.wifi_init();                                               // wifi 初始化函数,自动调用上次连接成功的网络
-  
   buletooth_init();                                                   // 蓝牙软串口初始化
   button_init();                                                      // 按键初始化
 
@@ -90,6 +88,7 @@ void loop()
   button_loop();                           // 按键循环函数 
   buletooth_loop();                        // 蓝牙循环函数 
   Menu_Select_main(key5_status_return(),key0_status_return());
+  ws_led.ws2812_led_loop();                // LED循环函数
   //doTCPClientTick();                        // 定时发送到云端
 
   #endif

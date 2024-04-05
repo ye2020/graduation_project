@@ -70,6 +70,16 @@ ui_show_t::ui_show_t()
                     {"绿: G", 8},
                     {"蓝: B", 8}
     };
+
+    mode_list = {
+                    {"闪烁彩虹", 11},
+                    {"纯色灯", 9},
+                    {"流水灯", 9},
+                    {"彩虹灯", 9},
+                    {"闪烁流水灯", 13},
+                    {"流星灯", 9},
+                    {"反向流星灯", 13}
+    };
             
 
     line_len                    = list.size();                                      // 选择页面的数量              
@@ -80,6 +90,8 @@ ui_show_t::ui_show_t()
     remote_single_line_length   = (screen_height - 1 - 16) / remote_line_len;       // 遥控页面单元格长度
     color_line_len              = color_list.size();                                // 颜色页面数量
     color_single_line_length    = (screen_height - 1 - 16) / color_line_len;        // 颜色页面单元格长度
+    mode_line_len               = mode_list.size();                                 // 模式页面数量
+    mode_single_line_length     = (screen_height - 1 - 16) / mode_line_len;         // 模式单元格长度
 
     total_line_length  = single_line_length * line_len + 1;                // 进度条长竖线的长度
 
@@ -328,6 +340,7 @@ void top_ui_show(void)
 {
  
   //  u8g2.drawXBMP(108,2,20,11,battery_in_black2_20_11);
+  
   top_battery_ui();                 // 绘制表头电池信息
 
   if(WiFi.status() == WL_CONNECTED) {

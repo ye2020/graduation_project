@@ -97,6 +97,14 @@ void LED_eeprom(uint8_t Brightness, WS_LED_mode_e LED_mode, uint32_t LED_color)
     EEPROM.commit();                                              // 覆盖掉旧的数值
 }
 
+
+void LED_state_eeprom(bool LED_state)
+{
+  eepUserSet.eeprom_LED_state = LED_state;
+  EEPROM.put(eeprom_address0, eepUserSet);
+  EEPROM.commit();                                              // 覆盖掉旧的数值
+}
+
 // 读取EEPROM数据
 void eeprom_read(void)
 {

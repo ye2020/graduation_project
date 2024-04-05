@@ -29,7 +29,8 @@ void Menu_Main_Init(void)
 	sub_index.select_current_index = 2;				// 索引值2 ~ 10 留给 菜单表单及其子表单 
 	sub_index.wifi_config_current_index = 11;		// 索引值11 ~ 15 留给网络配置页面
 	sub_index.remote_current_index	= 16;			// 遥控索引16 ~ 25 留给遥控页面
-	sub_index.color_current_index = 21;		
+	sub_index.color_current_index = 21;
+	sub_index.mode_current_index = 0;				// 因为没有子页面, 所以无所谓		
 
 
 	sub_index.Current_Page = MAIN_PAGE;					// 设置初始页面
@@ -338,7 +339,8 @@ void led_mode_ui_process(void)
 {
 	u8g2.clearBuffer();	
 	top_ui_show();
-
+	ui_show.menu_ui_show(ui_show.mode_list, 13, 9);	
+	ui_show.progress_ui_show(ui_show.mode_line_len, ui_show.mode_single_line_length, 5);      // 进度条UI绘制		
 	u8g2.sendBuffer();
 }
 

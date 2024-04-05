@@ -174,6 +174,9 @@ class ui_show_t{
     int16_t color_line_len;                                                  // 颜色页面的数量
     uint8_t color_single_line_length;                                        // 进度条单元格长度
 
+    int16_t mode_line_len;                                                  // 模式页面的数量
+    uint8_t mode_single_line_length;                                        // 进度条单元格长度
+
     uint8_t screen_length = 128;                                            // 屏幕长度
     uint8_t screen_height = 64 ;                                            // 屏幕高度
 
@@ -190,6 +193,7 @@ class ui_show_t{
     std::vector<Ui_list_t> wifi_list;                                        // wifi配置页面子菜单
     std::vector<Ui_list_t> remote_list;                                      // 遥控页面子菜单
     std::vector<Ui_list_t> color_list;                                       // 颜色设置页面子菜单
+    std::vector<Ui_list_t> mode_list;                                       // 模式设置页面子菜单
 
     ui_show_t();                                                            // 构造函数
 
