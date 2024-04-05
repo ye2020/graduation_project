@@ -16,6 +16,7 @@
 #include "usr_ui_show.h"
 #include "usr_wifi.h"
 #include "usr_dht.h"
+#include "usr_ws2812.h"
 
 extern U8G2_SSD1306_128X64_NONAME_F_SW_I2C u8g2;				// u8g2 库iic驱动
 
@@ -28,7 +29,7 @@ void Menu_Main_Init(void)
 	sub_index.select_current_index = 2;				// 索引值2 ~ 10 留给 菜单表单及其子表单 
 	sub_index.wifi_config_current_index = 11;		// 索引值11 ~ 15 留给网络配置页面
 	sub_index.remote_current_index	= 16;			// 遥控索引16 ~ 25 留给遥控页面
-			
+	sub_index.color_current_index = 21;		
 
 
 	sub_index.Current_Page = MAIN_PAGE;					// 设置初始页面
@@ -143,6 +144,27 @@ void Enter_Page(menu_i32 index, button_status_e Key5Value , button_status_e Key0
 	case REMOTE_BRIGHTNESS_PAGE:
 	{
 		Menu_Select_Item(REMOTE_BRIGHTNESS_PAGE, Key5Value,Key0Value);
+		break;
+	}
+
+		// 进入LED亮度设置页面
+	case REMOTE_COLOR_R_PAGE:
+	{
+		Menu_Select_Item(REMOTE_COLOR_R_PAGE, Key5Value,Key0Value);
+		break;
+	}
+
+		// 进入LED亮度设置页面
+	case REMOTE_COLOR_G_PAGE:
+	{
+		Menu_Select_Item(REMOTE_COLOR_G_PAGE, Key5Value,Key0Value);
+		break;
+	}
+
+		// 进入LED亮度设置页面
+	case REMOTE_COLOR_B_PAGE:
+	{
+		Menu_Select_Item(REMOTE_COLOR_B_PAGE, Key5Value,Key0Value);
 		break;
 	}
 
@@ -305,16 +327,18 @@ void led_color_ui_process(void)
 {
 	u8g2.clearBuffer();	
 	top_ui_show();
-	ui_show.Horizontal_progress_ui_show(0,0,0);			// 绘制横向进度条
-	u8g2.sendBuffer();
+	ui_show.menu_ui_show(ui_show.color_list, 13, 9);	
+	ui_show.progress_ui_show(ui_show.color_line_len, ui_show.color_single_line_length, 10);      // 进度条UI绘制			
+	u8g2.sendBuffer();	
 }
+
 
 // 模式设置页面页面UI进程
 void led_mode_ui_process(void)
 {
 	u8g2.clearBuffer();	
 	top_ui_show();
-	
+
 	u8g2.sendBuffer();
 }
 
@@ -324,5 +348,55 @@ void led_brightness_ui_process(void)
 	u8g2.clearBuffer();	
 	top_ui_show();
 
+	u8g2.sendBuffer();
+}
+
+// 颜色R设置页面UI进程
+void color_R_ui_process(void)
+{
+	u8g2.clearBuffer();	
+	top_ui_show();
+
+	u8g2.drawStr(3, 60, "0");
+	u8g2.drawStr(110, 60, "255");
+	u8g2.drawStr(45, 30, "R :");
+	u8g2.setCursor(65, 30);
+    u8g2.print(ws_led.color_R);
+
+	ui_show.Horizontal_progress_ui_show(&ui_show.horizontal_progress_len.cur_position, &ui_show.horizontal_progress_len.position_trg, 8);			// 绘制横向进度条
+	u8g2.sendBuffer();
+}
+
+// 颜色G设置页面UI进程
+void color_G_ui_process(void)
+{
+	u8g2.clearBuffer();	
+	top_ui_show();
+
+	u8g2.drawStr(3, 60, "0");
+	u8g2.drawStr(110, 60, "255");
+	u8g2.drawStr(45, 30, "G :");
+	u8g2.setCursor(65, 30);
+    u8g2.print(ws_led.color_G);
+
+	ui_show.Horizontal_progress_ui_show(&ui_show.horizontal_progress_len_G.cur_position, &ui_show.horizontal_progress_len_G.position_trg, 8);			// 绘制横向进度条
+	u8g2.sendBuffer();
+}
+
+
+
+// 颜色B设置页面UI进程
+void color_B_ui_process(void)
+{
+	u8g2.clearBuffer();	
+	top_ui_show();
+
+	u8g2.drawStr(3, 60, "0");
+	u8g2.drawStr(110, 60, "255");
+	u8g2.drawStr(45, 30, "B :");
+	u8g2.setCursor(65, 30);
+    u8g2.print(ws_led.color_B);
+
+	ui_show.Horizontal_progress_ui_show(&ui_show.horizontal_progress_len_B.cur_position, &ui_show.horizontal_progress_len_B.position_trg, 8);			// 绘制横向进度条
 	u8g2.sendBuffer();
 }

@@ -151,7 +151,9 @@ class ui_show_t{
     position_expect_t frame_len = {55, 55};                                          // 选择框的宽度
     position_expect_t frame_y = {17, 17};                                            // 选择框的高度
     position_expect_t progress_position {16, 16};                                    // 进度条的位置
-    position_expect_t horizontal_progress_len = {10, 100};                              // 横向选择框长度
+    position_expect_t horizontal_progress_len = {0, 0};                              // 横向选择框长度
+    position_expect_t horizontal_progress_len_G = {0, 0};                              // 横向选择框长度
+    position_expect_t horizontal_progress_len_B = {0, 0};                              // 横向选择框长度
 
     uint8_t max_bar;                                                        // 进度条最底部的位置
     uint8_t y_offset = 16;                                                  // y偏移值 , 为了不在最上面的黄色部分显示
@@ -166,8 +168,11 @@ class ui_show_t{
     int16_t wifi_line_len;                                                  // wifi页面的数量
     uint8_t wifi_single_line_length;                                        // 进度条单元格长度
 
-    int16_t remote_line_len;                                                  // wifi页面的数量
+    int16_t remote_line_len;                                                  // 遥控页面的数量
     uint8_t remote_single_line_length;                                        // 进度条单元格长度
+
+    int16_t color_line_len;                                                  // 颜色页面的数量
+    uint8_t color_single_line_length;                                        // 进度条单元格长度
 
     uint8_t screen_length = 128;                                            // 屏幕长度
     uint8_t screen_height = 64 ;                                            // 屏幕高度
@@ -184,6 +189,7 @@ class ui_show_t{
     std::vector<Ui_list_t> list;                                             // 菜单项数组
     std::vector<Ui_list_t> wifi_list;                                        // wifi配置页面子菜单
     std::vector<Ui_list_t> remote_list;                                      // 遥控页面子菜单
+    std::vector<Ui_list_t> color_list;                                       // 颜色设置页面子菜单
 
     ui_show_t();                                                            // 构造函数
 
@@ -193,7 +199,7 @@ class ui_show_t{
     void progress_ui_show(int16_t list_len, uint8_t single_length, int16_t speed);         // 进度条绘制函数
     void menu_ui_show(std::vector<Ui_list_t>& list, int16_t speed_x, int16_t speed_y);                        // 菜单绘制函数
     bool ui_disapper(void);                                                 // 消失函数
-    void Horizontal_progress_ui_show(int16_t x_position, int16_t y_position, int16_t speed);  //横向进度条
+    void Horizontal_progress_ui_show(int16_t *res, int16_t *res_trg, int16_t speed);  //横向进度条
 
 
     private:

@@ -55,6 +55,9 @@ void usr_ws2812_t::ws2812_led_init(void)
     ws_led.Brightness = eepUserSet.eeprom_Brightness;     // 亮度(从rom中获取) 
     ws_led.LED_mode   = eepUserSet.eeprom_LED_mode;       // 模式
     ws_led.LED_color  = eepUserSet.eeprom_LED_color;      // 颜色
+    ws_led.color_R    = (LED_color >> 16) & 0xFF;
+    ws_led.color_G    = (LED_color >> 8)  & 0xFF;
+    ws_led.color_B    = (LED_color)       & 0xFF; 
     ws_led.wait       = 100;
 
     WS2812.begin();             // 对象初始化

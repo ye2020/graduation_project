@@ -48,6 +48,7 @@ using namespace std;
 void setup() {
   Serial.begin(115200);
   auto_eeprom();                                                      // 读取保存在flash中的数据
+  ws_led.ws2812_led_init();                                           // led初始化
   ui_show.ui_init();                                                  // ui初始化
   Menu_Main_Init();                                                   // 菜单初始化
 
@@ -63,7 +64,7 @@ void setup() {
 
   startTCPClient();                                                   // 上传云端初始化
   bsp_adc_init();
-  ws_led.ws2812_led_init();                                           // led初始化
+  
  
   // PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTDI_U, FUNC_GPIO14);
   // GPIO_OUTPUT_SET(GPIO_ID_PIN(14), 1);

@@ -20,6 +20,7 @@
 #include "usr_wifi.h"
 #include "usr_clock_time.h"
 #include "bsp_adc.h"
+#include "usr_ws2812.h"
 
 
 // U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C u8g2(U8G2_R0, /* clock=*/14, /* data=*/2, /* reset=*/ U8X8_PIN_NONE);     // 0.91寸OLED驱动
@@ -63,18 +64,27 @@ ui_show_t::ui_show_t()
                     {"设置模式", 11},
                     {"设置亮度", 11}
     };
+
+    color_list = {
+                    {"红: R", 8},
+                    {"绿: G", 8},
+                    {"蓝: B", 8}
+    };
             
 
-    line_len                  = list.size();                                      // 选择页面的数量              
-    single_line_length        = (screen_height - 1 - 16) / line_len;              // 进度条单元格长度
-    wifi_line_len             = wifi_list.size();                                 // wifi页面数量
-    wifi_single_line_length   = (screen_height - 1 - 16) / wifi_line_len;         // wifi页面单元格长度
-    remote_line_len             = remote_list.size();                                 // wifi页面数量
-    remote_single_line_length   = (screen_height - 1 - 16) / remote_line_len;         // wifi页面单元格长度
+    line_len                    = list.size();                                      // 选择页面的数量              
+    single_line_length          = (screen_height - 1 - 16) / line_len;              // 进度条单元格长度
+    wifi_line_len               = wifi_list.size();                                 // wifi页面数量
+    wifi_single_line_length     = (screen_height - 1 - 16) / wifi_line_len;         // wifi页面单元格长度
+    remote_line_len             = remote_list.size();                               // 遥控页面数量
+    remote_single_line_length   = (screen_height - 1 - 16) / remote_line_len;       // 遥控页面单元格长度
+    color_line_len              = color_list.size();                                // 颜色页面数量
+    color_single_line_length    = (screen_height - 1 - 16) / color_line_len;        // 颜色页面单元格长度
 
     total_line_length  = single_line_length * line_len + 1;                // 进度条长竖线的长度
 
     max_bar = single_line_length*ui_show.line_len + ui_show.y_offset;       // 进度条最底部位置
+
 
    Serial.println(list[0].str);
 }
@@ -88,6 +98,10 @@ ui_show_t::ui_show_t()
  */
 void ui_show_t::ui_init(void)
 {
+    (ws_led.color_R < 255) ? (ui_show.horizontal_progress_len.position_trg = (ws_led.color_R/25)*10) : (ui_show.horizontal_progress_len.position_trg = 100);
+    (ws_led.color_G < 255) ? (ui_show.horizontal_progress_len_G.position_trg = (ws_led.color_G/25)*10) : (ui_show.horizontal_progress_len_G.position_trg = 100);
+    (ws_led.color_B < 255) ? (ui_show.horizontal_progress_len_B.position_trg = (ws_led.color_B/25)*10) : (ui_show.horizontal_progress_len_B.position_trg = 100);
+
     u8g2.begin();
     u8g2.enableUTF8Print();
     u8g2.setFont(u8g2_font_wqy12_t_gb2312a);           // 设置字体
@@ -239,8 +253,15 @@ bool ui_show_t::ui_disapper(void)
 }
 
 
-
-void ui_show_t::Horizontal_progress_ui_show(int16_t x_position, int16_t y_position, int16_t speed)
+/**
+ * @brief  绘制横向进度条
+ * 
+ * @param  res       进度条当前位置值
+ * @param  res_trg   进度条目标位置值
+ * @param  speed     进度条步进速度
+ * 
+ */
+void ui_show_t::Horizontal_progress_ui_show(int16_t *res, int16_t *res_trg, int16_t speed)
 {
   /* 总进度框 */
   u8g2.drawVLine(10, 40, 10);                     // 竖线
@@ -249,8 +270,16 @@ void ui_show_t::Horizontal_progress_ui_show(int16_t x_position, int16_t y_positi
   u8g2.drawHLine(10, 50, 100);
 
   // 进度条
-  u8g2.drawRBox(10, 41, ui_show.horizontal_progress_len.cur_position, 9, 1);
-  ui_run(&ui_show.horizontal_progress_len.cur_position, &ui_show.horizontal_progress_len.position_trg, 8);
+  if(*res_trg >= 10)
+  {
+    u8g2.drawRBox(10, 41, *res, 9, 1);
+    ui_run(res, res_trg, speed);
+  } 
+  else 
+  {
+    u8g2.drawRBox(10, 41, 3, 9, 1);
+  }
+
 
 }
 

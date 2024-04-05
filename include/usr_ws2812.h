@@ -46,6 +46,10 @@ class usr_ws2812_t
     WS_LED_mode_e LED_mode = FILL_LED;      // LED模式
 
     uint32_t LED_color = 0xFF0000;          // LED颜色
+    uint8_t color_R = 0xFF;
+    uint8_t color_G = 0; 
+    uint8_t color_B = 0;
+                         
     bool LED_state = false;                 // LED开关
     uint8_t wait;                           // LED间隔时间
 

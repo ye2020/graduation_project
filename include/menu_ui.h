@@ -37,7 +37,9 @@ void remote_page_ui_process(void);
 void led_color_ui_process(void);
 void led_mode_ui_process(void);
 void led_brightness_ui_process(void);
-
+void color_R_ui_process(void);
+void color_G_ui_process(void);
+void color_B_ui_process(void);
 
 
 

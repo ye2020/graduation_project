@@ -49,6 +49,7 @@ typedef struct Menu_Key_Index
 	menu_u8 wifi_config_current_index ; 
   menu_u8 select_current_index;
   menu_u8 remote_current_index;
+  menu_u8 color_current_index;
 
 	menu_u8 Current_Page ;      // 当前页面
 }Key_Index;
@@ -82,6 +83,10 @@ typedef enum
   REMOTE_COLOR_PAGE ,     // LED颜色设置页面 (remote 下子表单)
   REMOTE_MODE_PAGE,       // LED模式设置页面 (remote 下子表单)
   REMOTE_BRIGHTNESS_PAGE, // LED亮度设置页面 (remote 下子表单)
+  REMOTE_COLOR_R_PAGE= 21,// LED 颜色R设置   (color 下子表单)
+  REMOTE_COLOR_G_PAGE,    // LED 颜色R设置   (color 下子表单)
+  REMOTE_COLOR_B_PAGE,    // LED 颜色R设置   (color 下子表单)
+
 
 }OP_PAGE;
 
@@ -105,7 +110,9 @@ void wifi_smart_page_process(button_status_e Key5Value, button_status_e Key0Valu
 void remote_color_page_process(button_status_e Key5Value, button_status_e Key0Value);
 void remote_mode_page_process(button_status_e Key5Value, button_status_e Key0Value);
 void remote_brigtness_page_process(button_status_e Key5Value, button_status_e Key0Value);
-
+void remote_color_R_page_process(button_status_e Key5Value, button_status_e Key0Value);
+void remote_color_G_page_process(button_status_e Key5Value, button_status_e Key0Value);
+void remote_color_B_page_process(button_status_e Key5Value, button_status_e Key0Value);
 
 
 
