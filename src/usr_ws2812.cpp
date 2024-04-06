@@ -144,29 +144,18 @@ void usr_ws2812_t::ws2812_rainbowled(uint8_t red, uint8_t green, uint8_t blue, u
 
   static long firstPixelHue = 0;
   static int i = 0;
-  static int j = 0;
-//   static unsigned long waitTick = 0;          // 代替delay
-
 
   if(firstPixelHue < 65536)
   {
     if(i < 6)
     {
-        // if(millis() - waitTick > 1)
-        // {
-            if(j < (NUMPIXELS/6))
+            for(int j = 0; j<((NUMPIXELS/6)); j++ )
             {
                 int pixelHue = firstPixelHue + (i * 65536L / NUMPIXELS);
                 WS2812.setPixelColor(led_id_2[j][i], WS2812.gamma32(WS2812.ColorHSV(pixelHue)));
-                j++;
             }
-            else
-            {
-                i++;
-                j = 0;
-            }            
-        // }
-        // delay(wait);
+
+            i++;            
     }
     else
     {
@@ -192,6 +181,7 @@ void usr_ws2812_t::ws2812_rainbowled(uint8_t red, uint8_t green, uint8_t blue, u
  */
 void usr_ws2812_t::ws2812_theaterChase(uint8_t red, uint8_t green, uint8_t blue, uint8_t wait)
 {
+    #if 0
     for(int i=0; i<10; i++)  // 设置所有灯颜色 pixels.fill(0x000000);
     {
         for(int j=0; j<3; j++)
@@ -206,6 +196,28 @@ void usr_ws2812_t::ws2812_theaterChase(uint8_t red, uint8_t green, uint8_t blue,
             delay(wait);
         }     
     }
+    #endif
+
+    static int j = 0;
+
+    if(j < 3)
+    {
+        WS2812.clear();
+        for(int q = j; q < NUMPIXELS; q+=3)
+        {
+            WS2812.setPixelColor(led_id[q],  WS2812.Color(red, green, blue));
+        }
+        j++;
+        WS2812.show();              // 刷新显示 
+    }
+    else
+    {
+        j = 0;
+    }
+
+    
+    // delay(wait);
+
 }
 
 
@@ -217,6 +229,7 @@ void usr_ws2812_t::ws2812_theaterChase(uint8_t red, uint8_t green, uint8_t blue,
  */
 void usr_ws2812_t::ws2812_theaterChase_rainbow(uint8_t red, uint8_t green, uint8_t blue, uint8_t wait)
 {
+    #if 0
     long firstPixelHue = 0;  // 第一个像素从红色开始(色调0)
     for(int i=0; i<30; i++)  // 设置所有灯颜色 pixels.fill(0x000000);
     {
@@ -234,6 +247,36 @@ void usr_ws2812_t::ws2812_theaterChase_rainbow(uint8_t red, uint8_t green, uint8
             firstPixelHue+=256;
         }     
     }
+    #endif
+
+    static long firstPixelHue = 0;  // 第一个像素从红色开始(色调0)
+    static int j = 0;
+
+    if(firstPixelHue < 65536)
+    {
+        if(j < 3)
+        {
+            WS2812.clear();
+            for(int q = j; q<NUMPIXELS; q+=3)
+            {
+                int pixelHue = firstPixelHue + (j * 65536L / NUMPIXELS);
+                 WS2812.setPixelColor(led_id[q], WS2812.gamma32(WS2812.ColorHSV(pixelHue)));
+            }
+            j++;
+            WS2812.show();              // 刷新显示 
+        }
+        else
+        {
+            firstPixelHue += 2048;
+            j = 0;
+        }
+    }
+    else
+    {
+       firstPixelHue = 0;
+    }
+
+    
 }
 
 
@@ -248,6 +291,7 @@ void usr_ws2812_t::ws2812_theaterChase_rainbow(uint8_t red, uint8_t green, uint8
  */
 void usr_ws2812_t::ws2812_meteor(uint8_t red, uint8_t green, uint8_t blue, uint8_t wait)
 {
+#if 0
     const uint8_t num = 8;          // 拖尾灯数
     uint8_t max_color = red;
 
@@ -283,6 +327,50 @@ void usr_ws2812_t::ws2812_meteor(uint8_t red, uint8_t green, uint8_t blue, uint8
     WS2812.show();
     delay(wait);
   }
+#endif
+
+    const uint8_t num = 8;
+    uint8_t max_color = red;
+    static int i = 0;
+
+    if(green > max_color)
+        max_color = green;
+    if(blue > max_color)
+        max_color = blue;
+
+    uint8_t instance = (max_color-200)/num;
+
+    if(i < NUMPIXELS + num)
+    {
+
+            for(uint8_t j = 0; j < num; j++)
+            {
+
+                if(i - j >= 0 && i - j < NUMPIXELS)
+                {
+                    int red_after = red - (instance * j);
+                    int green_after = green - (instance * j);
+                    int blue_after = blue - (instance * j);
+            
+                    if(j>=1)
+                    {
+                    red_after -= 200;
+                    green_after -= 200;
+                    blue_after -= 200;
+                    }
+                WS2812.setPixelColor(led_id[i - j], WS2812.Color(red_after >= 0 ? red_after : 0, green_after >= 0 ? green_after : 0, blue_after >= 0 ? blue_after : 0));
+                }
+            }
+            i++;
+                    
+            if(i - num >= 0 && i-num < WS2812.numPixels())
+            WS2812.setPixelColor(led_id[i-num], 0); 
+            WS2812.show();
+    }
+    else
+    {
+        i = 0;
+    }    
 
 }
 
@@ -297,6 +385,7 @@ void usr_ws2812_t::ws2812_meteor(uint8_t red, uint8_t green, uint8_t blue, uint8
  */
 void usr_ws2812_t::ws2812_meteor_overturn(uint8_t red, uint8_t green, uint8_t blue, uint8_t wait)
 {
+#if 0
     const uint8_t num = 8;
     uint8_t max_color = red;
 
@@ -308,7 +397,7 @@ void usr_ws2812_t::ws2812_meteor_overturn(uint8_t red, uint8_t green, uint8_t bl
     uint8_t instance = (max_color-200)/num;
     for(int i=WS2812.numPixels() - 1; i>=-num; i--) 
     {
-        for(uint8_t j = 0; j < num; j ++)
+        for(uint8_t j = 0; j < num; j++)
         {
             if(i + j >= 0 && i + j < WS2812.numPixels())
             {
@@ -331,6 +420,52 @@ void usr_ws2812_t::ws2812_meteor_overturn(uint8_t red, uint8_t green, uint8_t bl
     WS2812.show();
     delay(wait);
   }
+#endif
+    const uint8_t num = 8;
+    uint8_t max_color = red;
+    static int i = WS2812.numPixels() - 1;
+
+    if(green > max_color)
+        max_color = green;
+    if(blue > max_color)
+        max_color = blue;
+
+    uint8_t instance = (max_color-200)/num;
+
+    if(i >= -num)
+    {
+
+            for(uint8_t j = 0; j < num; j++)
+            {
+
+                if(i + j >= 0 && i + j < WS2812.numPixels())
+                {
+                    int red_after = red - instance * j;
+                    int green_after = green - instance *  j;
+                    int blue_after = blue - instance *  j;
+
+                    if(j>=1)
+                    {
+                        red_after -= 200;
+                        green_after -= 200;
+                        blue_after -= 200;
+                    }
+                    WS2812.setPixelColor(led_id[i + j], WS2812.Color(red_after >= 0 ? red_after : 0, green_after >= 0 ? green_after : 0, blue_after >= 0 ? blue_after : 0));
+                }
+            }
+            i--;
+            
+            if(i + num >= 0 && i+num < WS2812.numPixels())
+            WS2812.setPixelColor(led_id[i+num], 0); 
+            
+            WS2812.show();
+    }
+    else
+    {
+
+        i=WS2812.numPixels() - 1;
+    }
+
 }
 
 /**
