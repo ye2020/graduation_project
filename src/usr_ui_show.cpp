@@ -48,7 +48,6 @@ ui_show_t::ui_show_t()
                 {"蓝牙设置", 11},
                 {"微信小程序", 13},
                 {"LED设置", 10},
-                {"红外检测", 11},
                 {"关于设备", 11}
             };
 
@@ -80,6 +79,11 @@ ui_show_t::ui_show_t()
                     {"流星灯", 9},
                     {"反向流星灯", 13}
     };
+
+    buletooth_list = {
+                    {"打开蓝牙", 11},
+                    {"关闭蓝牙", 11}
+    };
             
 
     line_len                    = list.size();                                      // 选择页面的数量              
@@ -92,6 +96,8 @@ ui_show_t::ui_show_t()
     color_single_line_length    = (screen_height - 1 - 16) / color_line_len;        // 颜色页面单元格长度
     mode_line_len               = mode_list.size();                                 // 模式页面数量
     mode_single_line_length     = (screen_height - 1 - 16) / mode_line_len;         // 模式单元格长度
+    buletooth_line_len          = buletooth_list.size();
+    buletooth_single_line_length= (screen_height - 1 - 16) / buletooth_line_len;       
 
     total_line_length  = single_line_length * line_len + 1;                // 进度条长竖线的长度
 
@@ -113,6 +119,8 @@ void ui_show_t::ui_init(void)
     (ws_led.color_R < 255) ? (ui_show.horizontal_progress_len.position_trg = (ws_led.color_R/25)*10) : (ui_show.horizontal_progress_len.position_trg = 100);
     (ws_led.color_G < 255) ? (ui_show.horizontal_progress_len_G.position_trg = (ws_led.color_G/25)*10) : (ui_show.horizontal_progress_len_G.position_trg = 100);
     (ws_led.color_B < 255) ? (ui_show.horizontal_progress_len_B.position_trg = (ws_led.color_B/25)*10) : (ui_show.horizontal_progress_len_B.position_trg = 100);
+    (ws_led.Brightness < 150) ? (ui_show.horizontal_progress_len_brightness.position_trg = (ws_led.Brightness/15)*10) : (ui_show.horizontal_progress_len_B.position_trg = 100);
+  
 
     u8g2.begin();
     u8g2.enableUTF8Print();
@@ -217,10 +225,20 @@ void ui_show_t::progress_ui_show(int16_t list_len, uint8_t single_length, int16_
 void ui_show_t::menu_ui_show(std::vector<Ui_list_t>& list, int16_t speed_x, int16_t speed_y)
 {
 
+  if(list.size() >= 3)
+  {
     for (int i = 0; i < 3; i++ )
     {
       u8g2.drawUTF8(ui_show.menu_x_position.cur_position + 4, ui_show.menu_y_position.cur_position + i*15, list[ui_show.text_top_index + i].str.c_str());
     }
+  }
+  else
+  {
+    for (uint16_t i = 0; i < list.size(); i++ )
+    {
+      u8g2.drawUTF8(ui_show.menu_x_position.cur_position + 4, ui_show.menu_y_position.cur_position + i*15, list[ui_show.text_top_index + i].str.c_str());
+    }
+  }
 
     ui_show.select_ui_show(speed_x, speed_y);                                            // 选择框UI绘制
 
@@ -338,14 +356,21 @@ void top_battery_ui(void)
  */
 void top_ui_show(void)
 {
- 
-  //  u8g2.drawXBMP(108,2,20,11,battery_in_black2_20_11);
-  
+  static long clock_updata_tick = 0;      // 定时校准时钟
+
   top_battery_ui();                 // 绘制表头电池信息
 
-  if(WiFi.status() == WL_CONNECTED) {
+  if(WiFi.status() == WL_CONNECTED) 
+  {
      u8g2.drawXBMP(70,2,13,10,wifi_13_10);
-  } else if( WiFi.status() != WL_CONNECTED) {
+    if(millis() - clock_updata_tick >= (10*1000))
+    {
+      clock_updata_tick = millis();
+      clock_updata();
+    }
+  } 
+  else if( WiFi.status() != WL_CONNECTED) 
+  {
     u8g2.drawXBMP(70,2,13,11,dis_wifi_13_11);
   }
    

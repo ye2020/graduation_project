@@ -1,5 +1,6 @@
 #include "usr_buletooth.h"
 #include <SoftwareSerial.h>
+#include "usr_eeprom.h"
 
 SoftwareSerial BT(15);
 const int BT_PIN = 4;
@@ -14,7 +15,15 @@ void buletooth_init(void)
 {
     BT.begin(9600);
     pinMode(BT_PIN, OUTPUT);
-    digitalWrite(BT_PIN,0);
+
+    if(eepUserSet.eeprom_buletooth_state == true)
+    {
+        digitalWrite(BT_PIN,1);
+    }
+    else
+    {
+        digitalWrite(BT_PIN,0);
+    }
 }
 
 void buletooth_loop(void)
@@ -91,4 +100,18 @@ button_status_e keybt0_status_return(void)
 button_status_e keybt1_status_return(void)
 {
     return button0_current_state;
+}
+
+// 打开蓝牙
+void buletooth_on(void)
+{
+    digitalWrite(BT_PIN,1);
+    buletooth_eeprom(true);         // 将设置状态写入rom
+}
+
+// 关闭蓝牙
+void buletooth_off(void)
+{
+    digitalWrite(BT_PIN,0);
+    buletooth_eeprom(false);
 }

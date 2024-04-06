@@ -7,9 +7,14 @@
 
 void buletooth_init(void);
 void buletooth_loop(void);
+void buletooth_on(void);
+void buletooth_off(void);
+
+
 
 button_status_e keybt0_status_return(void);
 button_status_e keybt1_status_return(void);
+
 
 
 

@@ -51,6 +51,7 @@ typedef struct Menu_Key_Index
   menu_u8 remote_current_index;
   menu_u8 color_current_index;
   menu_u8 mode_current_index;
+  menu_u8 buletooth_current_index;
 
 	menu_u8 Current_Page ;      // 当前页面
 }Key_Index;
@@ -75,7 +76,6 @@ typedef enum
   BULEBOOTH_PAGE,          // 蓝牙页面    (select 下子表单)
   WECHAT_PAGE,            // 微信小程序页面(select 下子表单)
   REMOTE_PAGE,            // 遥控页面      (select 下子表单)
-  IR_CHECK_PAGE,          // 红外检测      (select 下子表单)
   ABOUT_PAGE,             // 关于设备      (select 下子表单)
   WIFI_INFO_PAGE = 11,    // 当前网络信息    
   WIFI_DISCONNECT_PAGE,   // 断开网络
@@ -100,10 +100,9 @@ void Menu_Select_Item(menu_i32 current_index, button_status_e Key5Value , button
 void select_page_process(button_status_e Key5Value , button_status_e Key0Value);
 void main_page_process(button_status_e Key5Value , button_status_e Key0Value);
 void wifi_page_process(button_status_e Key5Value , button_status_e Key0Value);
-void temp_hum_page_process(button_status_e Key5Value, button_status_e Key0Value);
+void buletooth_page_process(button_status_e Key5Value, button_status_e Key0Value);
 void wechat_page_process(button_status_e Key5Value, button_status_e Key0Value);
 void remote_page_process(button_status_e Key5Value, button_status_e Key0Value);
-void ir_check_page_process(button_status_e Key5Value, button_status_e Key0Value);
 void about_page_process(button_status_e Key5Value, button_status_e Key0Value);
 void wifi_info_page_process(button_status_e Key5Value, button_status_e Key0Value);
 void wifi_disconnect_page_process(button_status_e Key5Value, button_status_e Key0Value);

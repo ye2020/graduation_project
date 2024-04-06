@@ -57,11 +57,11 @@ static OP_MENU_PAGE g_opStruct[] =
 		{MAIN_PAGE, main_page_process},
 		{SELECT_PAGE, select_page_process},
 		{WiFi_PAGE, wifi_page_process},
-		{BULEBOOTH_PAGE, temp_hum_page_process},
+		{BULEBOOTH_PAGE, buletooth_page_process},
 		{WECHAT_PAGE, wechat_page_process},
 		{REMOTE_PAGE, remote_page_process},
-		{IR_CHECK_PAGE, ir_check_page_process},
 		{ABOUT_PAGE, about_page_process},
+		{7,idle_page_process},
 		{8,idle_page_process},										// 留空
 		{9,idle_page_process},										// 留空
 		{10,idle_page_process},										// 留空
@@ -213,6 +213,7 @@ void index_reset(bool status, int16_t len)
 		sub_index.remote_current_index = 16;
 		sub_index.color_current_index = 21;
 		sub_index.mode_current_index = 0;
+		sub_index.buletooth_current_index = 0;
 	}
 	ui_show.frame_len = {len, len};																// 复位选择框
 	ui_show.frame_y	  = {17, 17};
@@ -490,13 +491,73 @@ void wifi_page_process(button_status_e Key5Value, button_status_e Key0Value)
  * @retval      none
  * @attention
  */
-void temp_hum_page_process(button_status_e Key5Value, button_status_e Key0Value)
+void buletooth_page_process(button_status_e Key5Value, button_status_e Key0Value)
 {
 	// Serial.println("temp status");
-	temp_hum_ui_process();
+	buletooth_ui_process();
 
 	switch (Key5Value_transition_function(Key5Value, Key0Value))
 	{
+	case KEY_dowm:
+	{
+			// 临界条件判断
+			(sub_index.buletooth_current_index < (ui_show.buletooth_line_len - 1)) ? (sub_index.buletooth_current_index++) : (sub_index.buletooth_current_index = (ui_show.buletooth_line_len - 1));
+			
+			// 进度条目标位置
+			if(ui_show.progress_position.position_trg < (ui_show.max_bar - ui_show.buletooth_single_line_length -  1))  {
+				(ui_show.progress_position.position_trg += ui_show.buletooth_single_line_length);
+			}
+		
+			ui_show.frame_y.position_trg += 15;							// 下移框
+			Serial.println("y.position_trg");
+			Serial.println(ui_show.frame_y.position_trg);		
+
+			(ui_show.frame_y.position_trg < (ui_show.screen_height - 20)) ? (ui_show.frame_y.position_trg += 0) : (ui_show.frame_y.position_trg = 32);  // 选择框位置限制
+			(ui_show.frame_y.position_trg > ui_show.y_offset) ? (ui_show.frame_y.position_trg -= 0) : (ui_show.frame_y.position_trg = 18);
+			
+			ui_show.frame_len.position_trg  =  ui_show.buletooth_list[sub_index.buletooth_current_index].len * 5;
+
+			Serial.println("down to choose");
+			Serial.println(sub_index.buletooth_current_index);		
+			break;					
+		}
+
+	case KEY_up:
+	{
+			(sub_index.buletooth_current_index > 0) ? (sub_index.buletooth_current_index--) : (sub_index.buletooth_current_index = 0);
+
+			// 进度条目标位置
+			if(ui_show.progress_position.position_trg > (ui_show.buletooth_single_line_length + ui_show.y_offset - 2))  {
+				(ui_show.progress_position.position_trg -= ui_show.buletooth_single_line_length);
+			}
+
+
+			ui_show.frame_y.position_trg -= 15;							// 上移框
+
+
+			(ui_show.frame_y.position_trg > ui_show.y_offset) ? (ui_show.frame_y.position_trg -= 0) : (ui_show.frame_y.position_trg = 18);	// 选择框位置限制
+			(ui_show.frame_y.position_trg < (ui_show.screen_height - 20)) ? (ui_show.frame_y.position_trg += 0) : (ui_show.frame_y.position_trg = 32);
+
+			ui_show.frame_len.position_trg  =  ui_show.buletooth_list[sub_index.buletooth_current_index].len * 5;		
+
+			Serial.println("down to choose");
+			Serial.println(sub_index.buletooth_current_index);		
+			break ;
+	}
+
+	case KEY_enter:
+	{
+		if(sub_index.buletooth_current_index == 0){
+			buletooth_on();
+		}else {
+			buletooth_off();
+		}
+
+		index_reset(false, 55);																		// 复位选择框与进度条
+		ui_show.ui_disapper();																		// 消失函数
+		Enter_Page(SELECT_PAGE,button_none,button_none);
+		break;
+	}
 
 	case KEY_home:
 	{
@@ -666,61 +727,6 @@ void remote_page_process(button_status_e Key5Value, button_status_e Key0Value)
 		default:
 		break;
 	}
-}
-
-
-/**
- * @brief      	红外检测页面处理
- * @param[in]   KeyValue ： 键值
- * @retval      none
- * @attention
- */
-void ir_check_page_process(button_status_e Key5Value, button_status_e Key0Value)
-{
-	// Serial.println("ir_check status");
-	//ir_check_ui_process(sr_tick());
-
-
-	switch (Key5Value_transition_function(Key5Value, Key0Value))
-	{
-
-	case KEY_dowm:
-	{
-
-		break;
-	}
-
-	case KEY_up:
-	{
-
-		break ;
-	}
-
-	case KEY_enter:
-	{
-		index_reset(true, 55);																		// 复位选择框与进度条
-		ui_show.ui_disapper();		
-		Enter_Page(MAIN_PAGE,button_none,button_none);;
-		break;
-	}
-	case KEY_home:
-	{
-		index_reset(false, 55);																		// 复位选择框与进度条
-		ui_show.ui_disapper();																		// 消失函数
-		Enter_Page(MAIN_PAGE,button_none,button_none);
-		break;
-	}
-
-	case KEY_esc:
-	{	
-		index_reset(false, 55);																		// 复位选择框与进度条
-		ui_show.ui_disapper();																		// 消失函数
-		Enter_Page(SELECT_PAGE,button_none,button_none);
-		break;
-	}
-	default:
-		break;
-	}	
 }
 
 
@@ -984,7 +990,7 @@ void remote_color_page_process(button_status_e Key5Value, button_status_e Key0Va
 	{	
 		index_reset(false, 55);																		// 复位选择框与进度条
 		ui_show.ui_disapper();																		// 消失函数
-		Enter_Page(REMOTE_COLOR_PAGE,button_none,button_none);
+		Enter_Page(REMOTE_PAGE,button_none,button_none);
 		break;
 	}
 	default:
@@ -1112,31 +1118,31 @@ void remote_mode_page_process(button_status_e Key5Value, button_status_e Key0Val
 void remote_brigtness_page_process(button_status_e Key5Value, button_status_e Key0Value)
 {
 
-	wifi_discon_ui_process();
+	led_brightness_ui_process();
 	switch (Key5Value_transition_function(Key5Value, Key0Value))
 	{
 
 	case KEY_dowm:
 	{
-		index_reset(false, 55);																		// 复位选择框与进度条
-		ui_show.ui_disapper();		
-		Enter_Page(WiFi_PAGE,button_none,button_none);
+		(ui_show.horizontal_progress_len_brightness.position_trg > 0)?(ui_show.horizontal_progress_len_brightness.position_trg-=10):(ui_show.horizontal_progress_len_brightness.position_trg = 0);
+		ws_led.Brightness = (ui_show.horizontal_progress_len_brightness.position_trg /10)*15;
 		break;
 	}
 	
 	case KEY_up:
 	{
-		index_reset(false, 55);																		// 复位选择框与进度条
-		ui_show.ui_disapper();		
-		Enter_Page(WiFi_PAGE,button_none,button_none);
+		(ui_show.horizontal_progress_len_brightness.position_trg < 100)?(ui_show.horizontal_progress_len_brightness.position_trg+=10):(ui_show.horizontal_progress_len_brightness.position_trg = 100);
+		ws_led.Brightness = (ui_show.horizontal_progress_len_brightness.position_trg /10)*15;
 		break ;
 	}
 
 	case KEY_enter:
 	{
+		
+		ws_led.ws2812_setting(ws_led.Brightness, ws_led.LED_mode, ws_led.LED_color);
 		index_reset(false, 55);																		// 复位选择框与进度条
 		ui_show.ui_disapper();		
-		Enter_Page(WiFi_PAGE,button_none,button_none);
+		Enter_Page(REMOTE_PAGE,button_none,button_none);
 		break;
 	}
 	case KEY_home:
@@ -1151,7 +1157,7 @@ void remote_brigtness_page_process(button_status_e Key5Value, button_status_e Ke
 	{	
 		index_reset(false, 55);																		// 复位选择框与进度条
 		ui_show.ui_disapper();																		// 消失函数
-		Enter_Page(WiFi_PAGE,button_none,button_none);
+		Enter_Page(REMOTE_PAGE,button_none,button_none);
 		break;
 	}
 	default:
@@ -1177,6 +1183,7 @@ void remote_color_R_page_process(button_status_e Key5Value, button_status_e Key0
 	{
 		(ui_show.horizontal_progress_len.position_trg > 0)?(ui_show.horizontal_progress_len.position_trg-=10):(ui_show.horizontal_progress_len.position_trg = 0);
 		ws_led.color_R = (ui_show.horizontal_progress_len.position_trg/10) * 25;
+		ws_led.LED_color = ((uint32_t)ws_led.color_R << 16) | ((uint32_t)ws_led.color_G << 8) | ws_led.color_B;		// 合成32为数据
 		break;
 	}
 	
@@ -1184,6 +1191,7 @@ void remote_color_R_page_process(button_status_e Key5Value, button_status_e Key0
 	{
 		(ui_show.horizontal_progress_len.position_trg < 100)?(ui_show.horizontal_progress_len.position_trg+=10):(ui_show.horizontal_progress_len.position_trg = 100);
 		ws_led.color_R = (ui_show.horizontal_progress_len.position_trg/10) * 25;
+		ws_led.LED_color = ((uint32_t)ws_led.color_R << 16) | ((uint32_t)ws_led.color_G << 8) | ws_led.color_B;		// 合成32为数据
 
 		if(ws_led.color_R > 225){
 			ws_led.color_R = 255;
@@ -1194,7 +1202,6 @@ void remote_color_R_page_process(button_status_e Key5Value, button_status_e Key0
 
 	case KEY_enter:
 	{
-		ws_led.LED_color = ((uint32_t)ws_led.color_R << 16) | ((uint32_t)ws_led.color_G << 8) | ws_led.color_B;		// 合成32为数据
 		ws_led.ws2812_setting(ws_led.Brightness, ws_led.LED_mode, ws_led.LED_color);
 		index_reset(false, 55);																		// 复位选择框与进度条
 		ui_show.ui_disapper();		
@@ -1239,6 +1246,8 @@ void remote_color_G_page_process(button_status_e Key5Value, button_status_e Key0
 	{
 		(ui_show.horizontal_progress_len_G.position_trg > 0)?(ui_show.horizontal_progress_len_G.position_trg-=10):(ui_show.horizontal_progress_len_G.position_trg = 0);
 		ws_led.color_G = (ui_show.horizontal_progress_len_G.position_trg/10) * 25;
+		ws_led.LED_color = ((uint32_t)ws_led.color_R << 16) | ((uint32_t)ws_led.color_G << 8) | ws_led.color_B;		// 合成32为数据
+
 		break;
 	}
 	
@@ -1246,6 +1255,7 @@ void remote_color_G_page_process(button_status_e Key5Value, button_status_e Key0
 	{
 		(ui_show.horizontal_progress_len_G.position_trg < 100)?(ui_show.horizontal_progress_len_G.position_trg+=10):(ui_show.horizontal_progress_len_G.position_trg = 100);
 		ws_led.color_G = (ui_show.horizontal_progress_len_G.position_trg/10) * 25;
+		ws_led.LED_color = ((uint32_t)ws_led.color_R << 16) | ((uint32_t)ws_led.color_G << 8) | ws_led.color_B;		// 合成32为数据
 
 		if(ws_led.color_G > 225){
 			ws_led.color_G = 255;
@@ -1256,7 +1266,6 @@ void remote_color_G_page_process(button_status_e Key5Value, button_status_e Key0
 
 	case KEY_enter:
 	{
-		ws_led.LED_color = ((uint32_t)ws_led.color_R << 16) | ((uint32_t)ws_led.color_G << 8) | ws_led.color_B;		// 合成32为数据
 		ws_led.ws2812_setting(ws_led.Brightness, ws_led.LED_mode, ws_led.LED_color);								// 写入rom
 		index_reset(false, 55);																		// 复位选择框与进度条
 		ui_show.ui_disapper();		
@@ -1301,6 +1310,8 @@ void remote_color_B_page_process(button_status_e Key5Value, button_status_e Key0
 	{
 		(ui_show.horizontal_progress_len_B.position_trg > 0)?(ui_show.horizontal_progress_len_B.position_trg-=10):(ui_show.horizontal_progress_len_B.position_trg = 0);
 		ws_led.color_B = (ui_show.horizontal_progress_len_B.position_trg/10) * 25;
+		ws_led.LED_color = ((uint32_t)ws_led.color_R << 16) | ((uint32_t)ws_led.color_G << 8) | ws_led.color_B;		// 合成32为数据
+		
 		break;
 	}
 	
@@ -1308,6 +1319,7 @@ void remote_color_B_page_process(button_status_e Key5Value, button_status_e Key0
 	{
 		(ui_show.horizontal_progress_len_B.position_trg < 100)?(ui_show.horizontal_progress_len_B.position_trg+=10):(ui_show.horizontal_progress_len_B.position_trg = 100);
 		ws_led.color_B = (ui_show.horizontal_progress_len_B.position_trg/10) * 25;
+		ws_led.LED_color = ((uint32_t)ws_led.color_R << 16) | ((uint32_t)ws_led.color_G << 8) | ws_led.color_B;		// 合成32为数据
 
 		if(ws_led.color_B > 225){
 			ws_led.color_B = 255;
@@ -1318,7 +1330,6 @@ void remote_color_B_page_process(button_status_e Key5Value, button_status_e Key0
 
 	case KEY_enter:
 	{
-		ws_led.LED_color = ((uint32_t)ws_led.color_R << 16) | ((uint32_t)ws_led.color_G << 8) | ws_led.color_B;		// 合成32为数据
 		ws_led.ws2812_setting(ws_led.Brightness, ws_led.LED_mode, ws_led.LED_color);
 		index_reset(false, 55);																		// 复位选择框与进度条
 		ui_show.ui_disapper();		

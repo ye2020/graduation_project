@@ -105,6 +105,14 @@ void LED_state_eeprom(bool LED_state)
   EEPROM.commit();                                              // 覆盖掉旧的数值
 }
 
+
+void buletooth_eeprom(bool buletooth_stata)
+{
+  eepUserSet.eeprom_buletooth_state = buletooth_stata;
+  EEPROM.put(eeprom_address0, eepUserSet);
+  EEPROM.commit();                                              // 覆盖掉旧的数值
+}
+
 // 读取EEPROM数据
 void eeprom_read(void)
 {

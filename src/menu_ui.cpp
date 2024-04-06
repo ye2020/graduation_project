@@ -30,7 +30,8 @@ void Menu_Main_Init(void)
 	sub_index.wifi_config_current_index = 11;		// 索引值11 ~ 15 留给网络配置页面
 	sub_index.remote_current_index	= 16;			// 遥控索引16 ~ 25 留给遥控页面
 	sub_index.color_current_index = 21;
-	sub_index.mode_current_index = 0;				// 因为没有子页面, 所以无所谓		
+	sub_index.mode_current_index = 0;				// 因为没有子页面, 所以无所谓
+	sub_index.buletooth_current_index = 0;		
 
 
 	sub_index.Current_Page = MAIN_PAGE;					// 设置初始页面
@@ -85,12 +86,7 @@ void Enter_Page(menu_i32 index, button_status_e Key5Value , button_status_e Key0
 		break;
 	}
 
-		//进入菜单页面
-	case IR_CHECK_PAGE:
-	{
-		Menu_Select_Item(IR_CHECK_PAGE,  Key5Value,Key0Value);
-		break;
-	}
+
 
 		//进入菜单页面
 	case ABOUT_PAGE:
@@ -269,19 +265,13 @@ void wifi_info_ui_process(void)
 
 
 // 温湿度页面UI进程
-void temp_hum_ui_process(void)
+void buletooth_ui_process(void)
 {
-	// u8g2.clearBuffer();	
-	// top_ui_show();
-	// u8g2.drawUTF8(3, 30, "温度 :");
-	// u8g2.setCursor(40, 30);
-    // u8g2.print(usr_dht.temp);
-	// u8g2.drawStr(74, 28, "*C");
-	// u8g2.drawUTF8(3, 55, "湿度 :");
-	// u8g2.setCursor(40, 55);
-    // u8g2.print(usr_dht.Hum);
-	// u8g2.drawStr(74, 53, "%");
-	// u8g2.sendBuffer();
+	u8g2.clearBuffer();	
+	top_ui_show();	
+	ui_show.menu_ui_show(ui_show.buletooth_list, 13, 9);	
+	ui_show.progress_ui_show(ui_show.buletooth_line_len, ui_show.buletooth_single_line_length, 5);      // 进度条UI绘制				
+	u8g2.sendBuffer();
 }
 
 // 小程序页面UI进程
@@ -302,24 +292,6 @@ void about_ui_process(void)
 	u8g2.drawStr(3, 45, "Flash  :  1MB");
 	u8g2.drawStr(3, 60, "SRAM  :  80KB");
 	u8g2.sendBuffer();
-}
-
-
-// 红外检测页面UI进程
-void ir_check_ui_process(bool status)
-{
-	// u8g2.clearBuffer();	
-	// top_ui_show();
-	// if(status)
-	// {
-	// 	u8g2.drawXBMP(40,16,50,47,ir_check_50_47);
-	// }
-	// else
-	// {
-	// 	// u8g2.drawUTF8(35, 48, "未检测到...");
-	// 	u8g2.drawXBMP(40,16,50,47,ir_fail_50_47);
-	// }
-	// u8g2.sendBuffer();
 }
 
 
@@ -350,6 +322,13 @@ void led_brightness_ui_process(void)
 	u8g2.clearBuffer();	
 	top_ui_show();
 
+	u8g2.drawStr(3, 60, "0");
+	u8g2.drawStr(110, 60, "150");
+	u8g2.drawStr(20, 30, "Brightness: ");
+	u8g2.setCursor(85, 30);
+    u8g2.print(ws_led.Brightness);
+
+	ui_show.Horizontal_progress_ui_show(&ui_show.horizontal_progress_len_brightness.cur_position, &ui_show.horizontal_progress_len_brightness.position_trg, 8);			// 绘制横向进度条
 	u8g2.sendBuffer();
 }
 

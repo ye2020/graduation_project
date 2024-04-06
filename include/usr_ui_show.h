@@ -154,6 +154,7 @@ class ui_show_t{
     position_expect_t horizontal_progress_len = {0, 0};                              // 横向选择框长度
     position_expect_t horizontal_progress_len_G = {0, 0};                              // 横向选择框长度
     position_expect_t horizontal_progress_len_B = {0, 0};                              // 横向选择框长度
+    position_expect_t horizontal_progress_len_brightness = {0, 0};                     // 横向选择框长度
 
     uint8_t max_bar;                                                        // 进度条最底部的位置
     uint8_t y_offset = 16;                                                  // y偏移值 , 为了不在最上面的黄色部分显示
@@ -177,6 +178,9 @@ class ui_show_t{
     int16_t mode_line_len;                                                  // 模式页面的数量
     uint8_t mode_single_line_length;                                        // 进度条单元格长度
 
+    int16_t buletooth_line_len;                                                  // 模式页面的数量
+    uint8_t buletooth_single_line_length;                                        // 进度条单元格长度
+
     uint8_t screen_length = 128;                                            // 屏幕长度
     uint8_t screen_height = 64 ;                                            // 屏幕高度
 
@@ -194,6 +198,7 @@ class ui_show_t{
     std::vector<Ui_list_t> remote_list;                                      // 遥控页面子菜单
     std::vector<Ui_list_t> color_list;                                       // 颜色设置页面子菜单
     std::vector<Ui_list_t> mode_list;                                       // 模式设置页面子菜单
+    std::vector<Ui_list_t> buletooth_list;                                  // 蓝牙设置页面子菜单
 
     ui_show_t();                                                            // 构造函数
 
