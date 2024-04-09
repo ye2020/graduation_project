@@ -116,12 +116,6 @@ ui_show_t::ui_show_t()
  */
 void ui_show_t::ui_init(void)
 {
-    (ws_led.color_R < 255) ? (ui_show.horizontal_progress_len.position_trg = (ws_led.color_R/25)*10) : (ui_show.horizontal_progress_len.position_trg = 100);
-    (ws_led.color_G < 255) ? (ui_show.horizontal_progress_len_G.position_trg = (ws_led.color_G/25)*10) : (ui_show.horizontal_progress_len_G.position_trg = 100);
-    (ws_led.color_B < 255) ? (ui_show.horizontal_progress_len_B.position_trg = (ws_led.color_B/25)*10) : (ui_show.horizontal_progress_len_B.position_trg = 100);
-    (ws_led.Brightness < 150) ? (ui_show.horizontal_progress_len_brightness.position_trg = (ws_led.Brightness/15)*10) : (ui_show.horizontal_progress_len_B.position_trg = 100);
-  
-
     u8g2.begin();
     u8g2.enableUTF8Print();
     u8g2.setFont(u8g2_font_wqy12_t_gb2312a);           // 设置字体

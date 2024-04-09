@@ -42,7 +42,7 @@ struct EEPROMStruct
 
 extern EEPROMStruct eepUserSet;
 
-#define eeprom_address0 0       //起始地址
+#define eeprom_address0 1280       //起始地址(0~1279 , 1536~2431 被blinker库占用,正常0即可) 1280代表从0到1280开始写入或读取
 
 
 

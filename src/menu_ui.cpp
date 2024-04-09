@@ -328,6 +328,7 @@ void led_brightness_ui_process(void)
 	u8g2.setCursor(85, 30);
     u8g2.print(ws_led.Brightness);
 
+    (ws_led.Brightness < 150) ? (ui_show.horizontal_progress_len_brightness.position_trg = (ws_led.Brightness/15)*10) : (ui_show.horizontal_progress_len_B.position_trg = 100);
 	ui_show.Horizontal_progress_ui_show(&ui_show.horizontal_progress_len_brightness.cur_position, &ui_show.horizontal_progress_len_brightness.position_trg, 8);			// 绘制横向进度条
 	u8g2.sendBuffer();
 }
@@ -344,6 +345,7 @@ void color_R_ui_process(void)
 	u8g2.setCursor(65, 30);
     u8g2.print(ws_led.color_R);
 
+	(ws_led.color_R < 255) ? (ui_show.horizontal_progress_len.position_trg = (ws_led.color_R/25)*10) : (ui_show.horizontal_progress_len.position_trg = 100);
 	ui_show.Horizontal_progress_ui_show(&ui_show.horizontal_progress_len.cur_position, &ui_show.horizontal_progress_len.position_trg, 8);			// 绘制横向进度条
 	u8g2.sendBuffer();
 }
@@ -360,6 +362,7 @@ void color_G_ui_process(void)
 	u8g2.setCursor(65, 30);
     u8g2.print(ws_led.color_G);
 
+    (ws_led.color_G < 255) ? (ui_show.horizontal_progress_len_G.position_trg = (ws_led.color_G/25)*10) : (ui_show.horizontal_progress_len_G.position_trg = 100);
 	ui_show.Horizontal_progress_ui_show(&ui_show.horizontal_progress_len_G.cur_position, &ui_show.horizontal_progress_len_G.position_trg, 8);			// 绘制横向进度条
 	u8g2.sendBuffer();
 }
@@ -378,6 +381,7 @@ void color_B_ui_process(void)
 	u8g2.setCursor(65, 30);
     u8g2.print(ws_led.color_B);
 
+    (ws_led.color_B < 255) ? (ui_show.horizontal_progress_len_B.position_trg = (ws_led.color_B/25)*10) : (ui_show.horizontal_progress_len_B.position_trg = 100);
 	ui_show.Horizontal_progress_ui_show(&ui_show.horizontal_progress_len_B.cur_position, &ui_show.horizontal_progress_len_B.position_trg, 8);			// 绘制横向进度条
 	u8g2.sendBuffer();
 }

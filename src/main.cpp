@@ -40,6 +40,7 @@
 #include "usr_SR505.h"
 #include "bsp_adc.h"
 #include "usr_ws2812.h"
+#include "usr_blinker.h"
 
 using namespace std;
 
@@ -48,6 +49,7 @@ using namespace std;
 void setup() {
   Serial.begin(115200);
   auto_eeprom();                                                      // 读取保存在flash中的数据
+  usr_blinker_init();                                                 // blinker 初始化,与wifi初始化
   ws_led.ws2812_led_init();                                           // led初始化
   ui_show.ui_init();                                                  // ui初始化
   usr_Wifi.wifi_init();                                               // wifi 初始化函数,自动调用上次连接成功的网络
@@ -56,11 +58,7 @@ void setup() {
   buletooth_init();                                                   // 蓝牙软串口初始化
   button_init();                                                      // 按键初始化
 
- // usr_dht.dht_init();                                                 // 温湿度初始化
-  //sr_init();                                                          // 红外传感器初始化
-  // IR_init();
-
-  startTCPClient();                                                   // 上传云端初始化
+  //startTCPClient();                                                   // 上传云端初始化
   bsp_adc_init();
   
  
@@ -89,6 +87,7 @@ void loop()
   buletooth_loop();                        // 蓝牙循环函数 
   Menu_Select_main(key5_status_return(),key0_status_return());
   ws_led.ws2812_led_loop();                // LED循环函数
+  usr_blinker_loop();
   //doTCPClientTick();                        // 定时发送到云端
 
   #endif

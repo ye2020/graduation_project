@@ -31,8 +31,8 @@ EEPROMStruct eepUserSet;                // 用户写入 EEPROM 的结构体
 void auto_eeprom(void){
   
   /* 自动计算需要用多少eeprom数量 */
-  EEPROM.begin(sizeof(EEPROMStruct));
-
+  // EEPROM.begin(sizeof(EEPROMStruct));
+    EEPROM.begin(4000);
 
   /* 获取eeprom数据 */
   EEPROM.get(eeprom_address0,eepUserSet);
@@ -45,6 +45,11 @@ void auto_eeprom(void){
     Serial.println("正在写入EEPROM");
     Serial.println("请不要进行其他操作");
     
+    eepUserSet.eeprom_LED_state = true;
+    eepUserSet.eeprom_Brightness = 30;
+    eepUserSet.eeprom_LED_color = 0xFF;
+    eepUserSet.eeprom_LED_mode = FILL_LED;
+    eepUserSet.eeprom_buletooth_state = true;
     strcpy(eepUserSet.wifi_ssid, String("00_mi").c_str());                             // 默认 wifi 的ssid
     strcpy(eepUserSet.wifi_password, String("yezhaotin").c_str());                     // 默认 wifi 的pwd
     eepUserSet.auto_state = 1;                                    // 表示后面不需要在刷写
@@ -73,11 +78,12 @@ void auto_eeprom(void){
  * @attention   将wifi 的ssid和pwd写入flash
  */
 void wifi_eeprom(const char* SSID,const char* Password) {
+    EEPROM.begin(4000);                                           // 因为blinker库所以增加 EEPROM.begin();  方法, 4000代表 从0开始读到4000地址位的ROM进缓存
     strcpy(eepUserSet.wifi_ssid, SSID);
     strcpy(eepUserSet.wifi_password, Password);
-    EEPROM.put(eeprom_address0, eepUserSet);
+    EEPROM.put(eeprom_address0, eepUserSet);  
     EEPROM.commit();                                              // 覆盖掉旧的数值
-
+    EEPROM.end();                                                 // 因为blinker库所以增加 EEPROM.end();  方法
 }
 
 /**
@@ -90,31 +96,40 @@ void wifi_eeprom(const char* SSID,const char* Password) {
  */
 void LED_eeprom(uint8_t Brightness, WS_LED_mode_e LED_mode, uint32_t LED_color)
 {
+    EEPROM.begin(4000);
     eepUserSet.eeprom_Brightness = Brightness;
     eepUserSet.eeprom_LED_mode   = LED_mode;
     eepUserSet.eeprom_LED_color  = LED_color;
     EEPROM.put(eeprom_address0, eepUserSet);
     EEPROM.commit();                                              // 覆盖掉旧的数值
+    EEPROM.end();
 }
 
 
 void LED_state_eeprom(bool LED_state)
 {
+  EEPROM.begin(4000);
   eepUserSet.eeprom_LED_state = LED_state;
   EEPROM.put(eeprom_address0, eepUserSet);
   EEPROM.commit();                                              // 覆盖掉旧的数值
+  EEPROM.end();
 }
 
 
 void buletooth_eeprom(bool buletooth_stata)
 {
+  EEPROM.begin(4000);
   eepUserSet.eeprom_buletooth_state = buletooth_stata;
   EEPROM.put(eeprom_address0, eepUserSet);
   EEPROM.commit();                                              // 覆盖掉旧的数值
+  EEPROM.end();
+
 }
 
 // 读取EEPROM数据
 void eeprom_read(void)
 {
+  EEPROM.begin(4000);
   EEPROM.get(eeprom_address0,eepUserSet);
+  EEPROM.end();
 }

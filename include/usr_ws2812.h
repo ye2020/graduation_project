@@ -30,7 +30,7 @@ typedef enum
 {
     THEATER_CHASE_RAINBOW_LED = 0, // 闪烁彩虹灯
     FILL_LED,                   // 纯色灯
-    WATER_LED = 0,              // 流水灯
+    WATER_LED,                  // 流水灯
     RAINBOW_LED,                // 彩虹灯
     THEATER_CHASE_LED,          // 闪烁灯
     METEOR_LED,                 // 流星灯
