@@ -127,7 +127,7 @@ static void recharge_check(int vol_value)
     // static int vol_discrease_count = 0;
 
     /* 一次大跳变 */
-    if((vol_value - voltage_old) >= 10 ){
+    if((vol_value - voltage_old) >= 15 ){
         vol_state = true; 
     } else if((vol_value - voltage_old) <= (-10)){
          vol_state = false;

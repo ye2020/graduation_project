@@ -5,27 +5,32 @@
 #include "usr_blinker.h"
 #include "usr_eeprom.h"
 #include "usr_clock_time.h"
+#include "bsp_adc.h"
 
  
 char auth[] = "463adba036d8";
 char ssid[] = "00_mi";
 char pswd[] = "yezhaotin";
  
-// 新建组件对象
-BlinkerButton Button1("btn-abc");
-BlinkerNumber Number1("num-uk5");
-BlinkerRGB    Color_1("col-a75");
+static long elec_updata_tick = 0;          // 定时上传电量数据
+#define upDataTime 5*1000                  // 上传速率5s (1s<=upDataTime<=60s）
 
-BlinkerText text1("tex-owp");
-BlinkerSlider Slider1("ran-xml");
+// 新建组件对象
+BlinkerButton Button1("btn-u30");           // 开关
+BlinkerNumber Number1("num-uk5");           // 当前电量
+BlinkerRGB    Color_1("col-a75");           // 取色器
+
+BlinkerText text1("tex-owp");               // 灯光状态显示
+BlinkerSlider Slider1("ran-xml");           // 滑块
 
  
 int counter = 0;
 
 void button1_callback(const String & state);
-void dataRead(const String & data);
 void RGB_callback(uint8_t r_data, uint8_t g_data, uint8_t b_data, uint8_t bright_data);
 void bridge_callback(int32_t data);
+void dataStorage(void);
+
 
 
 
@@ -33,36 +38,40 @@ void bridge_callback(int32_t data);
 
 void usr_blinker_init(void)
 {
-    Blinker.begin(auth, ssid, pswd);
-    Blinker.attachData(dataRead);                   // 绑定组件
+    Blinker.begin(auth, eepUserSet.wifi_ssid, eepUserSet.wifi_password);
+    // Blinker.attachData(dataRead);                   // 绑定组件
     Button1.attach(button1_callback);
     Color_1.attach(RGB_callback);
     Slider1.attach(bridge_callback);
+    Blinker.attachDataStorage(dataStorage);
 }
 
 
 void usr_blinker_loop(void)
 {
     Blinker.run();
+    if(millis() - elec_updata_tick >= upDataTime)
+    {
+        elec_updata_tick = millis();
+        Number1.print(bat_vcc_percentage());        // 电量信息上传
+    }
+
 }
 
 
 
 // 按下按键即会执行该函数
 void button1_callback(const String & state) {
-    BLINKER_LOG("get button state: ", state);
-    digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+    ws2812_power_callback();                    // 回调函数
 }
  
-// 如果未绑定的组件被触发，则会执行其中内容
-void dataRead(const String & data)
+
+ 
+void dataStorage()
 {
-    
-    BLINKER_LOG("Blinker readString: ", data);
-    counter++;
-    Number1.print(counter);
+    Blinker.dataStorage("data1", bat_vcc_percentage());
 }
- 
+
 
 // 取色器回调函数
 void RGB_callback(uint8_t r_data, uint8_t g_data, uint8_t b_data, uint8_t bright_data)

@@ -354,6 +354,7 @@ void top_ui_show(void)
 
   top_battery_ui();                 // 绘制表头电池信息
 
+
   if(WiFi.status() == WL_CONNECTED) 
   {
      u8g2.drawXBMP(70,2,13,10,wifi_13_10);
