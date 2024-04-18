@@ -14,7 +14,7 @@ char ssid[] = "00_mi";
 char pswd[] = "yezhaotin";
  
 static long elec_updata_tick = 0;          // 定时上传电量数据
-#define upDataTime 5*1000                  // 上传速率5s (1s<=upDataTime<=60s）
+#define upDataTime 15*1000                  // 上传速率5s (1s<=upDataTime<=60s）
 
 // 新建组件对象
 BlinkerButton Button1("btn-u30");           // 开关
@@ -87,7 +87,21 @@ void usr_blinker_loop(void)
 
 // 按下按键即会执行该函数
 void button1_callback(const String & state) {
-    ws2812_power_callback();                    // 回调函数
+    
+    if(state == "tap")
+    {
+         ws2812_power_callback();                    // 回调函数
+    } 
+    else if(state == "on")
+    {
+        ws_led.LED_state = true;
+        LED_state_eeprom(ws_led.LED_state);
+    }
+    else if(state == "off")
+    {
+        ws_led.LED_state = false;
+        LED_state_eeprom(ws_led.LED_state);
+    }
 }
  
 void button2_callback(const String & state) 

@@ -74,7 +74,7 @@ typedef enum
   SELECT_PAGE,            // 菜单页面   (1 ~ 10)索引为菜单页面及其子页面
   WiFi_PAGE,              // 网络配置页面  (select 下子表单）
   BULEBOOTH_PAGE,          // 蓝牙页面    (select 下子表单)
-  WECHAT_PAGE,            // 微信小程序页面(select 下子表单)
+  // WECHAT_PAGE,            // 微信小程序页面(select 下子表单)
   REMOTE_PAGE,            // 遥控页面      (select 下子表单)
   ABOUT_PAGE,             // 关于设备      (select 下子表单)
   WIFI_INFO_PAGE = 11,    // 当前网络信息    

@@ -58,9 +58,9 @@ static OP_MENU_PAGE g_opStruct[] =
 		{SELECT_PAGE, select_page_process},
 		{WiFi_PAGE, wifi_page_process},
 		{BULEBOOTH_PAGE, buletooth_page_process},
-		{WECHAT_PAGE, wechat_page_process},
 		{REMOTE_PAGE, remote_page_process},
 		{ABOUT_PAGE, about_page_process},
+		{6,idle_page_process},
 		{7,idle_page_process},
 		{8,idle_page_process},										// 留空
 		{9,idle_page_process},										// 留空

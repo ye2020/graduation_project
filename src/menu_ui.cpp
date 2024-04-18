@@ -79,14 +79,6 @@ void Enter_Page(menu_i32 index, button_status_e Key5Value , button_status_e Key0
 		break;
 	}
 
-		//进入微信小程序页面
-	case WECHAT_PAGE:
-	{
-		Menu_Select_Item(WECHAT_PAGE,  Key5Value,Key0Value);
-		break;
-	}
-
-
 
 		//进入菜单页面
 	case ABOUT_PAGE:
