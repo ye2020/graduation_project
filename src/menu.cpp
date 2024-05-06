@@ -39,6 +39,7 @@
 #include "usr_SR505.h"
 #include "usr_irremote.h"
 #include "usr_ws2812.h"
+#include "usr_blinker.h"
 
 
 // 定义菜单索引变量
@@ -741,6 +742,8 @@ void about_page_process(button_status_e Key5Value, button_status_e Key0Value)
 {
 	// Serial.println("about status");
 	about_ui_process();
+	blinker_enable = 1;					//使能blinker
+
 	switch (Key5Value_transition_function(Key5Value, Key0Value))
 	{
 

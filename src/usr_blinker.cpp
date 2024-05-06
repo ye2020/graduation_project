@@ -15,6 +15,7 @@ char pswd[] = "yezhaotin";
  
 static long elec_updata_tick = 0;          // 定时上传电量数据
 #define upDataTime 15*1000                  // 上传速率5s (1s<=upDataTime<=60s）
+bool blinker_enable = 0;
 
 // 新建组件对象
 BlinkerButton Button1("btn-u30");           // 开关

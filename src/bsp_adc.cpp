@@ -80,10 +80,10 @@ uint8_t bat_vcc_percentage(void)
         voltage_value = (int)(get_bat_vcc() * 1000);          // 获取当前电压值
         recharge_check(voltage_value);
 
-        Serial.println("vcc: ");	
-        Serial.println(voltage_value);
-        Serial.println("percen: ");	
-        Serial.println(bat_percen);		
+        // Serial.println("vcc: ");	
+        // Serial.println(voltage_value);
+        // Serial.println("percen: ");	
+        // Serial.println(bat_percen);		
 
         /* 电压小于最低电压 */
         if(voltage_value < Battery_Level_Percent_Table[0])

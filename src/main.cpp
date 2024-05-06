@@ -87,8 +87,10 @@ void loop()
   buletooth_loop();                        // 蓝牙循环函数 
   Menu_Select_main(key5_status_return(),key0_status_return());
   ws_led.ws2812_led_loop();                // LED循环函数
-  usr_blinker_loop();
-  //doTCPClientTick();                        // 定时发送到云端
+
+  if(blinker_enable)
+   usr_blinker_loop();
+  
 
   #endif
   #if 0

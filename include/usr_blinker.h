@@ -16,7 +16,7 @@
 #define BLINKER_PRINT Serial
 #define BLINKER_WIFI
 
-
+extern bool blinker_enable ;         // blinker使能位
 
 void usr_blinker_init(void);
 void usr_blinker_loop(void);

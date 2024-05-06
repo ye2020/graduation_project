@@ -1,8 +1,8 @@
 /**
   ****************************** Y.Z.T.****************************************
   * @file       bsp_button.c/h
-  * @brief      ÓÃÓÚ´æ·Å°´¼ü¶à¹¦ÄÜ¼ì²âµÄÏà¹Øº¯ÊıºÍ½á¹¹Ìå
-  * @note       °üÀ¨°´¼üµÄ¶Ì°´£¬³¤°´ºÍË«»÷µÈ»Øµ÷º¯Êı   
+  * @brief      ç”¨äºå­˜æ”¾æŒ‰é”®å¤šåŠŸèƒ½æ£€æµ‹çš„ç›¸å…³å‡½æ•°å’Œç»“æ„ä½“
+  * @note       åŒ…æ‹¬æŒ‰é”®çš„çŸ­æŒ‰ï¼Œé•¿æŒ‰å’ŒåŒå‡»ç­‰å›è°ƒå‡½æ•°   
   * 
   * @author     Y.Z.T
   * @history    2023.9.25
@@ -20,21 +20,21 @@
 
 #include "Arduino.h"
 
-// ¶¨ÒåÃ¶¾Ù±äÁ¿ °´¼üµ±Ç°×´Ì¬
+// å®šä¹‰æšä¸¾å˜é‡ æŒ‰é”®å½“å‰çŠ¶æ€
 typedef enum
 {
-    button_none = 0,        // Ê²Ã´¶¼Ã»¸É
-	  button_click = 1,       // °´¼ü¶Ì°´1´Î
-    button_doubleclick ,    // °´¼ü¶Ì°´2´Î
-    button_longPressStart , // °´¼ü³¤°´¿ªÊ¼ÅĞ¶¨
-    button_longPress,      // °´¼ü³¤°´ÖĞ
-    button_longPressStop,  // °´¼ü³¤°´½áÊøÅĞ¶¨
+    button_none = 0,        // ä»€ä¹ˆéƒ½æ²¡å¹²
+	  button_click = 1,       // æŒ‰é”®çŸ­æŒ‰1æ¬¡
+    button_doubleclick ,    // æŒ‰é”®çŸ­æŒ‰2æ¬¡
+    button_longPressStart , // æŒ‰é”®é•¿æŒ‰å¼€å§‹åˆ¤å®š
+    button_longPress,      // æŒ‰é”®é•¿æŒ‰ä¸­
+    button_longPressStop,  // æŒ‰é”®é•¿æŒ‰ç»“æŸåˆ¤å®š
 
-    button_click2,       // °´¼ü¶Ì°´1´Î
-    button_doubleclick2 ,    // °´¼ü¶Ì°´2´Î
-    button_longPressStart2 , // °´¼ü³¤°´¿ªÊ¼ÅĞ¶¨
-    button_longPress2,      // °´¼ü³¤°´ÖĞ
-    button_longPressStop2,  // °´¼ü³¤°´½áÊøÅĞ¶¨
+    button_click2,       // æŒ‰é”®çŸ­æŒ‰1æ¬¡
+    button_doubleclick2 ,    // æŒ‰é”®çŸ­æŒ‰2æ¬¡
+    button_longPressStart2 , // æŒ‰é”®é•¿æŒ‰å¼€å§‹åˆ¤å®š
+    button_longPress2,      // æŒ‰é”®é•¿æŒ‰ä¸­
+    button_longPressStop2,  // æŒ‰é”®é•¿æŒ‰ç»“æŸåˆ¤å®š
 } button_status_e;
 
 
@@ -46,7 +46,7 @@ button_status_e key5_status_return(void);
 button_status_e key0_status_return(void);
 
 
-/*************************** °´¼ü5»Øµ÷º¯Êı  *********************************/
+/*************************** æŒ‰é”®5å›è°ƒå‡½æ•°  *********************************/
 
 void click1();
 void doubleclick1() ;
@@ -54,7 +54,7 @@ void longPressStart1() ;
 void longPress1() ;
 void longPressStop1() ;
 
-/*************************** °´¼ü0»Øµ÷º¯Êı  *********************************/
+/*************************** æŒ‰é”®0å›è°ƒå‡½æ•°  *********************************/
 void click2() ;
 void doubleclick2() ;
 void longPressStart2();
